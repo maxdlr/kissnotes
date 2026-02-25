@@ -1,0 +1,43 @@
+{
+	"name": "kissnotes-backend",
+	"version": "0.1.0",
+	"private": true,
+	"description": "",
+	"main": "index.ts",
+	"author": "maxdlr",
+	"scripts": {
+		"start": "node ./bin/www",
+		"dev": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register index.ts",
+		"build": "tsc && npm run copy:assets",
+		"typecheck": "tsc --noEmit --incremental",
+		"tsc": "tsc --noEmit",
+		"copy:assets": "copyfiles -u 2 \"src/assets/**/*.{pdf,ttf}\" dist/src/assets"
+	},
+	"dependencies": {
+		"@kissnotes/types": "*",
+		"@types/express": "^4.17.21",
+		"chalk": "^5.5.0",
+		"cookie-parser": "~1.4.4",
+		"dotenv": "^8.6.0",
+		"express": "^4.17.1",
+		"express-rate-limit": "^6.7.0",
+		"module-alias": "^2.2.3",
+		"mysql2": "^3.14.0",
+		"reflect-metadata": "^0.2.2",
+		"tsconfig-paths": "^4.2.0",
+		"typeorm": "^0.3.26"
+	},
+	"devDependencies": {
+		"@faker-js/faker": "^9.9.0",
+		"@types/bcrypt": "^5.0.2",
+		"@types/cookie-parser": "^1.4.7",
+		"@types/jsonwebtoken": "^9.0.6",
+		"@types/node": "^22.18.1",
+		"copyfiles": "^2.4.1",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.5.4"
+	},
+	"_moduleAliases": {
+		"@": "src/"
+	}
+}

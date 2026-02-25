@@ -1,0 +1,14 @@
+{
+	"name": "my-monorepo",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"dev:back": "npm run dev --workspace=apps/back",
+		"dev:front": "npm run dev --workspace=apps/front",
+		"install:back": "cd apps/back && npm i",
+		"install:front": "cd apps/front && npm i"
+	}
+}
