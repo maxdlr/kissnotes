@@ -4,6 +4,7 @@ const setCors = (req: Request, res: Response) => {
   const origin = req.headers.origin || "";
 
   const allowedOrigins = process.env.CORS_ORIGIN_URL;
+
   if (allowedOrigins?.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }

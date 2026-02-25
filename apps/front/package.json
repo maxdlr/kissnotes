@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@kissnotes/types": "*",
+    "axios": "^1.8.4",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-redux": "^9.2.0",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
