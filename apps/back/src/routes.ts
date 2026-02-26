@@ -1,11 +1,8 @@
-import { Test } from "@kissnotes/types";
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import expressionRoutes from "./api/expressions/routes/index";
 
 const router = Router();
 
-router.use("/test", async (_req: Request, res: Response) => {
-  const hello: Test = { message: "Hello World" };
-  return res.send(hello);
-});
+router.use("/expressions", expressionRoutes);
 
 export default router;

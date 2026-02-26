@@ -1,5 +1,13 @@
-export interface Test {
-  message: string;
+export interface Model {
+  id: number;
+  deletedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ExpressionModel extends Model {
+  title: string;
+  description?: string;
 }
 
 export interface KissResponseData<T> {

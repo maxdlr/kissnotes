@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
+import "reflect-metadata";
 
-console.clear();
+// console.clear();
 dotenv.config({ path: "../../.env" });
 
 import registerGlobals from "@/services/registerGlobals";
@@ -24,7 +25,8 @@ import { loadFixtures } from "@/services/fixtures";
  * ======================
  */
 const app = express();
-const port = process.env.NODE_ENV === "test" ? 0 : process.env.PORT || 8080;
+const port =
+  process.env.NODE_ENV === "test" ? 0 : process.env.BACK_PORT || 8080;
 
 /**
  * ======================

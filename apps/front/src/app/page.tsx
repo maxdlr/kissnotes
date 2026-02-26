@@ -1,9 +1,9 @@
 "use client";
 
-import type { Test } from "@kissnotes/types";
+import type { ExpressionModel, KResData } from "@kissnotes/types";
 import useSWR from "swr";
 
 export default function Home() {
-  const { data } = useSWR<Test>("/test");
-  return <p className="text-white">{data?.message}</p>;
+  const { data } = useSWR<KResData<ExpressionModel>>("/test");
+  return <p className="text-white">{data?.data?.id}</p>;
 }
