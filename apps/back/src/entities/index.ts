@@ -1,5 +1,5 @@
 import { AbstractEntity } from "./AbstractEntity";
-import ExpressionEntity from "./Expression";
-import User from "./User";
+import ExpressionEntity from "./ExpressionEntity";
+import UserEntity from "./UserEntity";
 
-export default { AbstractEntity, User, ExpressionEntity };
+export default { AbstractEntity, UserEntity, ExpressionEntity };

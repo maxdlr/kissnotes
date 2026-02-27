@@ -25,11 +25,11 @@ interface SyncResult<TRes> {
   statusCode: number | undefined;
 }
 
-const useAxios = (url: string) => {
+const useAxios = <T>(url: string) => {
   const abortController = useRef<AbortController | null>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [responseData, setResponseData] = useState<KResData<unknown>>();
+  const [responseData, setResponseData] = useState<KResData<T>>();
   const [headers, setHeaders] = useState<AxiosResponseHeaders | null>(null);
   const [error, setError] = useState<KissResponseError | undefined>();
   const [errors, setErrors] = useState<string[]>([]);

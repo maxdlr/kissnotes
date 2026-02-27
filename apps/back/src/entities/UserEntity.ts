@@ -1,10 +1,10 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
-import ExpressionEntity from "./Expression";
+import ExpressionEntity from "./ExpressionEntity";
+import { UserModel } from "@kissnotes/types";
 
-@Entity()
-// @TableInheritance({ column: { type: "varchar", name: "type" } })
-export default class User extends AbstractEntity {
+@Entity({ name: "users" })
+export default class UserEntity extends AbstractEntity implements UserModel {
   @Column()
   firstname!: string;
 

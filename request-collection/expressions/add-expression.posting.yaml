@@ -1,0 +1,16 @@
+name: Add expression
+method: POST
+url: http://localhost:4000/expressions/add
+body:
+  content: |-
+    {
+      "expression": {
+        "title": "expression 2",
+        "description": "description 2",
+        "user": 1
+      }
+    }
+  content_type: application/json
+headers:
+- name: content-type
+  value: application/json

@@ -1,4 +1,4 @@
-import ExpressionEntity from "@/entities/Expression";
+import ExpressionEntity from "@/entities/ExpressionEntity";
 import { AppDataSource } from "@/services/database/datasource";
 
 const ExpressionRepository = AppDataSource.getRepository(ExpressionEntity);

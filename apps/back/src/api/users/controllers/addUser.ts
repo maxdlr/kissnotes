@@ -1,0 +1,19 @@
+import UserEntity from "@/entities/UserEntity";
+import { UserModel } from "@kissnotes/types";
+import { Request, Response } from "express";
+import createUser from "../services/createUser";
+import { TryCatch } from "@/decorators/TryCatch";
+
+const addUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response<UserEntity>> => {
+  const user: UserModel = req.body.user;
+  if (!user) {
+    throw ApiError("User missing");
+  }
+  const createdUser = await createUser(user);
+  return res.status(200).send(createdUser);
+};
+
+export default TryCatch(addUser);

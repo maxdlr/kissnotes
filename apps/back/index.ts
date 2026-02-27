@@ -18,6 +18,7 @@ import serviceErrorHandler from "@/services/serviceErrorHandlers";
 import wrapRoutesHandlers from "@/services/wrapRoutesHandlers";
 import printStartupInfo from "@/utils/printStartupInfo";
 import { loadFixtures } from "@/services/fixtures";
+import { TryCatch } from "@/decorators/TryCatch";
 
 /**
  * ======================

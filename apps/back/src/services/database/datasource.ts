@@ -5,7 +5,7 @@ import { DataSource } from "typeorm";
 export const AppDataSource = new DataSource({
   type: "mariadb",
   host: "localhost",
-  port: 3307,
+  port: Number(process.env.DB_PORT),
   username: "root",
   password: "root",
   database: process.env.APP_NAME,

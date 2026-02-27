@@ -1,15 +1,8 @@
-import ExpressionEntity from "@/entities/Expression";
-import User from "@/entities/User";
+import ExpressionEntity from "@/entities/ExpressionEntity";
+import ExpressionRepository from "@/repositories/ExpressionRepository";
 
-const findAllExpressions = async (): Promise<ExpressionEntity[]> => {
-  // const expressions = await ExpressionRepository.find();
-  const expressions: ExpressionEntity[] = [
-    {
-      id: 1,
-      title: "caca",
-      user: new User(),
-    },
-  ];
+const findAllExpressions = async (where?: any): Promise<ExpressionEntity[]> => {
+  const expressions = await ExpressionRepository.findBy(where);
   return expressions;
 };
 

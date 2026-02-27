@@ -1,10 +1,9 @@
 import { Column, Entity, ManyToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
-import User from "./User";
+import UserEntity from "./UserEntity";
 import { ExpressionModel } from "@kissnotes/types";
 
-@Entity()
-// @TableInheritance({ column: { type: "varchar", name: "type" } })
+@Entity({ name: "expressions" })
 export default class ExpressionEntity
   extends AbstractEntity
   implements ExpressionModel
@@ -15,6 +14,9 @@ export default class ExpressionEntity
   @Column()
   description?: string;
 
-  @ManyToOne(() => User, (user) => user.expressions)
-  user!: User;
+  @ManyToOne(() => UserEntity, (user) => user.expressions, {
+    nullable: false,
+    eager: true,
+  })
+  user!: UserEntity;
 }

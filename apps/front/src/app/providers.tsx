@@ -7,7 +7,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SWRConfig
       value={{
-        fetcher: (url) => axios.get(url).then((res) => res.data),
+        fetcher: ({ url, params }) =>
+          axios.get(url, { params }).then((res) => res.data),
       }}
     >
       {children}
