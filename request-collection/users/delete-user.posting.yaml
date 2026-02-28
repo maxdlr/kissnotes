@@ -1,0 +1,9 @@
+name: Delete users
+method: DELETE
+url: http://localhost:4000/users/delete
+headers:
+  - name: content-type
+    value: application/json
+params:
+  - name: user
+    value: "1"

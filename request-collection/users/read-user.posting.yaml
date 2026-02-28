@@ -1,0 +1,11 @@
+name: Read users
+url: http://localhost:4000/users/read
+body:
+  content: ""
+  content_type: application/json
+headers:
+  - name: content-type
+    value: application/json
+params:
+  - name: id
+    value: "1"
