@@ -1,0 +1,9 @@
+name: Delete expressions
+method: DELETE
+url: http://localhost:4000/expressions/delete
+headers:
+- name: content-type
+  value: application/json
+params:
+- name: user
+  value: '1'

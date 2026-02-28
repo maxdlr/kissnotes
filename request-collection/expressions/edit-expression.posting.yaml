@@ -1,0 +1,15 @@
+name: Edit expression
+method: PUT
+url: http://localhost:4000/expressions/edit
+body:
+  content: |-
+    {
+      "expression": {
+        "id": 1,
+        "title": "edited expression"
+        }
+    }
+  content_type: application/json
+headers:
+- name: content-type
+  value: application/json
