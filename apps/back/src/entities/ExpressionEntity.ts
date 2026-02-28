@@ -13,7 +13,7 @@ export default class ExpressionEntity
   @Column({ nullable: false })
   title!: string;
 
-  @Column()
+  @Column({ length: 2000 })
   description?: string;
 
   @ManyToOne(() => UserEntity, (user) => user.expressions, {
