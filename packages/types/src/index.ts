@@ -10,6 +10,8 @@ export interface Model {
 export interface ExpressionModel extends Model {
   title: string;
   description?: string;
+  layer: LayerModel;
+  property: PropertyModel;
   user: UserModel;
 }
 
@@ -18,6 +20,18 @@ export interface UserModel extends Model {
   lastname: string;
   expressions: ExpressionModel[];
 }
+
+export interface LayerModel {
+  type: string;
+  name: string;
+}
+
+export interface PropertyModel {
+  group: string;
+  name: string;
+}
+
+// --------------------------------------------------
 
 export interface KissResponseData<T> {
   data: T;

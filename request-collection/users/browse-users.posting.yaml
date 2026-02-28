@@ -3,3 +3,6 @@ url: http://localhost:4000/users/browse
 headers:
 - name: content-type
   value: application/json
+params:
+- name: id
+  value: '2'

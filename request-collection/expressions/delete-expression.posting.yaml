@@ -5,5 +5,5 @@ headers:
 - name: content-type
   value: application/json
 params:
-- name: user
+- name: id
   value: '1'

@@ -1,14 +1,16 @@
+import { ExpressionModel } from "@kissnotes/types";
 import { Column, Entity, ManyToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
+import LayerEntity from "./LayerEntity";
+import PropertyEntity from "./PropertyEntity";
 import UserEntity from "./UserEntity";
-import { ExpressionModel } from "@kissnotes/types";
 
 @Entity({ name: "expressions" })
 export default class ExpressionEntity
   extends AbstractEntity
   implements ExpressionModel
 {
-  @Column()
+  @Column({ nullable: false })
   title!: string;
 
   @Column()
@@ -19,4 +21,20 @@ export default class ExpressionEntity
     eager: true,
   })
   user!: UserEntity;
+
+  @ManyToOne(() => LayerEntity, (layer: PropertyEntity) => layer.expressions, {
+    nullable: false,
+    eager: true,
+  })
+  layer!: LayerEntity;
+
+  @ManyToOne(
+    () => PropertyEntity,
+    (property: PropertyEntity) => property.expressions,
+    {
+      nullable: false,
+      eager: true,
+    },
+  )
+  property!: PropertyEntity;
 }

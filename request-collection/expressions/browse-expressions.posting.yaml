@@ -1,11 +1,20 @@
 name: Browse expressions
 url: http://localhost:4000/expressions/browse
 body:
-  content: ''
+  content: |-
+    {
+      "expression": {
+        "title": "expression 2",
+        "description": "description 2",
+        "user": 1,
+        "layer": 1,
+        "property": 1
+      }
+    }
   content_type: application/json
 headers:
 - name: content-type
   value: application/json
 params:
-- name: user
+- name: user.id
   value: '1'
