@@ -1,7 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
+import { LayerModel } from "@kissnotes/types";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
-import { LayerModel } from "@kissnotes/types";
 
 @Entity({ name: "layers" })
 export default class LayerEntity extends AbstractEntity implements LayerModel {

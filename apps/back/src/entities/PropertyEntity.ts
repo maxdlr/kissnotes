@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToMany, OneToMany } from "typeorm";
+import { PropertyModel } from "@kissnotes/types";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
-import { PropertyModel } from "@kissnotes/types";
 
 @Entity({ name: "properties" })
 export default class PropertyEntity
