@@ -20,7 +20,6 @@ instance.interceptors.response.use(
     return { ...response, data: { data: response.data } };
   },
   async (error) => {
-    console.log({ baseURL });
     const status = error?.response?.status;
 
     if (status === 404) {

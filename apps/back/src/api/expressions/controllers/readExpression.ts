@@ -9,7 +9,7 @@ const readExpression = async (
 ): Promise<Response<ExpressionModel>> => {
   const { id } = req.query;
   if (!id) {
-    throw ApiError("Expression arguments missing");
+    throw ApiError("Id missing");
   }
   const expression = await findExpression(Number(id));
 

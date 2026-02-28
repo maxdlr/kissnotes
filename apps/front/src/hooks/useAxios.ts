@@ -1,9 +1,5 @@
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
-import type {
-  KissResponseData,
-  KissResponseError,
-  KResData,
-} from "@kissnotes/types";
+import type { KissResponseError, KRes } from "@kissnotes/types";
 import type { AxiosRequestConfig, AxiosResponseHeaders } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "@/services/axios";
@@ -19,7 +15,7 @@ interface MakeRequestParams<TBody>
 
 interface SyncResult<TRes> {
   syncError: KissResponseError | undefined;
-  syncData: KResData<TRes>;
+  syncData: KRes<TRes>;
   syncHeaders: AxiosResponseHeaders | null;
   syncLoading: boolean;
   statusCode: number | undefined;
@@ -29,7 +25,7 @@ const useAxios = <T>(url: string) => {
   const abortController = useRef<AbortController | null>(null);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [responseData, setResponseData] = useState<KResData<T>>();
+  const [responseData, setResponseData] = useState<KRes<T>>();
   const [headers, setHeaders] = useState<AxiosResponseHeaders | null>(null);
   const [error, setError] = useState<KissResponseError | undefined>();
   const [errors, setErrors] = useState<string[]>([]);
@@ -43,7 +39,7 @@ const useAxios = <T>(url: string) => {
     abortController.current = new AbortController();
 
     let syncError: KissResponseError | undefined;
-    let syncData: KResData<TRes>;
+    let syncData: KRes<TRes>;
     let syncHeaders: AxiosResponseHeaders | null = null;
     let syncLoading = true;
     let statusCode: number | undefined;
@@ -57,7 +53,7 @@ const useAxios = <T>(url: string) => {
         data: resData,
         headers: resHeaders,
         status,
-      } = await axios.request<KissResponseData<TRes>>({
+      } = await axios.request<KRes<TRes>>({
         method,
         url,
         data,
@@ -70,7 +66,7 @@ const useAxios = <T>(url: string) => {
       statusCode = status;
 
       setHeaders(syncHeaders);
-      setResponseData(syncData);
+      setResponseData(syncData as KRes<T>);
     } catch (err: any) {
       if (err) {
         statusCode = err.response?.status;

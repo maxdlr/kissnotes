@@ -1,6 +1,7 @@
 import { ExpressionModel } from "@kissnotes/types";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
+import CodeEntity from "./CodeEntity";
 import LayerEntity from "./LayerEntity";
 import PropertyEntity from "./PropertyEntity";
 import UserEntity from "./UserEntity";
@@ -21,6 +22,13 @@ export default class ExpressionEntity
     eager: true,
   })
   user!: UserEntity;
+
+  @OneToOne(() => CodeEntity, {
+    nullable: false,
+    eager: true,
+  })
+  @JoinColumn()
+  code!: CodeEntity;
 
   @ManyToOne(() => LayerEntity, (layer: PropertyEntity) => layer.expressions, {
     nullable: false,

@@ -1,3 +1,4 @@
+import CodeRepository from "./CodeRepository";
 import ExpressionRepository from "./ExpressionRepository";
 import LayerRepository from "./LayerRepository";
 import PropertyRepository from "./PropertyRepository";
@@ -8,4 +9,5 @@ export default {
   UserRepository,
   LayerRepository,
   PropertyRepository,
+  CodeRepository,
 };

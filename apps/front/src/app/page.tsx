@@ -1,23 +1,27 @@
 "use client";
 
-import type { ExpressionModel, KResData } from "@kissnotes/types";
+import type { ExpressionModel, KRes } from "@kissnotes/types";
 import useSWR from "swr";
 
 export default function Home() {
-  const { data } = useSWR<KResData<ExpressionModel>>({
+  const { data: exp } = useSWR<KRes<ExpressionModel>>({
     url: "expressions/read",
     params: {
       id: 1,
     },
   });
-
-  const expressions = data?.data;
-  // return expressions?.map(({ id, title, description, user }) => (
+  // return user?.map(({ id, title, description, user }) => (
   //   <div key={id}>
   //     <p className="text-white">{title}</p>
   //     <p className="text-white">{description}</p>
   //     <p className="text-white">{user.firstname}</p>
   //   </div>
   // ));
-  return expressions?.description;
+  console.log({ exp });
+  return exp?.code.lines.map(({ number, content }) => (
+    <div key={number} className="flex justify-start items-baseline gap-2">
+      <p>{number}</p>
+      <p>{content}</p>
+    </div>
+  ));
 }
