@@ -7,7 +7,7 @@ export default function Home() {
   const { data: exp } = useSWR<KRes<ExpressionModel>>({
     url: "expressions/read",
     params: {
-      id: 1,
+      id: 5,
     },
   });
   // return user?.map(({ id, title, description, user }) => (
