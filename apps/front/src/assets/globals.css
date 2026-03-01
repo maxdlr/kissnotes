@@ -9,7 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Primary color scale */
+  /* Color scale */
   --color-primary: #ffffff;
   --color-secondary: var(--foreground);
   --color-accent: #1f5e9a;
@@ -17,6 +17,7 @@
   --color-darker: var(--background);
   --color-code: #061727;
   --color-emphasis: #9eff28;
+
   /* Font */
   --font-display: var(--font-gilroy), sans-serif;
 }
