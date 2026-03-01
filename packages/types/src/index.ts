@@ -28,6 +28,7 @@ export interface ExpressionModel extends Model {
 export interface UserModel extends Model {
   firstname: string;
   lastname: string;
+  username: string;
   expressions: ExpressionModel[];
 }
 

@@ -20,6 +20,7 @@ export const loadFixtures = async () => {
     const user = await manager.save(UserEntity, {
       firstname: "max",
       lastname: "dlr",
+      username: "maxdlr",
     });
 
     const codes: CodeEntity[] = await Promise.all(

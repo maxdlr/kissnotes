@@ -1,0 +1,81 @@
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src:
+    url("../fonts/GilroySemiBoldItalic/font.woff2") format("woff2"),
+    url("../fonts/GilroySemiBoldItalic/font.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 700;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyBold/font.woff2") format("woff2"),
+    url("../fonts/GilroyBold/font.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 700;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyExtraBold/font.woff2") format("woff2"),
+    url("../fonts/GilroyExtraBold/font.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 400;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyRegular/font.woff2") format("woff2"),
+    url("../fonts/GilroyRegular/font.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyMediumItalic/font.woff2") format("woff2"),
+    url("../fonts/GilroyMediumItalic/font.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 600;
+  font-display: swap;
+  src:
+    url("../fonts/GilroySemiBold/font.woff2") format("woff2"),
+    url("../fonts/GilroySemiBold/font.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyBoldItalic/font.woff2") format("woff2"),
+    url("../fonts/GilroyBoldItalic/font.woff") format("woff");
+}
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyRegularItalic/font.woff2") format("woff2"),
+    url("../fonts/GilroyRegularItalic/font.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src:
+    url("../fonts/GilroyMedium/font.woff2") format("woff2"),
+    url("../fonts/GilroyMedium/font.woff") format("woff");
+}

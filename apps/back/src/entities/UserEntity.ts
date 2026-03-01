@@ -11,6 +11,9 @@ export default class UserEntity extends AbstractEntity implements UserModel {
   @Column()
   lastname!: string;
 
+  @Column()
+  username!: string;
+
   @OneToMany(() => ExpressionEntity, (expression) => expression.user)
   expressions!: ExpressionEntity[];
 }

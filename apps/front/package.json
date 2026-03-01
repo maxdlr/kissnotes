@@ -11,6 +11,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@kissnotes/types": "*",
     "axios": "^1.8.4",
     "next": "16.1.6",
