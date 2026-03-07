@@ -12,7 +12,7 @@ const useRead = <T extends Model>(model: string, id?: ParamValue) => {
     url: `/${model}/read`,
     params: { id: Number(id) as Id },
   });
-  return { expression: data, error };
+  return { data, error };
 };
 
 export default useRead;

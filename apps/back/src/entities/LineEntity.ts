@@ -8,7 +8,7 @@ export default class LineEntity extends AbstractEntity implements LineModel {
   @Column()
   number!: number;
 
-  @Column()
+  @Column({ length: 2000 })
   content!: string;
 
   @ManyToOne(() => CodeEntity)

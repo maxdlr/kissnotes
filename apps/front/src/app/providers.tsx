@@ -3,6 +3,7 @@
 import type { KissApiError, Model } from "@kissnotes/types";
 import type { AxiosError } from "axios";
 import { SWRConfig } from "swr";
+import { AuthProvider } from "@/hooks/AuthProvider";
 import axios from "@/services/axios";
 
 const onError = (err: AxiosError) => {
@@ -25,5 +26,9 @@ const fetcher = async ({ url, params }: { url: string; params: Model }) => {
 };
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <SWRConfig value={{ fetcher, onError }}>{children}</SWRConfig>;
+  return (
+    <SWRConfig value={{ fetcher, onError }}>
+      <AuthProvider>{children}</AuthProvider>
+    </SWRConfig>
+  );
 }

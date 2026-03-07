@@ -11,7 +11,7 @@ const readUser = async (
   if (!id) {
     throw ApiError("User arguments missing");
   }
-  const user = await findUser(Number(id));
+  const user = await findUser({ id: Number(id) });
 
   return res.status(200).send(user);
 };

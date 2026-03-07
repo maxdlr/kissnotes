@@ -92,7 +92,7 @@ app.use(customBodyParser);
 // Wrap all routes handlers to catch errors even if there are no try/catch blocks
 app.use(requestLogger);
 wrapRoutesHandlers(routes);
-app.use(routes);
+app.use("/api", routes);
 
 /**
  * ======================

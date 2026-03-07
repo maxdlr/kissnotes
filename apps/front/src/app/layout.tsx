@@ -1,61 +1,98 @@
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-import "../assets/globals.css";
 import localFont from "next/font/local";
+import "../assets/globals.css";
 import { Providers } from "./providers";
 
 const gilroy = localFont({
   variable: "--font-gilroy",
   src: [
     {
-      path: "../assets/fonts/GilroyRegular/font.woff2",
+      path: "../assets/fonts/Gilroy/Gilroy-UltraLight.ttf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-UltraLightItalic.ttf",
+      weight: "100",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-Light.ttf",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-LightItalic.ttf",
+      weight: "200",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-Thin.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-ThinItalic.ttf",
+      weight: "300",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../assets/fonts/GilroySemiBoldItalic/font.woff2",
-      weight: "600",
-      style: "italic",
-    },
-    {
-      path: "../assets/fonts/GilroyBold/font.woff2",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/GilroyExtraBold/font.woff2",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/GilroyMediumItalic/font.woff2",
-      weight: "500",
-      style: "italic",
-    },
-    {
-      path: "../assets/fonts/GilroySemiBold/font.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/GilroyBoldItalic/font.woff2",
-      weight: "700",
-      style: "italic",
-    },
-    {
-      path: "../assets/fonts/GilroySemiBoldItalic/font.woff2",
-      weight: "600",
-      style: "italic",
-    },
-    {
-      path: "../assets/fonts/GilroyRegularItalic/font.woff2",
+      path: "../assets/fonts/Gilroy/Gilroy-RegularItalic.ttf",
       weight: "400",
       style: "italic",
     },
+
     {
-      path: "../assets/fonts/GilroyMedium/font.woff2",
+      path: "../assets/fonts/Gilroy/Gilroy-SemiBold.ttf",
       weight: "500",
       style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-SemiBoldItalic.ttf",
+      weight: "500",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-BoldItalic.ttf",
+      weight: "700",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-ExtraBold.ttf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-ExtraBoldItalic.ttf",
+      weight: "800",
+      style: "italic",
+    },
+
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-Heavy.ttf",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../assets/fonts/Gilroy/Gilroy-HeavyItalic.ttf",
+      weight: "900",
+      style: "italic",
     },
   ],
 });
@@ -73,9 +110,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-lt-installed>
       <body
-        className={`${gilroy.variable} antialiased bg-background text-foreground`}
+        className={`${gilroy.className} antialiased bg-background text-foreground`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <div id="modal-full" />
+          <div id="modal" />
+          <div id="tooltip" />
+          <div id="dropdown" />
+        </Providers>
       </body>
     </html>
   );

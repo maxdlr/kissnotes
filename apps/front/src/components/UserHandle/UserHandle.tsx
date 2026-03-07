@@ -3,10 +3,15 @@ import { Button } from "../Button";
 
 interface UserHandleProps {
   user: UserModel;
+  className?: string;
 }
-const UserHandle = ({ user }: UserHandleProps) => {
+const UserHandle = ({ user, className }: UserHandleProps) => {
   const { username } = user;
-  return <Button label={`@${username}`} variant="ghost" />;
+  return (
+    <div className={className}>
+      <Button label={`@${username}`} variant="ghost" />
+    </div>
+  );
 };
 
 export default UserHandle;

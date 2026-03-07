@@ -6,7 +6,7 @@
 #j for invocation information.
 #m for information during makefile remakes.
 DOCKER = docker
-MAKEFLAGS += --no-print-directory
+MAKEFLAGS += --no-print-directory -s
 #MAKEFLAGS += --debug=v
 # MAKEFLAGS += -s
 include .env

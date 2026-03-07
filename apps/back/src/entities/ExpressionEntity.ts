@@ -21,7 +21,7 @@ export default class ExpressionEntity
     nullable: false,
     eager: true,
   })
-  user!: UserEntity;
+  author!: UserEntity;
 
   @OneToOne(() => CodeEntity, {
     nullable: false,

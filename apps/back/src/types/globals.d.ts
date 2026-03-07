@@ -36,7 +36,7 @@ declare global {
     (message: string): TCrudError;
   };
 
-  var Unauthorized: (type?: "user" | "person" | "yousign" | "ext") => TApiError;
+  var Unauthorized: (type?: "user" | "origin") => TApiError;
   var Forbidden: () => TApiError;
   var isApiError: (error: unknown) => error is TApiError;
   var isCrudError: (error: unknown) => error is TCrudError;

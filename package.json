@@ -10,5 +10,8 @@
 		"dev:front": "npm run dev --workspace=apps/front",
 		"install:back": "cd apps/back && npm i",
 		"install:front": "cd apps/front && npm i"
+	},
+	"dependencies": {
+		"jsonwebtoken": "^9.0.3"
 	}
 }

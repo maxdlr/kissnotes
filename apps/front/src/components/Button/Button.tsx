@@ -23,36 +23,49 @@ const Button = ({
   Icon,
   shortcut,
 }: ButtonProps) => {
-  const style =
-    "cursor-pointer flex justify-center items-center rounded-3xl p-3.5 gap-3 w-fit";
+  const style = "cursor-pointer rounded-3xl py-5 px-3.5 w-fit";
 
   const variantStyles = {
-    fill: "bg-secondary/20 border-2 border-secondary",
-    outline: "border-2 border-secondary",
+    fill: "bg-secondary/20 border-[1px] border-secondary",
+    outline: "border-[1px] border-secondary",
     ghost: "!p-0 hover:text-primary active:text-darker",
   };
 
-  const content = (
-    <span className={`${style} ${variantStyles[variant]} ${className}`}>
+  const content = (Icon || label) && (
+    <span className="flex justify-center items-center gap-3">
       {Icon && (
         <span>
           <Icon className="size-6" />
         </span>
       )}
-      {label && <span className="pe-1">{label}</span>}
+      {label && (
+        <span className="pe-1 font-semibold whitespace-nowrap">{label}</span>
+      )}
       {shortcut && <Shortcut keys={shortcut} />}
     </span>
   );
 
-  if (href) {
-    return <Link href={href}>{content}</Link>;
+  if (href && content) {
+    return (
+      <Link href={href} className={className}>
+        {content}
+      </Link>
+    );
   }
 
-  return (
-    <button type={type} onClick={onClick}>
-      {content}
-    </button>
-  );
+  if (content) {
+    return (
+      <button
+        type={type}
+        onClick={onClick}
+        className={`${style} ${variantStyles[variant]} ${className}`}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return null;
 };
 
 export default Button;

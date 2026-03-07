@@ -5,7 +5,7 @@ import { Button } from "@/components/Button";
 import useBrowse from "../hooks/bread/useBrowse";
 
 const Expressions = () => {
-  const { expressions } = useBrowse<ExpressionModel[]>("expressions");
+  const { data: expressions } = useBrowse<ExpressionModel[]>("expressions");
   return (
     <div className="flex flex-col gap-2 p-8">
       {expressions?.map(({ title, id }) => (

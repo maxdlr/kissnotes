@@ -13,6 +13,7 @@
   --color-primary: #ffffff;
   --color-secondary: var(--foreground);
   --color-accent: #1f5e9a;
+  --color-modal: #1d3a56;
   --color-dark: #0c2135;
   --color-darker: var(--background);
   --color-code: #061727;

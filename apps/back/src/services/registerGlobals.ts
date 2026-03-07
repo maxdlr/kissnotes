@@ -23,9 +23,8 @@ const registerGlobalErrors = (): void => {
     return error;
   };
 
-  global.Unauthorized = (
-    type: "user" | "person" | "yousign" | "ext" = "user",
-  ) => ApiError(401, `${type} authentication required`);
+  global.Unauthorized = (type: "user" | "origin" = "user") =>
+    ApiError(401, `${type} authentication required`);
 
   global.Forbidden = () => ApiError(403);
 

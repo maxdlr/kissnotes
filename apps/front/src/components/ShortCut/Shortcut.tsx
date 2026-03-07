@@ -1,23 +1,5 @@
 import type { ElementType } from "react";
-
-interface ShortcutProps {
-  keys: (string | ElementType)[];
-}
-
-type ModName =
-  | "cmd"
-  | "opt"
-  | "shift"
-  | "capslock"
-  | "enter"
-  | "ctrl"
-  | "backspace"
-  | "tab"
-  | "del"
-  | "up"
-  | "down"
-  | "left"
-  | "right";
+import type { ModName } from ".";
 
 const mods: Map<ModName, string> = new Map();
 mods.set("cmd", "⌘");
@@ -34,6 +16,10 @@ mods.set("down", "↓");
 mods.set("left", "←");
 mods.set("cmd", "⌘");
 mods.set("right", "→");
+
+interface ShortcutProps {
+  keys: (string | ElementType | ModName)[];
+}
 
 const Shortcut = ({ keys }: ShortcutProps) => {
   const shortcutKeys = keys.map((key) => {

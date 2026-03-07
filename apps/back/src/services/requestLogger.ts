@@ -21,7 +21,7 @@ export const requestLogger = (
     console.log(
       chalk.bgGreen.black.bold(`[RES] ${req.method} ${req.originalUrl}`),
     );
-    console.log(chalk.green("Response body:"), JSON.stringify(body, null, 2));
+    // console.log(chalk.green("Response body:"), JSON.stringify(body, null, 2));
     return originalJson(body);
   };
 

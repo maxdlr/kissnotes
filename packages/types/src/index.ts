@@ -7,6 +7,17 @@ export interface Model {
   updatedAt?: Date;
 }
 
+export interface RefreshTokenModel extends Model {
+  token: string;
+  expireOn: Date;
+  revokedOn?: Date;
+  revokedReason?: "user-logout" | "token-replaced" | "password-change";
+  rotatedFrom?: Id;
+  rotatedTo?: Id;
+  userId: Id;
+  isExpired?: boolean;
+}
+
 export interface CodeModel {
   lines: LineModel[];
 }
@@ -16,19 +27,32 @@ export interface LineModel {
   content: string;
 }
 
+export interface NativeExpressionModel extends Model {
+  title: string;
+  regex: string;
+  arguments: string;
+  description: string;
+}
+
 export interface ExpressionModel extends Model {
   title: string;
   description?: string;
   layer: LayerModel;
   property: PropertyModel;
-  user: UserModel;
+  author: UserModel;
   code: CodeModel;
 }
 
-export interface UserModel extends Model {
-  firstname: string;
-  lastname: string;
+export interface AuthId {
   username: string;
+  password: string;
+  token: string;
+}
+
+export interface UserModel extends Model {
+  email: string;
+  username: string;
+  password: string;
   expressions: ExpressionModel[];
 }
 
@@ -65,3 +89,5 @@ export type KRes<T> = T | undefined;
 export interface KissResponseError {
   message: string;
 }
+
+// --------------------------------------------------
