@@ -44,8 +44,6 @@ instance.interceptors.response.use(
       return Promise.resolve(undefined);
     }
 
-    console.log({ status, window: window.location.pathname });
-
     if (status === 401) {
       const isPrivate = ["/me"].includes(window.location.pathname);
       if (isPrivate) {

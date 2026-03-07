@@ -23,8 +23,6 @@ export default class UserEntity extends AbstractEntity implements UserModel {
   }
 
   async comparePassword(plainText: string): Promise<boolean> {
-    console.log({ plainText, password: this._password });
-
     return bcrypt.compareSync(plainText, this._password);
   }
 }

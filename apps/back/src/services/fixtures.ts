@@ -2,13 +2,13 @@ import CodeEntity from "@/entities/CodeEntity";
 import ExpressionEntity from "@/entities/ExpressionEntity";
 import LayerEntity from "@/entities/LayerEntity";
 import LineEntity from "@/entities/LineEntity";
+import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
 import PropertyEntity from "@/entities/PropertyEntity";
 import UserEntity from "@/entities/UserEntity";
 import ExpressionRepository from "@/repositories/ExpressionRepository";
+import jsBuiltins from "@/ressources/js-builtins";
 import { faker } from "@faker-js/faker";
 import nativeExpressionContent from "../ressources/native-expressions";
-import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
-import jsBuiltins from "@/ressources/js-builtins";
 
 export const loadFixtures = async () => {
   return await ExpressionRepository.manager.transaction(async (manager) => {

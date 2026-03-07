@@ -19,7 +19,9 @@ const fetcher = async ({ url, params }: { url: string; params: Model }) => {
     const kissError: KissApiError = (error as AxiosError)?.response
       ?.data as KissApiError;
     if (process.env.NODE_ENV === "development") {
-      console.log({ "----- kissError -----": `${kissError?.message}` });
+      console.log({
+        "----- kissError -----": `${kissError?.status} - ${kissError?.message}`,
+      });
     }
     throw kissError;
   }

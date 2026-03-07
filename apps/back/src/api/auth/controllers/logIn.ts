@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import setAuthCookies from "../services/setAuthCookie";
 import findUser from "@/api/users/services/findUser";
+import { TryCatch } from "@/decorators/TryCatch";
 
 const logIn = async ({ body }: Request, res: Response) => {
   let user = await findUser({ username: body.username });
@@ -26,4 +27,4 @@ const logIn = async ({ body }: Request, res: Response) => {
   // type is returned to help the front-end redirect the user to the right flow
   return res.status(202).end();
 };
-export default logIn;
+export default TryCatch(logIn);

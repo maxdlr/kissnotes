@@ -10,7 +10,7 @@ const getMe = async (
   if (!user) {
     throw Unauthorized("user");
   }
-  const me = (await findUser({ id: Number(user?.id) })) as UserModel;
+  const me = await findUser({ id: Number(user?.id) });
   return res.status(200).send(me);
 };
 export default getMe;

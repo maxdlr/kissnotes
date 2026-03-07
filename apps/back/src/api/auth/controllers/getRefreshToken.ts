@@ -3,6 +3,7 @@ import checkRefreshToken from "../services/checkRefreshToken";
 import rotateRefreshToken from "../services/rotateRefreshToken";
 import deliverJwtToken from "../services/deliverJwtToken";
 import setCookie from "../services/setCookie";
+import { TryCatch } from "@/decorators/TryCatch";
 
 const getRefreshToken = async (
   { signedCookies }: Request,
@@ -48,4 +49,4 @@ const getRefreshToken = async (
   return res.status(200).end();
 };
 
-export default getRefreshToken;
+export default TryCatch(getRefreshToken);
