@@ -32,6 +32,12 @@ export const loadFixtures = async () => {
     author.password = "password"; // triggers set password() → bcrypt.hashSync
     await manager.save(UserEntity, author);
 
+    const user = new UserEntity();
+    user.username = "augusta";
+    user.email = "contact@augusta.com";
+    user.password = "password"; // triggers set password() → bcrypt.hashSync
+    await manager.save(UserEntity, user);
+
     const codes: CodeEntity[] = await Promise.all(
       Array.from({ length: 10 }).map(() =>
         manager

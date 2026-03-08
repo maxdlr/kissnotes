@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 import setAuthCookies from "../services/setAuthCookie";
 import findUser from "@/api/users/services/findUser";
 import { TryCatch } from "@/decorators/TryCatch";
 
 const logIn = async ({ body }: Request, res: Response) => {
-  let user = await findUser({ username: body.username });
+  let user = await findUser({ username: body.username }, true);
 
   if (!user) {
     throw ApiError("Email ou mot de passe incorrect");
   }
 
-  if (!(await user.comparePassword(body.password))) {
+  if (!bcrypt.compareSync(body.password, user.password)) {
     throw ApiError("Email ou mot de passe incorrect");
   }
 

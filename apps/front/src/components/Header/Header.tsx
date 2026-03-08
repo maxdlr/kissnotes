@@ -1,32 +1,29 @@
-import type { UserModel } from "@kissnotes/types";
+import { mutate } from "swr";
+import useAuth from "@/hooks/AuthProvider";
 import useAxios from "@/hooks/useAxios";
 import { Button } from "../Button";
 import { Logo } from "../Logo";
 import { SearchBar } from "../SearchBar";
 import { UserHandle } from "../UserHandle";
 
-interface HeaderProps {
-  user?: UserModel;
-}
-const Header = ({ user }: HeaderProps) => {
+const Header = () => {
   const { postData } = useAxios("/login");
+  const { user } = useAuth();
 
   const handleSignIn = async () => {
     await postData({
       username: "maxdlr",
       password: "password",
     });
+    mutate("/me");
   };
   return (
-    <header className="p-8 grid grid-cols-5 items-center">
-      <div className="w-fit text-end">
-        <Logo />
-        <p className="text-sm leading-none italic">by Motiontober</p>
-      </div>
+    <header className="p-8 grid grid-cols-5 items-center bg-darker">
+      <Logo />
       <SearchBar className="col-span-3" shortcut={["cmd", "K"]} />
-      <div className="text-end w-full">
+      <div className="place-self-end self-center">
         {user ? (
-          <UserHandle user={user} />
+          <UserHandle />
         ) : (
           <Button
             label="Sign in"

@@ -5,10 +5,13 @@ import userRoutes from "./api/users/routes/index";
 import getMe from "./api/auth/controllers/getMe";
 import logIn from "./api/auth/controllers/logIn";
 import authenticate from "./middlewares/authenticate";
+import getRefreshToken from "./api/auth/controllers/getRefreshToken";
 
 const router = Router();
 
 router.post("/login", logIn);
+router.post("/refresh", getRefreshToken);
+
 router.get("/me", authenticate, getMe);
 
 router.use("/expressions", expressionRoutes);

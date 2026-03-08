@@ -22,7 +22,8 @@ const rotateRefreshToken = async (
   refreshTokenDocument.revokedReason = reason;
   refreshTokenDocument.revokedOn = new Date();
 
-  await refreshTokenDocument.save();
+  await RefreshTokenRepository.save(refreshTokenDocument);
+  // await refreshTokenDocument.save();
 
   // 2. Prepare payload (remove old JWT metadata)
   const payload = { ...jwtPayload };
@@ -55,7 +56,7 @@ const rotateRefreshToken = async (
 
   // 6. Link oldRecord → newRecord
   refreshTokenDocument.rotatedTo = newRefreshTokenDocument.id;
-  await refreshTokenDocument.save();
+  await RefreshTokenRepository.save(refreshTokenDocument);
 
   return {
     newRefreshToken,

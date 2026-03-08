@@ -16,7 +16,7 @@ interface ButtonProps {
 const Button = ({
   label,
   href,
-  className,
+  className = "",
   variant = "fill",
   type,
   onClick,
@@ -47,7 +47,10 @@ const Button = ({
 
   if (href && content) {
     return (
-      <Link href={href} className={className}>
+      <Link
+        className={`block ${style} ${variantStyles[variant]} ${className}`}
+        href={href}
+      >
         {content}
       </Link>
     );

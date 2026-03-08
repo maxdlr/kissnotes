@@ -11,7 +11,7 @@ const readExpression = async (
   if (!id) {
     throw ApiError("Id missing");
   }
-  const expression = await findExpression(Number(id));
+  const expression = await findExpression(id as string);
 
   return res.status(200).send(expression);
 };

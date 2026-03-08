@@ -86,12 +86,12 @@ const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
 
   return (
     <CodeBlock code={text} language="js" words={matches} lines={lineMatches}>
-      <div className="relative bg-code pt-40 border-2 border-red-500 rounded-2xl">
-        <div className="absolute top-4 left-4 text-sm text-accent">
+      <div className="relative bg-code p-8 pt-24 rounded-2xl">
+        <div className="absolute top-8 left-8 text-sm text-accent">
           {`${property.group}.${property.name}`}
         </div>
         <Button
-          className="absolute top-2 right-2"
+          className="absolute top-8 right-8"
           Icon={ClipboardIcon}
           shortcut={["cmd", "shift", "C"]}
           variant="ghost"

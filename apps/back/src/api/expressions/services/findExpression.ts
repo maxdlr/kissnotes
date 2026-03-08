@@ -3,7 +3,7 @@ import ExpressionRepository from "@/repositories/ExpressionRepository";
 import { Id } from "@kissnotes/types";
 
 const findExpression = async (id: Id): Promise<ExpressionEntity | null> => {
-  return await ExpressionRepository.findOneBy({ id });
+  return await ExpressionRepository.findOneBy({ id: Number(id) });
 };
 
 export default findExpression;

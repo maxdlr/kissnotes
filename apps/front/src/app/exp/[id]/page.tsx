@@ -6,31 +6,31 @@ import {
   SlashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import type { ExpressionModel } from "@kissnotes/types";
+import type { ExpressionModel, Id } from "@kissnotes/types";
 import { useParams } from "next/navigation";
 import Button from "@/components/Button/Button";
 import { Header } from "@/components/Header";
 import { KissCodeBlock } from "@/components/KissCodeBlock";
 import { LayerMockup } from "@/components/LayerMockup";
 import { UserHandle } from "@/components/UserHandle";
-import useAuth from "@/hooks/AuthProvider";
-import useRead from "../../hooks/bread/useRead";
+import useRead from "../../../hooks/bread/useRead";
 
 const ExpressionDetails = () => {
-  const { user } = useAuth();
   const { id } = useParams();
-  const { data: expression } = useRead<ExpressionModel>("expressions", id);
+  const { data: expression } = useRead<ExpressionModel>("expressions", {
+    id: id as Id,
+  });
+
   if (!expression) {
     return "loading";
   }
 
   const { title, description, author, layer, property } = expression;
-  // return <Header />;
 
   return (
     <>
-      <Header user={user} />
-      <section className="grid grid-cols-5 gap-8 p-8 bg-dark">
+      <Header />
+      <section className="grid grid-cols-5 gap-8 p-8 bg-dark rounded-4xl border">
         <p>{description}</p>
         <div className="col-span-3">
           <div className="flex flex-col col-span-3 gap-4">
@@ -40,7 +40,7 @@ const ExpressionDetails = () => {
                 <Button variant="ghost" Icon={EyeIcon} label={14} />
                 <Button variant="ghost" Icon={ShareIcon} label={6} />
               </div>
-              <UserHandle user={author} />
+              <UserHandle username={author.username} />
             </div>
             <LayerMockup layer={layer} property={property} />
             <KissCodeBlock className="col-span-full" expression={expression} />

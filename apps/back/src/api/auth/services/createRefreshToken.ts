@@ -7,7 +7,7 @@ const createRefreshToken = async (token: string, userId: Id) => {
   await RefreshTokenRepository.save({
     token,
     expireOn,
-    userId,
+    userId: Number(userId),
   });
 
   return token;

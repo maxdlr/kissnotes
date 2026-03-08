@@ -6,7 +6,7 @@ import ExpressionEntity from "./ExpressionEntity";
 
 @Entity({ name: "users" })
 export default class UserEntity extends AbstractEntity implements UserModel {
-  @Column({ name: "password" })
+  @Column({ name: "password", select: false })
   private _password!: string;
 
   @Column({ unique: true })
@@ -22,7 +22,7 @@ export default class UserEntity extends AbstractEntity implements UserModel {
     this._password = bcrypt.hashSync(value, 10);
   }
 
-  async comparePassword(plainText: string): Promise<boolean> {
-    return bcrypt.compareSync(plainText, this._password);
+  get password() {
+    return this._password;
   }
 }

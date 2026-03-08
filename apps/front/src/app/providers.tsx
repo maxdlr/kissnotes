@@ -13,6 +13,7 @@ const onError = (err: AxiosError) => {
 
 const fetcher = async ({ url, params }: { url: string; params: Model }) => {
   try {
+    if (!url) return null;
     const res = await axios.get(url, { params });
     return res?.data?.data;
   } catch (error) {

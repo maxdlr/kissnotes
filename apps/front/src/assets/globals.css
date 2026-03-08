@@ -5,7 +5,8 @@
   --background: #061a2c;
 }
 
-@theme inline {
+/* biome-ignore lint/suspicious/noUnknownAtRules: don't care */
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 

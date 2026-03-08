@@ -1,6 +1,6 @@
 import type { CodeModel, NativeExpressionModel } from "@kissnotes/types";
 import { useEffect, useState } from "react";
-import useBrowse from "@/app/hooks/bread/useBrowse";
+import useBrowse from "@/hooks/bread/useBrowse";
 
 const useAeExpressions = (code: CodeModel, regexes?: string[]) => {
   const { data: nativeExpressions, isLoading } =

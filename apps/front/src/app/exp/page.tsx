@@ -2,7 +2,7 @@
 import { ArrowTurnDownRightIcon } from "@heroicons/react/24/outline";
 import type { ExpressionModel } from "@kissnotes/types";
 import { Button } from "@/components/Button";
-import useBrowse from "../hooks/bread/useBrowse";
+import useBrowse from "../../hooks/bread/useBrowse";
 
 const Expressions = () => {
   const { data: expressions } = useBrowse<ExpressionModel[]>("expressions");

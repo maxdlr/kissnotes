@@ -16,7 +16,7 @@ const KissLineContent = ({
   return (
     <div className={`table-row ${className}`}>
       <CodeBlock.LineNumber
-        className={`table-cell px-4 text-sm text-gray-500 text-right select-none ${lineNumberClassName}`}
+        className={`table-cell pe-4 text-sm text-gray-500 text-right select-none ${lineNumberClassName}`}
       />
       <CodeBlock.LineContent className={`text-sm ${lineContentClassName}`}>
         {children}

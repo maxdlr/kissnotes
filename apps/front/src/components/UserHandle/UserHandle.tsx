@@ -1,16 +1,27 @@
-import type { UserModel } from "@kissnotes/types";
+import useAuth from "@/hooks/AuthProvider";
+import { getProfileHref } from "@/utils/getProfileHref";
 import { Button } from "../Button";
 
 interface UserHandleProps {
-  user: UserModel;
+  username?: string;
   className?: string;
 }
-const UserHandle = ({ user, className }: UserHandleProps) => {
-  const { username } = user;
+const UserHandle = ({ username, className = "" }: UserHandleProps) => {
+  const { user } = useAuth();
+  const shownUsername = username || user?.username;
+
+  if (!shownUsername) {
+    return null;
+  }
+
+  const handle = `@${shownUsername}`;
   return (
-    <div className={className}>
-      <Button label={`@${username}`} variant="ghost" />
-    </div>
+    <Button
+      href={getProfileHref(shownUsername)}
+      label={handle}
+      variant="ghost"
+      className={className}
+    />
   );
 };
 
