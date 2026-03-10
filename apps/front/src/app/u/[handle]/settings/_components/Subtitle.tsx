@@ -3,7 +3,7 @@ interface SubtitleProps {
   title: string;
   className?: string;
 }
-const Subtitle = ({ subtitle, title, className }: SubtitleProps) => {
+const SectionTitle = ({ subtitle, title, className }: SubtitleProps) => {
   return (
     <div className={className}>
       <h2 className="text-xl">{title}</h2>
@@ -12,4 +12,4 @@ const Subtitle = ({ subtitle, title, className }: SubtitleProps) => {
     </div>
   );
 };
-export default Subtitle;
+export default SectionTitle;

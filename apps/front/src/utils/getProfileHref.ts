@@ -3,7 +3,7 @@ import type { ParamValue } from "next/dist/server/request/params";
 
 const getProfileHref = (username: string) => {
   const handle = `@${username}`;
-  return `/u/${handle}`;
+  return `/${handle}`;
 };
 const getHandle = (usernameOrParam: string | ParamValue) => {
   const decoded = decodeURIComponent(usernameOrParam as string);

@@ -2,22 +2,23 @@
 import { PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { UserModel } from "@kissnotes/types";
 import { useParams } from "next/navigation";
+import { type ChangeEvent, useState } from "react";
 import { Button } from "@/components/Button";
+import { FormInput } from "@/components/FormInput";
 import { UserHandle } from "@/components/UserHandle";
 import useAuth from "@/hooks/AuthProvider";
 import useRead from "@/hooks/bread/useRead";
-import { getUsername } from "@/utils/getProfileHref";
-import Subtitle from "./_components/Subtitle";
-import { FormInput } from "@/components/FormInput";
-import { ChangeEvent, useState } from "react";
+import { getProfileHref, getUsername } from "@/utils/getProfileHref";
+import SectionTitle from "./_components/Subtitle";
+import useSearcher from "@/components/Searcher/hooks/useSearcher";
 
 interface ProfileSettingsPageProps {
   className?: string;
 }
 
 const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
-  const { handle: rawHandle } = useParams();
-  const username = getUsername(rawHandle);
+  const { handle } = useParams();
+  const username = getUsername(handle);
 
   const { user: authUser, isAuthUser } = useAuth();
   const { data: unAuthUser } = useRead<UserModel>(
@@ -28,6 +29,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
 
   const user: UserModel | undefined = unAuthUser || authUser;
 
+  const { isOpen } = useSearcher();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || "",
@@ -44,25 +46,24 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
   const handleOnchange = ({
     target: { name, value },
   }: ChangeEvent<HTMLInputElement>) => {
-    console.log({ name, value });
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
   return (
-    <div className="w-full h-lvh flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center">
       <div
-        className={`w-200 h-fit max-h-125 border border-secondary rounded-4xl grid grid-cols-5 items-start gap-4 p-8`}
+        className={`sm:max-w-200 w-full h-fit sm:max-h-125 border border-secondary rounded-4xl grid sm:grid-cols-5 items-start gap-x-4 sm:gap-x-8 sm:gap-y-4 gap-y-2 p-4 sm:p-8`}
       >
         <div className="flex justify-between items-center col-span-full">
           <UserHandle />
           <Button
             Icon={XMarkIcon}
-            shortcut={{ keys: ["ESC"] }}
-            href="/"
+            shortcut={{ keys: ["ESC"], blockers: [isOpen] }}
+            href={getProfileHref(username)}
             variant="ghost"
           />
         </div>
-        <Subtitle
+        <SectionTitle
           title="Profile"
           subtitle="Personal information"
           className="col-span-full"
@@ -71,12 +72,12 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
           className="place-self-end self-center col-span-full"
           label="Edit"
           Icon={PencilIcon}
-          shortcut={{ keys: ["cmd", "E"] }}
-          onClick={() => setIsEdit(true)}
+          shortcut={{ keys: ["cmd", "E"], blockers: [isOpen] }}
+          onClick={() => setIsEdit((v) => !v)}
           variant="ghost"
         />
         <FormInput
-          className="col-span-2 place-self-start"
+          className="sm:col-span-2 place-self-start"
           name="username"
           label="Username"
           value={formData?.username}
@@ -86,7 +87,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
           disabled={!isEdit}
         />
         <FormInput
-          className="col-span-2"
+          className="sm:col-span-2"
           type="email"
           name="email"
           label="Email"
@@ -97,7 +98,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
           disabled={!isEdit}
         />
 
-        <Subtitle
+        <SectionTitle
           title="Notifications"
           subtitle="Receive emails"
           className="col-span-full"
@@ -105,7 +106,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
         <FormInput
           labelIn
           type="checkbox"
-          className="col-span-2"
+          className="sm:col-span-2 pe-8"
           name="notifyLike"
           label="Likes"
           value={formData?.notifyLike}
@@ -116,7 +117,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
         <FormInput
           labelIn
           type="checkbox"
-          className="col-span-2"
+          className="sm:col-span-2 pe-8"
           name="notifyShare"
           label="Shares"
           value={formData?.notifyShare}

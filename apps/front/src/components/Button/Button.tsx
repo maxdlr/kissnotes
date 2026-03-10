@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { ElementType } from "react";
-import type { ShortcutDef } from "@/hooks/useShortcut";
+import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
 
 interface ButtonProps {
@@ -13,6 +16,7 @@ interface ButtonProps {
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
   shortcut?: ShortcutDef;
+  // shortcutBlockers?: boolean;
 }
 const Button = ({
   label,
@@ -23,7 +27,14 @@ const Button = ({
   onClick,
   Icon,
   shortcut,
+  // shortcutBlockers,
 }: ButtonProps) => {
+  console.log(shortcut?.blockers);
+
+  const router = useRouter();
+  useShortcut(shortcut, () => {
+    return href ? router.push(href) : onClick?.();
+  });
   const style = "cursor-pointer rounded-3xl py-5 px-3.5 w-fit";
 
   const variantStyles = {

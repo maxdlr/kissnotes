@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../assets/globals.css";
 import { Providers } from "./providers";
+import { Header } from "@/components/Header";
 
 const gilroy = localFont({
   variable: "--font-gilroy",
@@ -113,6 +114,7 @@ export default function RootLayout({
         className={`${gilroy.className} antialiased bg-background text-foreground`}
       >
         <Providers>
+          <Header />
           {children}
           <div id="modal-full" />
           <div id="modal" />

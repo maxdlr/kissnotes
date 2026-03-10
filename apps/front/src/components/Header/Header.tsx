@@ -1,3 +1,4 @@
+"use client";
 import { mutate } from "swr";
 import useAuth from "@/hooks/AuthProvider";
 import useAxios from "@/hooks/useAxios";
@@ -31,7 +32,7 @@ const Header = () => {
         ) : (
           <Button
             label="Sign in"
-            shortcut={{ keys: ["cmd", "L"] }}
+            shortcut={{ keys: ["L"] }}
             onClick={handleSignIn}
           />
         )}

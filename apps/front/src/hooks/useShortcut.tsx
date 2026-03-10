@@ -19,6 +19,7 @@ const MOD_TO_KEY: Record<ModName, string> = {
   down: "ArrowDown",
   left: "ArrowLeft",
   right: "ArrowRight",
+  ESC: "Escape",
 };
 
 // Modifier keys that go into KeyboardEvent's boolean flags
@@ -46,6 +47,8 @@ export interface ShortcutDef {
   event?: "keydown" | "keyup";
   /** Attach to a specific element instead of window */
   target?: HTMLElement | null;
+  /** List of conditions not to fire */
+  blockers?: boolean[];
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────

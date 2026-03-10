@@ -24,8 +24,6 @@ interface ShortcutProps {
 }
 
 const Shortcut = ({ shortcut, className }: ShortcutProps) => {
-  console.log({ shortcut });
-
   const shortcutKeys = shortcut?.keys?.map((key) => {
     if (typeof key !== "string") {
       const KeyElement = key as ElementType;
@@ -40,7 +38,7 @@ const Shortcut = ({ shortcut, className }: ShortcutProps) => {
   });
 
   return (
-    <div className={className}>
+    <div className={`max-sm:hidden ${className}`}>
       <div className="rounded-lg overflow-hidden flex justify-center items-center gap-0.5">
         {shortcutKeys.map((key, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: don't care

@@ -2,7 +2,7 @@ import type { ChangeEvent, ElementType } from "react";
 import { type ModName, Shortcut } from "../ShortCut";
 import InputText, { type InputTextProps } from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
-import { ShortcutDef } from "@/hooks/useShortcut";
+import { ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 
 interface FormInputProps {
   placeholder?: string;
@@ -47,6 +47,7 @@ const FormInput = ({
   disabled,
   labelIn = false,
 }: FormInputProps) => {
+  useShortcut(shortcut, onClick as (e: KeyboardEvent) => void);
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
     outline: "border-[1px] border-secondary",

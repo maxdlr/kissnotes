@@ -12,4 +12,5 @@ export type ModName =
   | "up"
   | "down"
   | "left"
-  | "right";
+  | "right"
+  | "ESC";
