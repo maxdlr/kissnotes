@@ -93,7 +93,7 @@ const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
         <Button
           className="absolute top-8 right-8"
           Icon={ClipboardIcon}
-          shortcut={["cmd", "shift", "C"]}
+          shortcut={{ keys: ["cmd", "shift", "C"] }}
           variant="ghost"
         />
         <div className={`relative overflow-scroll ${className}`}>

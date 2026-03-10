@@ -48,14 +48,14 @@ const ExpressionDetails = () => {
         </div>
         <div className="flex flex-col justify-stretch items-end gap-4">
           <Button
-            shortcut={["ESC"]}
+            shortcut={{ keys: ["ESC"] }}
             variant="ghost"
             Icon={XMarkIcon}
             href="/exp"
           />
           <Button
             label="Search..."
-            shortcut={[SlashIcon]}
+            shortcut={{ keys: [SlashIcon] }}
             Icon={MagnifyingGlassIcon}
           />
         </div>

@@ -1,8 +1,9 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { type ElementType, useState } from "react";
+import { ChangeEvent, type ElementType, useEffect, useState } from "react";
 import { FormInput } from "../FormInput";
 import { Searcher } from "../Searcher";
 import type { ModName } from "../ShortCut";
+import { ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -11,12 +12,11 @@ interface SearchBarProps {
   value?: string;
   variant?: "fill" | "outline" | "ghost";
   modalSearcher?: boolean;
-  shortcut?: (string | ElementType | ModName)[];
+  shortcut?: ShortcutDef;
 }
 
 const SearchBar = ({
   placeholder = "Search...",
-  value,
   inputClassName,
   className,
   variant = "outline",
@@ -24,6 +24,14 @@ const SearchBar = ({
   shortcut,
 }: SearchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [prompt, setPrompt] = useState("");
+  useShortcut(shortcut, () => setIsOpen(true));
+
+  const handleOnChange = ({
+    target: { value },
+  }: ChangeEvent<HTMLInputElement>) => {
+    setPrompt(value);
+  };
 
   return (
     <div className={className}>
@@ -31,11 +39,12 @@ const SearchBar = ({
         name="search"
         inputClassName={`${inputClassName} ${modalSearcher ? "cursor-pointer" : ""}`}
         placeholder={placeholder}
-        value={value}
+        value={prompt}
+        onChange={handleOnChange}
         variant={variant}
         onClick={modalSearcher ? () => setIsOpen(true) : undefined}
         Icon={MagnifyingGlassIcon}
-        shortcut={shortcut}
+        shortcut={modalSearcher ? shortcut : undefined}
       />
       {isOpen && modalSearcher && <Searcher onClose={() => setIsOpen(false)} />}
     </div>

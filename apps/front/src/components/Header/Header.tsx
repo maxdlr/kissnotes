@@ -20,14 +20,18 @@ const Header = () => {
   return (
     <header className="p-8 grid grid-cols-5 items-center bg-darker">
       <Logo />
-      <SearchBar className="col-span-3" shortcut={["cmd", "K"]} />
+      <SearchBar
+        className="col-span-3"
+        shortcut={{ keys: ["cmd", "K"] }}
+        modalSearcher
+      />
       <div className="place-self-end self-center">
         {user ? (
           <UserHandle />
         ) : (
           <Button
             label="Sign in"
-            shortcut={["cmd", "L"]}
+            shortcut={{ keys: ["cmd", "L"] }}
             onClick={handleSignIn}
           />
         )}

@@ -33,13 +33,18 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
     username: user?.username || "",
     email: user?.email || "",
     password: "",
+    notifyLike: true,
+    notifyShare: false,
   });
 
   if (!user) {
     return null;
   }
 
-  const handleOnchange = ({ target: { name, value } }: ChangeEvent) => {
+  const handleOnchange = ({
+    target: { name, value },
+  }: ChangeEvent<HTMLInputElement>) => {
+    console.log({ name, value });
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
@@ -52,22 +57,26 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
           <UserHandle />
           <Button
             Icon={XMarkIcon}
-            shortcut={["ESC"]}
+            shortcut={{ keys: ["ESC"] }}
             href="/"
             variant="ghost"
           />
         </div>
-        <Subtitle subtitle="Profile" className="col-span-full" />
+        <Subtitle
+          title="Profile"
+          subtitle="Personal information"
+          className="col-span-full"
+        />
         <Button
           className="place-self-end self-center col-span-full"
           label="Edit"
           Icon={PencilIcon}
-          shortcut={["cmd", "E"]}
+          shortcut={{ keys: ["cmd", "E"] }}
           onClick={() => setIsEdit(true)}
           variant="ghost"
         />
         <FormInput
-          className="col-span-2"
+          className="col-span-2 place-self-start"
           name="username"
           label="Username"
           value={formData?.username}
@@ -78,6 +87,7 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
         />
         <FormInput
           className="col-span-2"
+          type="email"
           name="email"
           label="Email"
           value={formData?.email}
@@ -86,7 +96,34 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
           variant={isEdit ? "fill" : "ghost"}
           disabled={!isEdit}
         />
-        <Subtitle subtitle="Notifications" className="col-span-full" />
+
+        <Subtitle
+          title="Notifications"
+          subtitle="Receive emails"
+          className="col-span-full"
+        />
+        <FormInput
+          labelIn
+          type="checkbox"
+          className="col-span-2"
+          name="notifyLike"
+          label="Likes"
+          value={formData?.notifyLike}
+          onChange={handleOnchange}
+          variant="ghost"
+          disabled={!isEdit}
+        />
+        <FormInput
+          labelIn
+          type="checkbox"
+          className="col-span-2"
+          name="notifyShare"
+          label="Shares"
+          value={formData?.notifyShare}
+          onChange={handleOnchange}
+          variant="ghost"
+          disabled={!isEdit}
+        />
       </div>
     </div>
   );

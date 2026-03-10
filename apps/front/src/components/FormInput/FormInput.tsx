@@ -1,22 +1,38 @@
 import type { ChangeEvent, ElementType } from "react";
 import { type ModName, Shortcut } from "../ShortCut";
+import InputText, { type InputTextProps } from "./_components/InputText";
+import InputToggle from "./_components/InputToggle";
+import { ShortcutDef } from "@/hooks/useShortcut";
 
 interface FormInputProps {
   placeholder?: string;
   inputClassName?: string;
   className?: string;
-  value?: string;
+  value?: string | number | boolean;
   variant?: "fill" | "outline" | "ghost";
   onClick?: (e?: Event | React.MouseEvent) => void;
   Icon?: ElementType;
-  shortcut?: (string | ElementType | ModName)[];
+  shortcut?: ShortcutDef;
   name: string;
   label?: string;
-  onChange: (event: ChangeEvent) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  type?:
+    | "text"
+    | "number"
+    | "search"
+    | "button"
+    | "checkbox"
+    | "color"
+    | "date"
+    | "email"
+    | "file"
+    | "hidden";
+  labelIn?: boolean;
 }
 
 const FormInput = ({
+  type = "text",
   placeholder = "Search...",
   value,
   name,
@@ -29,9 +45,8 @@ const FormInput = ({
   label,
   onChange,
   disabled,
+  labelIn = false,
 }: FormInputProps) => {
-  const style = "font-semibold text-lg";
-
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
     outline: "border-[1px] border-secondary",
@@ -40,25 +55,50 @@ const FormInput = ({
 
   return (
     <div className={className}>
-      <label htmlFor={name}>{label}</label>
+      {!labelIn && (
+        <div className="pb-2 ps-2">
+          <label htmlFor={name} className="font-thin">
+            {label}
+          </label>
+        </div>
+      )}
       <div
-        className={`rounded-3xl p-4 flex justify-center items-center gap-4 ${style} ${variantStyles[variant]} `}
+        className={`rounded-3xl p-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} `}
       >
-        {Icon && (
-          <span>
-            <Icon className="size-6" />
-          </span>
+        {((label && labelIn) || Icon) && (
+          <div>
+            {Icon && (
+              <span>
+                <Icon className="size-6" />
+              </span>
+            )}
+
+            {labelIn && <label htmlFor={name}>{label}</label>}
+          </div>
         )}
-        <input
-          name={name}
-          placeholder={placeholder}
-          className={`focus:ring-0 focus:outline-none whitespace-nowrap w-full ${inputClassName}`}
-          value={value}
-          onClick={onClick}
-          onChange={onChange}
-          disabled={disabled}
-        />
-        {shortcut && <Shortcut keys={shortcut} />}
+
+        {type === "checkbox" && (
+          <InputToggle
+            value={value as boolean}
+            onChange={onChange}
+            name={name}
+            disabled={disabled}
+          />
+        )}
+
+        {["text", "search", "email"].includes(type) && (
+          <InputText
+            type={type as InputTextProps["type"]}
+            name={name}
+            placeholder={placeholder}
+            className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap w-full ${inputClassName}`}
+            value={value as InputTextProps["value"]}
+            onClick={onClick}
+            onChange={onChange}
+            disabled={disabled}
+          />
+        )}
+        {shortcut && <Shortcut shortcut={shortcut} />}
       </div>
     </div>
   );

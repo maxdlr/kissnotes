@@ -11,6 +11,7 @@ const Searcher = ({
   value,
   placeholder = "Search anything",
 }: SearcherProps) => {
+  console.log("modal");
   return (
     <Modal onClose={onClose}>
       {() => <input name="search" placeholder={placeholder} value={value} />}

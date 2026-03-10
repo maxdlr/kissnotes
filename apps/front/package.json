@@ -14,6 +14,7 @@
     "@heroicons/react": "^2.2.0",
     "@kissnotes/types": "*",
     "axios": "^1.8.4",
+    "motion": "^12.35.2",
     "next": "16.1.6",
     "prism-react-renderer": "^2.4.1",
     "react": "19.2.3",

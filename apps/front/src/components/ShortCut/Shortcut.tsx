@@ -1,4 +1,5 @@
 import type { ElementType } from "react";
+import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { ModName } from ".";
 
 const mods: Map<ModName, string> = new Map();
@@ -18,12 +19,14 @@ mods.set("cmd", "⌘");
 mods.set("right", "→");
 
 interface ShortcutProps {
-  keys: (string | ElementType | ModName)[];
+  shortcut: ShortcutDef;
   className?: string;
 }
 
-const Shortcut = ({ keys, className }: ShortcutProps) => {
-  const shortcutKeys = keys.map((key) => {
+const Shortcut = ({ shortcut, className }: ShortcutProps) => {
+  console.log({ shortcut });
+
+  const shortcutKeys = shortcut?.keys?.map((key) => {
     if (typeof key !== "string") {
       const KeyElement = key as ElementType;
       return <KeyElement key={key} className="size-4" />;

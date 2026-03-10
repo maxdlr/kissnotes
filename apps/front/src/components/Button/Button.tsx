@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ElementType } from "react";
+import type { ShortcutDef } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
 
 interface ButtonProps {
@@ -11,7 +12,7 @@ interface ButtonProps {
   onClick?: (args?: any) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
-  shortcut?: (string | ElementType)[];
+  shortcut?: ShortcutDef;
 }
 const Button = ({
   label,
@@ -41,7 +42,7 @@ const Button = ({
       {label && (
         <span className="pe-1 font-semibold whitespace-nowrap">{label}</span>
       )}
-      {shortcut && <Shortcut keys={shortcut} />}
+      {shortcut && <Shortcut shortcut={shortcut} />}
     </span>
   );
 
