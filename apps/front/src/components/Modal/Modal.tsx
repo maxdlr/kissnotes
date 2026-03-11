@@ -72,6 +72,7 @@ const Modal = ({
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
+      event.stopPropagation();
       if (event.keyCode === 27 && onClose) handleOnClose(event);
     };
 

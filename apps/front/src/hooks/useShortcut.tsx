@@ -63,6 +63,7 @@ export function useShortcut(
     preventDefault = false,
     event = "keydown",
     target = null,
+    blockers,
   } = shortcut ?? {};
 
   // Stable handler ref — callers don't need useCallback
@@ -78,6 +79,8 @@ export function useShortcut(
     (e: Event) => {
       if (!triggerKey) return;
       const ke = e as KeyboardEvent;
+
+      if (blockers?.some(Boolean)) return; // ← add this
 
       if (ignoreInputs) {
         const tag = (ke.target as HTMLElement)?.tagName;
@@ -105,6 +108,7 @@ export function useShortcut(
       modifiers.shift,
       ignoreInputs,
       preventDefault,
+      blockers,
     ],
   );
 

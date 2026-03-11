@@ -11,12 +11,10 @@ interface ButtonProps {
   href?: string;
   className?: string;
   variant?: "fill" | "outline" | "ghost";
-  // biome-ignore lint/suspicious/noExplicitAny: don't want to fight with react type hinting
-  onClick?: (args?: any) => void;
+  onClick?: (event?: MouseEvent) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
   shortcut?: ShortcutDef;
-  // shortcutBlockers?: boolean;
 }
 const Button = ({
   label,
@@ -27,10 +25,7 @@ const Button = ({
   onClick,
   Icon,
   shortcut,
-  // shortcutBlockers,
 }: ButtonProps) => {
-  console.log(shortcut?.blockers);
-
   const router = useRouter();
   useShortcut(shortcut, () => {
     return href ? router.push(href) : onClick?.();

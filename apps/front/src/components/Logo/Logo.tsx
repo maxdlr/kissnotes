@@ -4,7 +4,7 @@ interface LogoProps {
 }
 const Logo = ({ className = "", byLine = true }: LogoProps) => {
   return (
-    <div className={className}>
+    <a className={className} href="/">
       <div className="w-fit text-end">
         <div>
           <p className="font-black italic text-3xl leading-none">Kissnotes</p>
@@ -13,7 +13,7 @@ const Logo = ({ className = "", byLine = true }: LogoProps) => {
           <p className="text-sm leading-none italic">by Motiontober</p>
         )}
       </div>
-    </div>
+    </a>
   );
 };
 export default Logo;

@@ -5,12 +5,12 @@ import { useParams } from "next/navigation";
 import { type ChangeEvent, useState } from "react";
 import { Button } from "@/components/Button";
 import { FormInput } from "@/components/FormInput";
+import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import { UserHandle } from "@/components/UserHandle";
 import useAuth from "@/hooks/AuthProvider";
 import useRead from "@/hooks/bread/useRead";
 import { getProfileHref, getUsername } from "@/utils/getProfileHref";
 import SectionTitle from "./_components/Subtitle";
-import useSearcher from "@/components/Searcher/hooks/useSearcher";
 
 interface ProfileSettingsPageProps {
   className?: string;

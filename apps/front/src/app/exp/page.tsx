@@ -1,5 +1,5 @@
 "use client";
-import { ArrowTurnDownRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import type { ExpressionModel } from "@kissnotes/types";
 import { Button } from "@/components/Button";
 import useBrowse from "../../hooks/bread/useBrowse";
@@ -14,7 +14,7 @@ const Expressions = () => {
           href={`/exp/${id}`}
           label={title}
           variant="ghost"
-          Icon={ArrowTurnDownRightIcon}
+          Icon={ArrowRightIcon}
         />
       ))}
     </div>
