@@ -8,12 +8,12 @@ const Expressions = () => {
   const { data: expressions } = useBrowse<ExpressionModel[]>("expressions");
   if (!expressions) return <div>Loading...</div>;
   return (
-    <div className="grid grid-cols-5 grid-flow-row gap-4 md:gap-8">
+    <div className="grid grid-cols-6 grid-flow-row gap-4 md:gap-8">
       <ExpressionListSidebar
-        list={expressions}
-        className="max-sm:col-span-full"
+        expressions={expressions}
+        className="col-span-full lg:col-span-2"
       />
-      <div className="col-span-full md:col-span-4 grid grid-flow-row md:grid-cols-2 gap-2 md:gap-4">
+      <div className="col-span-full lg:col-span-4 grid grid-flow-row xl:grid-cols-2 gap-2 md:gap-4">
         {expressions?.map((expression) => (
           <ExpressionCard key={expression.id} expression={expression} />
         ))}

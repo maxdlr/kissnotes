@@ -5,7 +5,7 @@ import InputToggle from "./_components/InputToggle";
 import { ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 
 interface FormInputProps {
-  placeholder?: string;
+  placeholder?: string | React.ReactNode;
   inputClassName?: string;
   className?: string;
   value?: string | number | boolean;
@@ -14,7 +14,7 @@ interface FormInputProps {
   Icon?: ElementType;
   shortcut?: ShortcutDef;
   name: string;
-  label?: string;
+  label?: string | React.ReactNode;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   type?:
@@ -91,7 +91,7 @@ const FormInput = ({
           <InputText
             type={type as InputTextProps["type"]}
             name={name}
-            placeholder={placeholder}
+            placeholder={placeholder as InputTextProps["placeholder"]}
             className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap w-full ${inputClassName}`}
             value={value as InputTextProps["value"]}
             onClick={onClick}

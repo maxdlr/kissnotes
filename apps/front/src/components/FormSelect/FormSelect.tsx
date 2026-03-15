@@ -1,21 +1,25 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dont care */
 
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ElementType } from "react";
+import { type ElementType, useEffect, useRef, useState } from "react";
 import { Button } from "../Button";
+import InputText from "../FormInput/_components/InputText";
+import Pill from "../Pill/Pill";
 
 interface FormSelectProps<T> {
   name: string;
   label?: string | React.ReactNode;
   className?: string;
   options: T[];
-  value: T[] | T;
+  value: T[] | (T | null);
   onChange: (change: { name: string; value: T[] | T }) => void;
   Icon?: ElementType;
-  RenderOption: (option: T) => React.ReactNode;
+  RenderOption?: (option: T) => React.ReactNode;
   SelectedRenderOption?: (option: T) => React.ReactNode;
+  property: keyof T;
+  searchable?: boolean;
 }
 
 const itemVariants = {
@@ -38,8 +42,36 @@ const FormSelect = <T,>({
   onChange,
   RenderOption,
   SelectedRenderOption,
+  property,
+  searchable = true,
 }: FormSelectProps<T>) => {
   const multiple = Array.isArray(value);
+  const [prompt, setPrompt] = useState("");
+  const [localOptions, setLocalOptions] = useState<T[]>(options);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => console.log({ value }), [value]);
+
+  console.log({ multiple });
+
+  useEffect(() => {
+    if (!prompt) {
+      setLocalOptions(options);
+      return;
+    }
+    setLocalOptions(
+      options.filter((option) => {
+        const optionValue = option[property] as string;
+        return (
+          optionValue.includes(prompt) ||
+          optionValue.toLocaleLowerCase().includes(prompt)
+        );
+      }),
+    );
+    if (searchable) {
+      inputRef.current?.focus();
+    }
+  }, [prompt, property, options, searchable]);
 
   const handleOnSelect = (option: T) => {
     if (multiple) {
@@ -49,6 +81,9 @@ const FormSelect = <T,>({
     } else {
       onChange({ name, value: option });
     }
+    if (searchable) {
+      inputRef.current?.focus();
+    }
   };
 
   const handleOnDeselect = (option: T) => {
@@ -57,20 +92,51 @@ const FormSelect = <T,>({
     } else {
       onChange({ name, value: null as T });
     }
+    if (searchable) {
+      inputRef.current?.focus();
+    }
   };
+
+  const handleClear = () => {
+    onChange({ name, value: multiple ? [] : (null as T) });
+    setPrompt("");
+    if (searchable) {
+      inputRef.current?.focus();
+    }
+  };
+
+  const isValue = (!multiple && !!value) || (multiple && !!value.length);
 
   return (
     <div
-      className={`border border-accent p-4 rounded-3xl grid grid-flow-row gap-4 transition-all  ${className}`}
+      className={`border border-accent p-4 rounded-3xl grid grid-flow-row gap-4 transition-all ${className}`}
     >
+      {/* HEADER */}
+
       <div className="flex justify-between items-center w-full transition-all">
         <div className="font-semibold flex items-center transition-all">
-          <p>{label}</p>
-          {Icon && <Icon className="ms-2 size-6" />}
+          {label &&
+            ((multiple && searchable) || (!multiple && value === null) ? (
+              <InputText
+                value={prompt}
+                ref={inputRef}
+                name={name}
+                placeholder={label as string}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="ps-1.5"
+              />
+            ) : (
+              <p className="ps-1.5 w-full">{label}</p>
+            ))}
+          {(multiple && searchable) || (!multiple && value === null) ? (
+            <MagnifyingGlassIcon className="ms-2 size-6" />
+          ) : (
+            Icon && <Icon className="ms-2 size-6" />
+          )}
         </div>
         <div className="flex justify-center items-center gap-4 transition-all">
           <AnimatePresence mode="popLayout">
-            {value !== null && !!(value as T[]).length && (
+            {(isValue || prompt) && (
               <motion.div
                 variants={itemVariants}
                 initial="initialLeft"
@@ -81,11 +147,10 @@ const FormSelect = <T,>({
                 <Button
                   label="Clear"
                   variant="ghost"
-                  onClick={() =>
-                    onChange({ name, value: multiple ? [] : (null as T) })
-                  }
+                  onClick={handleClear}
                   Icon={XMarkIcon}
                   size="sm"
+                  shortcut={{ keys: ["ESC"], ignoreInputs: false }}
                 />
               </motion.div>
             )}
@@ -105,37 +170,77 @@ const FormSelect = <T,>({
         </div>
       </div>
 
-      <AnimatePresence mode="popLayout">
-        {value !== null && !!(value as T[]).length && (
-          <div className={`flex flex-wrap gap-2 transition-all`}>
-            {multiple
-              ? value.map((option: T, i: number) => (
-                  <motion.div
-                    key={i}
-                    variants={itemVariants}
-                    initial="initialDown"
-                    animate="animate"
-                    exit="exitDown"
-                  >
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleOnDeselect(option)}
-                      label={
-                        SelectedRenderOption?.(option) || RenderOption(option)
-                      }
-                    />
-                  </motion.div>
-                ))
-              : RenderOption(value as T)}
-          </div>
-        )}
-      </AnimatePresence>
+      {/* RESULT */}
+
+      {multiple && (
+        <AnimatePresence mode="popLayout">
+          {!!value.length && (
+            <div className={`flex flex-wrap gap-2 transition-all`}>
+              {value.map((valueOption: T, i: number) => (
+                <motion.div
+                  key={i}
+                  variants={itemVariants}
+                  initial="initialDown"
+                  animate="animate"
+                  exit="exitDown"
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleOnDeselect(valueOption)}
+                    label={
+                      SelectedRenderOption?.(valueOption) || (
+                        <Pill
+                          label={valueOption[property] as string}
+                          className="bg-accent! text-white! border-0! py-2! px-3!"
+                        />
+                      )
+                    }
+                  />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
+      )}
+
+      {!multiple && (
+        <AnimatePresence mode="popLayout">
+          {!!value && (
+            <div className={`flex flex-wrap gap-2 transition-all`}>
+              <motion.div
+                variants={itemVariants}
+                initial="initialDown"
+                animate="animate"
+                exit="exitDown"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleOnDeselect(value)}
+                  label={
+                    SelectedRenderOption?.(value) || (
+                      <Pill
+                        label={value?.[property] as string}
+                        className="bg-accent! text-white! border-0! py-2! px-3!"
+                      />
+                    )
+                  }
+                />
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      )}
+
       <div className="bg-accent h-px" />
+
+      {/* OPTIONS */}
 
       <div className={`flex flex-wrap gap-2`}>
         <AnimatePresence mode="popLayout">
-          {options
-            .filter((o) => !(value as T[]).includes(o) && o !== (value as T))
+          {localOptions
+            .filter((o) => (multiple ? !value.includes(o) : o !== (value as T)))
             .map((option: T, i: number) => (
               <motion.div
                 key={i}
@@ -147,7 +252,16 @@ const FormSelect = <T,>({
                 <Button
                   variant="ghost"
                   onClick={() => handleOnSelect(option)}
-                  label={RenderOption(option)}
+                  label={
+                    RenderOption?.(option) || (
+                      <Pill label={option[property] as string} />
+                    )
+                  }
+                  shortcut={
+                    localOptions.length === 1
+                      ? { keys: ["enter"], ignoreInputs: false }
+                      : undefined
+                  }
                 />
               </motion.div>
             ))}
