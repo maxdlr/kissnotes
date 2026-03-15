@@ -1,4 +1,4 @@
-import { ExpressionModel } from "@kissnotes/types";
+import type { ExpressionModel, ParsedExpression } from "@kissnotes/types";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import CodeEntity from "./CodeEntity";
@@ -8,41 +8,51 @@ import UserEntity from "./UserEntity";
 
 @Entity({ name: "expressions" })
 export default class ExpressionEntity
-  extends AbstractEntity
-  implements ExpressionModel
+	extends AbstractEntity
+	implements ExpressionModel
 {
-  @Column({ nullable: false })
-  title!: string;
+	@Column({ nullable: false })
+	title!: string;
 
-  @Column({ length: 2000 })
-  description?: string;
+	@Column({ length: 2000 })
+	description?: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.expressions, {
-    nullable: false,
-    eager: true,
-  })
-  author!: UserEntity;
+	@ManyToOne(
+		() => UserEntity,
+		(user) => user.expressions,
+		{
+			nullable: false,
+			eager: true,
+		},
+	)
+	author!: UserEntity;
 
-  @OneToOne(() => CodeEntity, {
-    nullable: false,
-    eager: true,
-  })
-  @JoinColumn()
-  code!: CodeEntity;
+	@OneToOne(() => CodeEntity, {
+		nullable: false,
+		eager: true,
+	})
+	@JoinColumn()
+	code!: CodeEntity;
 
-  @ManyToOne(() => LayerEntity, (layer: PropertyEntity) => layer.expressions, {
-    nullable: false,
-    eager: true,
-  })
-  layer!: LayerEntity;
+	@ManyToOne(
+		() => LayerEntity,
+		(layer: PropertyEntity) => layer.expressions,
+		{
+			nullable: false,
+			eager: true,
+		},
+	)
+	layer!: LayerEntity;
 
-  @ManyToOne(
-    () => PropertyEntity,
-    (property: PropertyEntity) => property.expressions,
-    {
-      nullable: false,
-      eager: true,
-    },
-  )
-  property!: PropertyEntity;
+	@ManyToOne(
+		() => PropertyEntity,
+		(property: PropertyEntity) => property.expressions,
+		{
+			nullable: false,
+			eager: true,
+		},
+	)
+	property!: PropertyEntity;
+
+	symbols?: ParsedExpression;
 }

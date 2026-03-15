@@ -10,7 +10,7 @@ import useAeExpressions from "./hooks/useAeExpressions";
 
 interface CodeBlockProps {
   expression: ExpressionModel;
-  className: string;
+  className?: string;
 }
 const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
   const { code, property } = expression;
@@ -86,7 +86,7 @@ const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
 
   return (
     <CodeBlock code={text} language="js" words={matches} lines={lineMatches}>
-      <div className="relative bg-code p-8 pt-24 rounded-2xl">
+      <div className="relative bg-code p-8 pt-20 rounded-2xl overflow-hidden">
         <div className="absolute top-8 left-8 text-sm text-accent">
           {`${property.group}.${property.name}`}
         </div>

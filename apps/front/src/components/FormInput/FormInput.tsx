@@ -64,7 +64,7 @@ const FormInput = ({
         </div>
       )}
       <div
-        className={`rounded-3xl p-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} `}
+        className={`rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} `}
       >
         {((label && labelIn) || Icon) && (
           <div>

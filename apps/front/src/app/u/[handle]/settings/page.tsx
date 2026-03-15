@@ -49,13 +49,17 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
+  const handleLogout = () => {
+
+  };
+
   return (
     <div className="w-full h-full flex justify-center items-center">
       <div
         className={`sm:max-w-200 w-full h-fit sm:max-h-125 border border-secondary rounded-4xl grid sm:grid-cols-5 items-start gap-x-4 sm:gap-x-8 sm:gap-y-4 gap-y-2 p-4 sm:p-8`}
       >
         <div className="flex justify-between items-center col-span-full">
-          <UserHandle />
+          <div><UserHandle /><Button label="Logout" onClick={handleLogout} /></div>
           <Button
             Icon={XMarkIcon}
             shortcut={{ keys: ["ESC"], blockers: [isOpen] }}

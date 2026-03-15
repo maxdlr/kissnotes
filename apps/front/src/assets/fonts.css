@@ -1,5 +1,5 @@
-@font-face {
-  font-family: "Gilroy";
+/*@font-face {*/
+  /*font-family: "Gilroy";
   font-style: italic;
   font-weight: 600;
   font-display: swap;
@@ -78,4 +78,4 @@
   src:
     url("../fonts/GilroyMedium/font.woff2") format("woff2"),
     url("../fonts/GilroyMedium/font.woff") format("woff");
-}
+}*/

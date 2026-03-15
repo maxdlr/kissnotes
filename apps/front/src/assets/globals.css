@@ -21,5 +21,6 @@
   --color-emphasis: #9eff28;
 
   /* Font */
-  --font-display: var(--font-gilroy), sans-serif;
+  /*--font-display: var(--font-gilroy), sans-serif;*/
+  /*--default-font-family: var(--font-fira-code), monospace;*/
 }

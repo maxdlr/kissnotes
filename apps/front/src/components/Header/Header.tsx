@@ -19,10 +19,10 @@ const Header = () => {
     mutate("/me");
   };
   return (
-    <header className="p-8 grid grid-cols-5 items-center bg-darker">
-      <Logo />
+    <header className="grid grid-cols-3 md:grid-cols-5 items-center bg-darker">
+      <Logo className="hidden md:block" />
       <SearchBar
-        className="col-span-3"
+        className="col-span-2 md:col-span-3"
         shortcut={{ keys: ["cmd", "K"] }}
         modalSearcher
       />
@@ -32,7 +32,7 @@ const Header = () => {
         ) : (
           <Button
             label="Sign in"
-            shortcut={{ keys: ["L"] }}
+            shortcut={{ keys: ["cmd", "shift", "L"] }}
             onClick={handleSignIn}
           />
         )}
