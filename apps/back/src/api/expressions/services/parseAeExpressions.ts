@@ -3,7 +3,7 @@ import type {
   CodeModel,
   ExpressionToken,
   NativeExpressionModel,
-  ParsedExpression,
+  ExpressionSymbol,
   TokenKind,
 } from "@kissnotes/types";
 
@@ -104,12 +104,12 @@ class RangeSet {
 
 /**
  * Parse an AE expression against the full native-expression dictionary and
- * return a structured `ParsedExpression` ready to be attached to the API response.
+ * return a structured `ExpressionSymbol` ready to be attached to the API response.
  */
 export function parseAeExpression(
   code: CodeModel,
   nativeExpressions: NativeExpressionModel[],
-): ParsedExpression {
+): ExpressionSymbol {
   const text = code.lines.map((l) => l.content).join("\n");
   const allTokens: ExpressionToken[] = [];
   const occupied = new RangeSet();
@@ -238,6 +238,7 @@ export function parseAeExpression(
   allTokens.sort((a, b) => a.index - b.index);
 
   return {
+    id,
     text,
     tokens: allTokens,
     groups: {

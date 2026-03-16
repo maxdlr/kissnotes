@@ -4,16 +4,24 @@ import type {
   ExpressionToken,
 } from "@kissnotes/types";
 
-const useExpressions = (expressionList: ExpressionModel[]) => {
-  const getAllTokens = () => {
-    return expressionList
+const useExpressions = (expressions: ExpressionModel[]) => {
+  const getTokens = (kinds?: (keyof ExpressionSymbol["groups"])[]) => {
+    if (!expressions.length) {
+      return [];
+    }
+    const symbols = expressions
       .map((expression: ExpressionModel) => expression.symbols)
-      .filter((symbol): symbol is ExpressionSymbol => symbol !== undefined)
-      .flatMap((symbols): ExpressionToken[] => symbols.tokens);
+      .filter((symbol): symbol is ExpressionSymbol => symbol !== undefined);
+
+    if (kinds) {
+      return kinds.flatMap((k) => symbols.flatMap((s) => s.groups[k]));
+    }
+
+    return symbols.flatMap((s): ExpressionToken[] => s.tokens);
   };
 
   return {
-    getAllTokens,
+    getTokens,
   };
 };
 

@@ -9,9 +9,16 @@ import { UserHandle } from "../UserHandle";
 interface ExpressionCardProps {
   expression: ExpressionModel;
   className?: string;
+  highlightedTokens: string[];
 }
-const ExpressionCard = ({ expression, className }: ExpressionCardProps) => {
+const ExpressionCard = ({
+  expression,
+  className,
+  highlightedTokens = [],
+}: ExpressionCardProps) => {
   const { symbols, title, author, createdAt, description } = expression;
+
+  if (!expression) return <div>Loading...</div>;
   return (
     <div
       className={`border border-secondary rounded-3xl p-4 sm:p-8 ${className}`}
@@ -36,7 +43,10 @@ const ExpressionCard = ({ expression, className }: ExpressionCardProps) => {
               <Pill label={t.label} key={t.index} />
             ))}
         </div>
-        <KissCodeBlock expression={expression} />
+        <KissCodeBlock
+          highlightedTokens={highlightedTokens}
+          expression={expression}
+        />
       </div>
     </div>
   );

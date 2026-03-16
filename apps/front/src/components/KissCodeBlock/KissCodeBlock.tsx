@@ -6,20 +6,25 @@ import { type ReactElement, useEffect, useState } from "react";
 import { CodeBlock } from "react-code-block";
 import { Button } from "../Button";
 import KissLineContent from "./components/KissLineContent";
-import useAeExpressions from "./hooks/useAeExpressions";
 
 interface CodeBlockProps {
   expression: ExpressionModel;
   className?: string;
+  highlightedTokens: string[];
 }
-const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
+const KissCodeBlock = ({
+  expression,
+  className,
+  highlightedTokens,
+}: CodeBlockProps) => {
   const { code, property } = expression;
-  const { text, matches, isLoading: isParsing } = useAeExpressions(code, []);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
+  const text = code.lines.map((l) => l.content).join("\n");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const lineMatches: string[] = [];
 
-  const wordHighlightedCode: ReactElement = (
+  const tokenHighlightedCode: ReactElement = (
     <CodeBlock.Code>
       <KissLineContent>
         <CodeBlock.Token>
@@ -67,25 +72,26 @@ const KissCodeBlock = ({ expression, className }: CodeBlockProps) => {
   );
 
   useEffect(() => {
-    setCodeBlock(() => {
-      if (!!matches.length && !!lineMatches.length) {
-        return normalCode;
-      }
+    if (!highlightedTokens?.length) {
+      setCodeBlock(normalCode);
+      setIsLoading(false);
+      return;
+    }
 
-      if (!!matches.length && !lineMatches.length) {
-        return wordHighlightedCode;
-      } else if (!!lineMatches.length && !matches.length) {
-        return lineHighlightedCode;
-      }
-      return normalCode;
-    });
+    if (highlightedTokens?.length) {
+      setTokens(highlightedTokens);
+      setCodeBlock(tokenHighlightedCode);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(false);
-  }, [matches, wordHighlightedCode, lineHighlightedCode]);
+  }, [highlightedTokens]);
 
-  if (isLoading || isParsing) return "loading";
+  if (isLoading) return "loading";
 
   return (
-    <CodeBlock code={text} language="js" words={matches} lines={lineMatches}>
+    <CodeBlock code={text} language="js" words={tokens} lines={lineMatches}>
       <div className="relative bg-code p-8 pt-20 rounded-2xl overflow-hidden">
         <div className="absolute top-8 left-8 text-sm text-accent">
           {`${property.group}.${property.name}`}

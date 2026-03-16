@@ -1,44 +1,50 @@
 "use client";
-import {
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import type {
   ExpressionModel,
   ExpressionToken,
   UserModel,
 } from "@kissnotes/types";
-import { useState } from "react";
 import useExpressions from "@/hooks/useExpressions";
 import { arrayUnique } from "@/utils/arrayUtils";
 import { Button } from "../Button";
 import { FormSelect } from "../FormSelect";
-import Pill from "../Pill/Pill";
+
+export type SidebarValue =
+  | {
+      tokens: ExpressionToken[];
+      author: UserModel | null;
+    }
+  | undefined;
 
 interface ExpressListSideBarProps {
   className?: string;
   expressions: ExpressionModel[];
+  onChange: (filters: SidebarValue) => void;
+  value: SidebarValue;
 }
 
 const ExpressionListSidebar = ({
   className,
   expressions,
+  onChange,
+  value,
 }: ExpressListSideBarProps) => {
-  const [formData, setFormData] = useState<{
-    tokens: ExpressionToken[];
-    author: UserModel | null;
-  }>({
-    tokens: [],
-    author: null,
-  });
+  const { getTokens } = useExpressions(expressions);
+  const tokens = arrayUnique(getTokens(), "label");
+  const authors = arrayUnique(
+    expressions.map((e) => e.author),
+    "username",
+  );
 
-  const { getAllTokens } = useExpressions(expressions);
-
-  const handleOnChange = ({ name, value }: { name: string; value: any }) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleOnChange = ({
+    name,
+    value: changeValue,
+  }: {
+    name: string;
+    value: any;
+  }) => {
+    onChange({ ...value, [name]: changeValue } as SidebarValue);
   };
 
   return (
@@ -53,20 +59,17 @@ const ExpressionListSidebar = ({
         <FormSelect<ExpressionToken>
           name="tokens"
           label="Expression contains..."
-          options={arrayUnique(getAllTokens(), "label")}
+          options={tokens}
           onChange={handleOnChange}
-          value={formData.tokens}
+          value={value?.tokens || []}
           property="label"
         />
         <FormSelect<UserModel>
           name="author"
           label="Author is..."
-          options={arrayUnique(
-            expressions.map((e) => e.author),
-            "username",
-          )}
+          options={authors}
           onChange={handleOnChange}
-          value={formData.author}
+          value={value?.author || null}
           property="username"
         />
       </div>

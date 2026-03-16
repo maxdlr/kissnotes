@@ -3,7 +3,14 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
-import { type ElementType, useEffect, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type ElementType,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "../Button";
 import InputText from "../FormInput/_components/InputText";
 import Pill from "../Pill/Pill";
@@ -20,6 +27,7 @@ interface FormSelectProps<T> {
   SelectedRenderOption?: (option: T) => React.ReactNode;
   property: keyof T;
   searchable?: boolean;
+  useHovering?: boolean;
 }
 
 const itemVariants = {
@@ -44,34 +52,40 @@ const FormSelect = <T,>({
   SelectedRenderOption,
   property,
   searchable = true,
+  useHovering = true,
 }: FormSelectProps<T>) => {
   const multiple = Array.isArray(value);
   const [prompt, setPrompt] = useState("");
-  const [localOptions, setLocalOptions] = useState<T[]>(options);
+  const filterOptions = useCallback(
+    (opts: T[]) => {
+      const lowerPrompt = prompt.toLocaleLowerCase();
+      return opts.filter((option) => {
+        const optionValue = (option[property] as string).toLocaleLowerCase();
+
+        const isPromptMatch = !prompt || optionValue.includes(lowerPrompt);
+
+        const isUnselected = multiple
+          ? !(value as T[]).map((v) => v[property]).includes(option[property])
+          : value?.[property] !== option[property];
+
+        return isPromptMatch && isUnselected;
+      });
+    },
+    [prompt, property, multiple, value],
+  );
+  const [localOptions, setLocalOptions] = useState<T[]>(() =>
+    filterOptions(options),
+  );
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => console.log({ value }), [value]);
-
-  console.log({ multiple });
-
   useEffect(() => {
-    if (!prompt) {
-      setLocalOptions(options);
-      return;
-    }
-    setLocalOptions(
-      options.filter((option) => {
-        const optionValue = option[property] as string;
-        return (
-          optionValue.includes(prompt) ||
-          optionValue.toLocaleLowerCase().includes(prompt)
-        );
-      }),
-    );
-    if (searchable) {
+    setLocalOptions(filterOptions(options));
+    if (prompt && searchable) {
       inputRef.current?.focus();
     }
-  }, [prompt, property, options, searchable]);
+  }, [prompt, options, searchable, filterOptions]);
+
+  if (!options.length) return <div>Loading...</div>;
 
   const handleOnSelect = (option: T) => {
     if (multiple) {
@@ -107,9 +121,14 @@ const FormSelect = <T,>({
 
   const isValue = (!multiple && !!value) || (multiple && !!value.length);
 
+  const handlePrompt = (e: ChangeEvent<HTMLInputElement>) => {
+    const promptValue = e.target.value;
+    setPrompt(promptValue);
+  };
+
   return (
     <div
-      className={`border border-accent p-4 rounded-3xl grid grid-flow-row gap-4 transition-all ${className}`}
+      className={`border border-accent p-4 rounded-3xl grid grid-flow-row items-start gap-4 transition-all h-fit min-h-36 w-full ${className}`}
     >
       {/* HEADER */}
 
@@ -122,7 +141,7 @@ const FormSelect = <T,>({
                 ref={inputRef}
                 name={name}
                 placeholder={label as string}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={handlePrompt}
                 className="ps-1.5"
               />
             ) : (
@@ -239,32 +258,33 @@ const FormSelect = <T,>({
 
       <div className={`flex flex-wrap gap-2`}>
         <AnimatePresence mode="popLayout">
-          {localOptions
-            .filter((o) => (multiple ? !value.includes(o) : o !== (value as T)))
-            .map((option: T, i: number) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                initial="initialUp"
-                animate="animate"
-                exit="exitUp"
-              >
-                <Button
-                  variant="ghost"
-                  onClick={() => handleOnSelect(option)}
-                  label={
-                    RenderOption?.(option) || (
-                      <Pill label={option[property] as string} />
-                    )
-                  }
-                  shortcut={
-                    localOptions.length === 1
-                      ? { keys: ["enter"], ignoreInputs: false }
-                      : undefined
-                  }
-                />
-              </motion.div>
-            ))}
+          {localOptions.map((option: T, i: number) => (
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              initial="initialUp"
+              animate="animate"
+              exit="exitUp"
+            >
+              <Button
+                variant="ghost"
+                onClick={() => handleOnSelect(option)}
+                label={
+                  RenderOption?.(option) || (
+                    <Pill
+                      useHovering={useHovering}
+                      label={option[property] as string}
+                    />
+                  )
+                }
+                shortcut={
+                  localOptions.length === 1
+                    ? { keys: ["enter"], ignoreInputs: false }
+                    : undefined
+                }
+              />
+            </motion.div>
+          ))}
         </AnimatePresence>
       </div>
     </div>
