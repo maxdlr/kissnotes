@@ -32,6 +32,13 @@ const ExpressionListSidebar = ({
 }: ExpressListSideBarProps) => {
   const { getTokens } = useExpressions(expressions);
   const tokens = arrayUnique(getTokens(), "label");
+  // const [authors, setAuthors] = useState(
+  //   arrayUnique(
+  //     expressions.map((e) => e.author),
+  //     "username",
+  //   ),
+  // );
+
   const authors = arrayUnique(
     expressions.map((e) => e.author),
     "username",

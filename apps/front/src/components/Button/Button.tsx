@@ -1,24 +1,70 @@
 "use client";
 
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ElementType } from "react";
 import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
 
+type VariantSet = {
+  initial: object;
+  animate: object;
+  exit: object;
+};
+
+const animate = { opacity: 1, scale: 1, y: 0, x: 0, rotate: 0 };
+const hidden = { opacity: 0, scale: 0.9, rotate: 3 };
+const distance = 20;
+
+export const variants = {
+  up: {
+    initial: { ...hidden, y: distance },
+    animate,
+    exit: { ...hidden, y: distance },
+  },
+  down: {
+    initial: { ...hidden, y: -distance },
+    animate,
+    exit: { ...hidden, y: -distance },
+  },
+  left: {
+    initial: { ...hidden, x: distance },
+    animate,
+    exit: { ...hidden, x: distance },
+  },
+  right: {
+    initial: { ...hidden, x: -distance },
+    animate,
+    exit: { ...hidden, x: -distance },
+  },
+  scale: { initial: { ...hidden }, animate, exit: { ...hidden } },
+} satisfies Record<string, VariantSet>;
+
+export type VariantDirection = keyof typeof variants;
+
 export interface ButtonProps {
   id?: string;
   label?: string | number | React.ReactNode;
   href?: string;
   className?: string;
-  variant?: "fill" | "outline" | "ghost";
-  // biome-ignore lint/suspicious/noExplicitAny: fight
-  onClick?: (event?: any) => void;
+  variant?: "fill" | "outline" | "ghost" | "fill-accent";
+  onClick?: (event?: React.MouseEvent) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
   shortcut?: ShortcutDef;
   size?: "md" | "sm" | "lg";
+  animDirection?: VariantDirection;
 }
+
+const MotionLink = motion(Link);
+
+const defaultVariants = {
+  initial: { opacity: 0.5 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0.5 },
+};
+
 const Button = ({
   id,
   label,
@@ -30,14 +76,16 @@ const Button = ({
   Icon,
   shortcut,
   size = "md",
+  animDirection,
 }: ButtonProps) => {
   const router = useRouter();
+
   useShortcut(shortcut, () => {
-    console.log("shortcut triggered", shortcut?.keys);
-    return href ? router.push(href) : onClick?.();
+    if (href) router.push(href);
+    else onClick?.();
   });
 
-  const sizeStyles: Record<"md" | "sm" | "lg", Record<string, string>> = {
+  const sizeStyles = {
     md: {
       text: "text-base",
       gap: "gap-3",
@@ -47,7 +95,7 @@ const Button = ({
     sm: {
       text: "text-sm",
       gap: "gap-1",
-      padding: "py-2 px-3",
+      padding: `${shortcut ? "pe-1! ps-2!" : "px-2!"} py-1!`,
       iconSize: "size-5",
     },
     lg: {
@@ -58,55 +106,71 @@ const Button = ({
     },
   };
 
-  const style = `cursor-pointer rounded-3xl w-fit ${sizeStyles[size].padding}`;
+  const s = sizeStyles[size];
+  const baseStyle = `cursor-pointer rounded-3xl w-fit ${s.padding}`;
 
   const variantStyles = {
-    fill: "bg-secondary/20 border-[1px] border-secondary",
-    outline: "border-[1px] border-secondary",
+    "fill-accent":
+      "border border-accent bg-accent/20 rounded-full hover:text-white hover:bg-accent hover:border-secondary",
+    fill: "bg-secondary/20 border border-secondary",
+    outline:
+      "border border-secondary hover:text-accent hover:border-accent active:text-white active:border-white",
     ghost: "!p-0 hover:text-primary active:text-darker",
   };
 
-  const content = (Icon || label) && (
-    <span
-      className={`flex justify-center items-center ${sizeStyles[size].gap} ${sizeStyles[size].text}`}
-    >
-      {Icon && (
-        <span>
-          <Icon className={`${sizeStyles[size].iconSize}`} />
-        </span>
-      )}
-      {label && (
-        <span className="font-semibold whitespace-nowrap">{label}</span>
-      )}
-      {shortcut && <Shortcut shortcut={shortcut} className="ps-1" />}
-    </span>
-  );
+  const safeId =
+    id ??
+    (typeof label === "string" || typeof label === "number"
+      ? `${String(label).toLowerCase()}-btn`
+      : undefined);
 
-  if (href && content) {
+  const motionProps = animDirection ? variants[animDirection] : defaultVariants;
+
+  const content =
+    Icon || label ? (
+      <span
+        className={`transition-all flex justify-center items-center ${s.gap} ${s.text}`}
+      >
+        {Icon && (
+          <span>
+            <Icon className={s.iconSize} />
+          </span>
+        )}
+        {label && (
+          <span className="font-semibold whitespace-nowrap">{label}</span>
+        )}
+        {shortcut && (
+          <Shortcut shortcut={shortcut} className="ps-1" pill={size === "sm"} />
+        )}
+      </span>
+    ) : null;
+
+  if (!content) return null;
+
+  if (href) {
     return (
-      <Link
-        className={`block ${style} ${variantStyles[variant]} ${className}`}
+      <MotionLink
+        {...motionProps}
+        id={safeId}
         href={href}
+        className={`block ${baseStyle} ${variantStyles[variant]} ${className}`}
       >
         {content}
-      </Link>
+      </MotionLink>
     );
   }
 
-  if (content) {
-    return (
-      <button
-        id={id || `${label?.toString().toLowerCase()}-btn`}
-        type={type}
-        onClick={onClick}
-        className={`${style} ${variantStyles[variant]} ${className}`}
-      >
-        {content}
-      </button>
-    );
-  }
-
-  return null;
+  return (
+    <motion.button
+      {...motionProps}
+      id={safeId}
+      type={type}
+      onClick={onClick}
+      className={`${baseStyle} ${variantStyles[variant]} ${className}`}
+    >
+      {content}
+    </motion.button>
+  );
 };
 
 export default Button;

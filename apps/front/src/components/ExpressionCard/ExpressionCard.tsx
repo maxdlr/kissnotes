@@ -18,7 +18,8 @@ const ExpressionCard = ({
 }: ExpressionCardProps) => {
   const { symbols, title, author, createdAt, description } = expression;
 
-  if (!expression) return <div>Loading...</div>;
+  // if (!expression) return <div>Loading...</div>;
+
   return (
     <div
       className={`border border-secondary rounded-3xl p-4 sm:p-8 ${className}`}

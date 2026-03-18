@@ -15,11 +15,17 @@ const useBrowse = <T extends Model[]>(
       ) as Partial<T[number]>)
     : undefined;
 
-  const { data, error, isLoading, mutate } = useSWR<KRes<T>>({
+  const {
+    data,
+    error,
+    isLoading: loading,
+    mutate,
+  } = useSWR<KRes<T>>({
     url: `/${model}/browse`,
     params: filteredParams,
   });
-  return { data, error, isLoading, mutate };
+
+  return { data, error, loading, mutate };
 };
 
 export default useBrowse;

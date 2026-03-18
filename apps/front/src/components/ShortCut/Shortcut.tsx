@@ -21,9 +21,10 @@ mods.set("right", "→");
 interface ShortcutProps {
   shortcut: ShortcutDef;
   className?: string;
+  pill?: boolean;
 }
 
-const Shortcut = ({ shortcut, className }: ShortcutProps) => {
+const Shortcut = ({ shortcut, className, pill }: ShortcutProps) => {
   const shortcutKeys = shortcut?.keys?.map((key) => {
     if (typeof key !== "string") {
       const KeyElement = key as ElementType;
@@ -39,11 +40,15 @@ const Shortcut = ({ shortcut, className }: ShortcutProps) => {
 
   return (
     <div className={`max-sm:hidden ${className}`}>
-      <div className="rounded-lg overflow-hidden flex justify-center items-center gap-0.5">
+      <div
+        className={`rounded-lg overflow-hidden flex justify-center items-center gap-0.5`}
+      >
         {shortcutKeys.map((key, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: don't care
           <p key={i} className="text-xs font-extrabold">
-            <span className="min-w-6 min-h-6 bg-secondary flex justify-center items-center rounded-sm px-2">
+            <span
+              className={`min-w-6 min-h-6 bg-secondary flex justify-center items-center px-2 ${pill ? "rounded-full" : "rounded-sm"}`}
+            >
               <span className="text-dark">{key}</span>
             </span>
           </p>

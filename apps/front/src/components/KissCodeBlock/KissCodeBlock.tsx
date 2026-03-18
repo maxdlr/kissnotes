@@ -20,7 +20,7 @@ const KissCodeBlock = ({
   const { code, property } = expression;
   const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
   const text = code.lines.map((l) => l.content).join("\n");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const lineMatches: string[] = [];
 
@@ -74,21 +74,21 @@ const KissCodeBlock = ({
   useEffect(() => {
     if (!highlightedTokens?.length) {
       setCodeBlock(normalCode);
-      setIsLoading(false);
+      setLoading(false);
       return;
     }
 
     if (highlightedTokens?.length) {
       setTokens(highlightedTokens);
       setCodeBlock(tokenHighlightedCode);
-      setIsLoading(false);
+      setLoading(false);
       return;
     }
 
-    setIsLoading(false);
+    setLoading(false);
   }, [highlightedTokens]);
 
-  if (isLoading) return "loading";
+  if (loading) return "loading";
 
   return (
     <CodeBlock code={text} language="js" words={tokens} lines={lineMatches}>

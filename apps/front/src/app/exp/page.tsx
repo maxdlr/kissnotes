@@ -1,30 +1,33 @@
 "use client";
 import type { ExpressionModel, UserModel } from "@kissnotes/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExpressionCard } from "@/components/ExpressionCard";
 import ExpressionListSidebar, {
   type SidebarValue,
 } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
-import useBrowse from "../../hooks/bread/useBrowse";
-import useSidebar from "@/components/ExpressionListSidebar/hooks/useSidebar";
+import useBrowse from "@/hooks/bread/useBrowse";
 
 const Expressions = () => {
-  const { hovering } = useSidebar();
+  const [expressions, setExpressions] = useState<ExpressionModel[]>([]);
   const [filters, setFilters] = useState<SidebarValue>({
     author: null,
     tokens: [],
   });
 
-  const { data: expressions, mutate } = useBrowse<ExpressionModel[]>(
-    "expressions",
-    {
-      author: { id: filters?.author?.id as number } as UserModel,
-    },
-  );
+  const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
+    author: { id: filters?.author?.id as number } as UserModel,
+  });
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    setExpressions(data || []);
+  }, [data, loading]);
 
   const handleFilter = (updatedFilters: SidebarValue) => {
     setFilters(updatedFilters);
-    mutate(); // data will reactively update once mutate resolves
+    // setExpressions(data || []);
   };
 
   return (
@@ -38,7 +41,7 @@ const Expressions = () => {
       <div className="col-span-full lg:col-span-4 grid grid-flow-row xl:grid-cols-2 gap-2 md:gap-4">
         {expressions?.map((expression) => (
           <ExpressionCard
-            highlightedTokens={[hovering]}
+            highlightedTokens={[]}
             key={expression.id}
             expression={expression}
           />
