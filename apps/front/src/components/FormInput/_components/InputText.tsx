@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent, type ElementType, type Ref } from "react";
+import type { ChangeEvent, ElementType, FocusEventHandler, Ref } from "react";
 import type { ModName } from "@/components/ShortCut";
 
 export interface InputTextProps {
@@ -12,6 +12,7 @@ export interface InputTextProps {
   name: string;
   label?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
   disabled?: boolean;
   type?: "text" | "search" | "email";
   ref?: Ref<HTMLInputElement | null>;
@@ -25,6 +26,7 @@ const InputText = ({
   name,
   className,
   onClick,
+  onFocus,
   onChange,
   disabled,
 }: InputTextProps) => {
@@ -42,6 +44,7 @@ const InputText = ({
       onClick={onClick}
       onChange={onChange}
       disabled={disabled}
+      onFocus={onFocus}
     />
   );
 };

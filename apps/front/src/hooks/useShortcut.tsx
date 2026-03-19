@@ -97,7 +97,7 @@ export function useShortcut(
       if (ke.key.toLowerCase() !== triggerKey.toLowerCase()) return;
 
       if (preventDefault) ke.preventDefault();
-      handlerRef.current(ke);
+      handlerRef?.current(ke);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [

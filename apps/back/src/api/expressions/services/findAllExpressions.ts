@@ -2,31 +2,44 @@ import ExpressionEntity from "@/entities/ExpressionEntity";
 import ExpressionRepository from "@/repositories/ExpressionRepository";
 import { ExpressionSymbol } from "@kissnotes/types";
 import { FindOptionsWhere } from "typeorm";
+import filterBySearch from "./filterBySearch";
+import filterByTokens from "./filterByTokens";
+
+interface ExtendedWhere extends FindOptionsWhere<ExpressionEntity> {
+  search?: string;
+}
 
 const findAllExpressions = async (
-  where?: FindOptionsWhere<ExpressionEntity>,
+  where?: ExtendedWhere,
 ): Promise<ExpressionEntity[]> => {
   if (!where) {
-    return await ExpressionRepository.find();
+    return ExpressionRepository.find();
   }
 
-  const tokenFilter = (where.symbols as ExpressionSymbol)?.tokens.map(Number);
+  const symbolsFilter = where.symbols;
+  const tokenTitles: string[] | undefined =
+    symbolsFilter &&
+    typeof symbolsFilter === "object" &&
+    "tokens" in symbolsFilter &&
+    Array.isArray((symbolsFilter as ExpressionSymbol).tokens)
+      ? (symbolsFilter as ExpressionSymbol).tokens.map(String)
+      : undefined;
 
-  if (tokenFilter) {
-    delete where.symbols;
+  const { search, symbols: _symbols, ...sanitizedWhere } = where;
+
+  let result = await ExpressionRepository.findBy(
+    sanitizedWhere as FindOptionsWhere<ExpressionEntity>,
+  );
+
+  if (tokenTitles) {
+    result = filterByTokens(result, tokenTitles);
   }
 
-  const collection = await ExpressionRepository.findBy(where);
-
-  if (tokenFilter) {
-    return collection.filter((expression) =>
-      expression.symbols?.tokens
-        .map((t) => t.id)
-        .some((t) => tokenFilter.includes(t)),
-    );
+  if (search) {
+    result = filterBySearch(result, search);
   }
 
-  return collection;
+  return result;
 };
 
 export default findAllExpressions;

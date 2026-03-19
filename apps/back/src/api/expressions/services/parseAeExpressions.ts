@@ -16,6 +16,7 @@ const NOISE_TOKENS = new Set([
   "/",
   "\\",
   "[0]",
+  "[1]",
   "0",
   "",
   "[",
@@ -46,23 +47,23 @@ function indexToPosition(
   index: number,
 ): { line: number; column: number } {
   const before = text.slice(0, index);
-  const lines = before.split("\n") || [];
+  const lines = before.split("\n");
   return { line: lines.length, column: lines[lines.length - 1]?.length ?? 0 };
 }
 
 /**
  * Split a raw argument string on top-level commas, correctly ignoring
- * commas inside nested parentheses.
+ * commas inside nested parentheses or brackets.
  */
 function splitTopLevelArgs(raw: string): string[] {
   const result: string[] = [];
   let depth = 0;
   let current = "";
   for (const ch of raw) {
-    if (ch === "(") {
+    if (ch === "(" || ch === "[") {
       depth++;
       current += ch;
-    } else if (ch === ")") {
+    } else if (ch === ")" || ch === "]") {
       depth--;
       current += ch;
     } else if (ch === "," && depth === 0) {
@@ -74,6 +75,22 @@ function splitTopLevelArgs(raw: string): string[] {
   }
   if (current.trim()) result.push(current.trim());
   return result;
+}
+
+/**
+ * Given a string and a position pointing at an opening '(', return the index
+ * of the matching closing ')'. Returns -1 if not found.
+ */
+function findMatchingParen(text: string, openIndex: number): number {
+  let depth = 0;
+  for (let i = openIndex; i < text.length; i++) {
+    if (text[i] === "(") depth++;
+    else if (text[i] === ")") {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
 }
 
 /** Classify a token that was not matched by any native expression. */
@@ -114,8 +131,13 @@ export function parseAeExpression(
   const allTokens: ExpressionToken[] = [];
   const occupied = new RangeSet();
 
+  // Single monotonic counter — every token AND every CallArgument gets a
+  // unique id drawn from this sequence. No two objects in the output share
+  // the same id.
+  const nextId: () => string = () => crypto.randomUUID() as unknown as string;
+
   // ── Pass 1: native expression matches ──────────────────────────────────────
-  let id = 0;
+
   for (const native of nativeExpressions) {
     let regex: RegExp;
     try {
@@ -139,27 +161,35 @@ export function parseAeExpression(
       if (occupied.overlaps(index, end)) continue;
       occupied.add(index, end);
 
+      const tokenId = nextId();
       const hasParens = fullMatch.includes("(");
 
-      // Named capture groups — zip against paramNames by insertion order
-      const captureGroups: Record<string, string> | undefined = match.groups
-        ? (Object.fromEntries(
-            Object.entries(match.groups).filter(([, v]) => v !== undefined),
-          ) as Record<string, string>)
-        : undefined;
+      // Raw named groups from the regex (includes undefined entries for
+      // optional groups that didn't participate in this match).
+      const rawGroups = match.groups ?? {};
 
-      const callArguments: CallArgument[] = captureGroups
-        ? Object.entries(captureGroups).map(([groupName, value], i) => ({
-            id,
-            name: paramNames[i] ?? groupName,
-            value,
-          }))
-        : [];
+      // captureGroups exposed on the token: only defined values.
+      const captureGroups: Record<string, string> | undefined =
+        Object.keys(rawGroups).length > 0
+          ? (Object.fromEntries(
+              Object.entries(rawGroups).filter(([, v]) => v !== undefined),
+            ) as Record<string, string>)
+          : undefined;
 
-      // Fallback: no named groups but positional capture available
-      if (!callArguments.length && match[1]) {
+      // Build callArguments by matching paramNames to group values by NAME,
+      // not by insertion order. Each argument gets its own unique id.
+      const callArguments: CallArgument[] = paramNames.flatMap(
+        (name): CallArgument[] => {
+          const value = rawGroups[name];
+          if (value === undefined) return [];
+          return [{ id: nextId(), name, value }];
+        },
+      );
+
+      // Fallback for natives with no named groups but with a first capture.
+      if (callArguments.length === 0 && match[1] !== undefined) {
         splitTopLevelArgs(match[1]).forEach((value, i) => {
-          callArguments.push({ id, name: paramNames[i], value });
+          callArguments.push({ id: nextId(), name: paramNames[i], value });
         });
       }
 
@@ -172,7 +202,7 @@ export function parseAeExpression(
       const { line, column } = indexToPosition(text, index);
 
       allTokens.push({
-        id,
+        id: tokenId,
         label: hasParens ? `${native.title}()` : native.title,
         fullMatch,
         title: native.title,
@@ -188,40 +218,66 @@ export function parseAeExpression(
         captureGroups,
       });
     }
-    id++;
   }
 
   // ── Pass 2: generic identifiers not covered by any native match ────────────
-  const genericRe = /([a-zA-Z_$][\w$.]*)(\(([^)]*)\))?/g;
+  //
+  // We use a simple identifier regex, then do balanced-paren scanning
+  // manually for the argument list. This correctly handles nested calls
+  // like foo(bar(1), 2) which a character-class regex cannot.
 
-  for (const match of text.matchAll(genericRe)) {
+  const identRe = /[a-zA-Z_$][\w$."]*/g;
+
+  for (const match of text.matchAll(identRe)) {
     const index = match.index ?? 0;
-    const fullMatch = match[0];
-    const end = index + fullMatch.length;
-
-    if (occupied.overlaps(index, end)) continue;
-
-    const title = match[1] || "";
-    const hasParens = !!match[2];
-    const rawArgs = match[3] ?? "";
+    const title = match[0];
 
     if (NOISE_TOKENS.has(title) || /^\d+$/.test(title)) continue;
 
+    // Check if the identifier itself is already claimed.
+    const identEnd = index + title.length;
+    if (occupied.overlaps(index, identEnd)) continue;
+
+    // Check whether a '(' immediately follows the identifier.
+    const parenStart = identEnd;
+    const hasParens = parenStart < text.length && text[parenStart] === "(";
+
+    let fullMatch = title;
+    let rawArgs = "";
+    let end = identEnd;
+
+    if (hasParens) {
+      const closeIndex = findMatchingParen(text, parenStart);
+      if (closeIndex !== -1) {
+        end = closeIndex + 1;
+        fullMatch = text.slice(index, end);
+        rawArgs = text.slice(parenStart + 1, closeIndex);
+      } else {
+        // Unmatched paren — treat as plain identifier.
+        end = identEnd;
+        fullMatch = title;
+      }
+    }
+
+    // Re-check now that we know the full extent of the token.
+    if (occupied.overlaps(index, end)) continue;
     occupied.add(index, end);
+
+    const tokenId = nextId();
 
     const callArguments: CallArgument[] | undefined = hasParens
       ? splitTopLevelArgs(rawArgs)
-          .map((value) => ({ value, id }))
-          .filter((a) => a.value !== "")
+          .filter((value) => value !== "")
+          .map((value) => ({ id: nextId(), value }))
       : undefined;
 
-    const kind = classifyGenericToken(title, hasParens);
+    const kind = classifyGenericToken(title, hasParens && end > identEnd);
     const { line, column } = indexToPosition(text, index);
 
     allTokens.push({
-      id,
+      id: tokenId,
       label: hasParens ? `${title}()` : title,
-      fullMatch: fullMatch.trim(),
+      fullMatch,
       title,
       isNative: false,
       kind,
@@ -231,14 +287,13 @@ export function parseAeExpression(
       line,
       column,
     });
-    id++;
   }
 
   // ── Sort by source position and group ─────────────────────────────────────
   allTokens.sort((a, b) => a.index - b.index);
 
   return {
-    id,
+    id: nextId(),
     text,
     tokens: allTokens,
     groups: {

@@ -1,12 +1,13 @@
-import type { ChangeEvent, ElementType } from "react";
-import { type ModName, Shortcut } from "../ShortCut";
+import { type ChangeEvent, type ElementType, useRef } from "react";
+import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
+import { Shortcut } from "../ShortCut";
 import InputText, { type InputTextProps } from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
-import { ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 
 interface FormInputProps {
   placeholder?: string | React.ReactNode;
   inputClassName?: string;
+  containerClassName?: string;
   className?: string;
   value?: string | number | boolean;
   variant?: "fill" | "outline" | "ghost";
@@ -38,6 +39,7 @@ const FormInput = ({
   name,
   className,
   inputClassName,
+  containerClassName,
   variant = "outline",
   onClick,
   Icon,
@@ -47,7 +49,8 @@ const FormInput = ({
   disabled,
   labelIn = false,
 }: FormInputProps) => {
-  useShortcut(shortcut, onClick as (e: KeyboardEvent) => void);
+  const ref = useRef<HTMLInputElement | null>(null);
+  useShortcut(shortcut, onClick ? onClick : () => ref.current?.focus());
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
     outline: "border-[1px] border-secondary",
@@ -56,7 +59,7 @@ const FormInput = ({
 
   return (
     <div className={className}>
-      {!labelIn && (
+      {!labelIn && label && (
         <div className="pb-2 ps-2">
           <label htmlFor={name} className="font-thin">
             {label}
@@ -64,7 +67,7 @@ const FormInput = ({
         </div>
       )}
       <div
-        className={`rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} `}
+        className={`rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} ${containerClassName}`}
       >
         {((label && labelIn) || Icon) && (
           <div>
@@ -89,6 +92,7 @@ const FormInput = ({
 
         {["text", "search", "email"].includes(type) && (
           <InputText
+            ref={ref}
             type={type as InputTextProps["type"]}
             name={name}
             placeholder={placeholder as InputTextProps["placeholder"]}

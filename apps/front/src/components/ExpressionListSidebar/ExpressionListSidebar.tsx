@@ -9,11 +9,14 @@ import useExpressions from "@/hooks/useExpressions";
 import { arrayUnique } from "@/utils/arrayUtils";
 import { Button } from "../Button";
 import { FormSelect } from "../FormSelect";
+import { FormInput } from "../FormInput";
+import MasonryGrid from "../MasonryGrid/MasonryGrid";
 
 export type SidebarValue =
   | {
       tokens: ExpressionToken[];
       author: UserModel | null;
+      search: string;
     }
   | undefined;
 
@@ -31,14 +34,7 @@ const ExpressionListSidebar = ({
   value,
 }: ExpressListSideBarProps) => {
   const { getTokens } = useExpressions(expressions);
-  const tokens = arrayUnique(getTokens(), "label");
-  // const [authors, setAuthors] = useState(
-  //   arrayUnique(
-  //     expressions.map((e) => e.author),
-  //     "username",
-  //   ),
-  // );
-
+  const tokens = getTokens(["functions", "methods", "properties"]);
   const authors = arrayUnique(
     expressions.map((e) => e.author),
     "username",
@@ -62,7 +58,18 @@ const ExpressionListSidebar = ({
         className="place-self-end self-start hidden md:block"
         shortcut={{ keys: ["ctrl", "S"] }}
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+      <MasonryGrid>
+        <FormInput
+          name="search"
+          onChange={(e) =>
+            handleOnChange({ name: "search", value: e.target.value })
+          }
+          shortcut={{
+            keys: value?.search ? ["ESC"] : ["cmd", "F"],
+            preventDefault: true,
+          }}
+          containerClassName="border-accent!"
+        />
         <FormSelect<ExpressionToken>
           name="tokens"
           label="Expression contains..."
@@ -79,7 +86,7 @@ const ExpressionListSidebar = ({
           value={value?.author || null}
           property="username"
         />
-      </div>
+      </MasonryGrid>
     </aside>
   );
 };

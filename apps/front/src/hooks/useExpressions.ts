@@ -3,9 +3,13 @@ import type {
   ExpressionSymbol,
   ExpressionToken,
 } from "@kissnotes/types";
+import { arrayUnique } from "@/utils/arrayUtils";
 
 const useExpressions = (expressions: ExpressionModel[]) => {
-  const getTokens = (kinds?: (keyof ExpressionSymbol["groups"])[]) => {
+  const getTokens = (
+    kinds?: (keyof ExpressionSymbol["groups"])[],
+    property?: keyof ExpressionToken,
+  ) => {
     if (!expressions.length) {
       return [];
     }
@@ -14,10 +18,16 @@ const useExpressions = (expressions: ExpressionModel[]) => {
       .filter((symbol): symbol is ExpressionSymbol => symbol !== undefined);
 
     if (kinds) {
-      return kinds.flatMap((k) => symbols.flatMap((s) => s.groups[k]));
+      return arrayUnique(
+        kinds.flatMap((k) => symbols.flatMap((s) => s.groups[k])),
+        property || "label",
+      );
     }
 
-    return symbols.flatMap((s): ExpressionToken[] => s.tokens);
+    return arrayUnique<ExpressionToken>(
+      symbols.flatMap((s): ExpressionToken[] => s.tokens),
+      property || "label",
+    );
   };
 
   return {

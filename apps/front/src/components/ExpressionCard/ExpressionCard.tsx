@@ -1,10 +1,11 @@
 "use client";
-import type { ExpressionModel } from "@kissnotes/types";
+import type { ExpressionModel, ExpressionToken } from "@kissnotes/types";
 import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
 import { KissCodeBlock } from "../KissCodeBlock";
 import Pill from "../Pill/Pill";
 import { UserHandle } from "../UserHandle";
+import useExpressions from "@/hooks/useExpressions";
 
 interface ExpressionCardProps {
   expression: ExpressionModel;
@@ -16,7 +17,8 @@ const ExpressionCard = ({
   className,
   highlightedTokens = [],
 }: ExpressionCardProps) => {
-  const { symbols, title, author, createdAt, description } = expression;
+  const { title, author, createdAt, description } = expression;
+  const { getTokens } = useExpressions([expression]);
 
   // if (!expression) return <div>Loading...</div>;
 
@@ -38,11 +40,9 @@ const ExpressionCard = ({
           </div>
         )}
         <div className="flex overflow-auto justify-items-start items-center gap-2">
-          {symbols?.tokens
-            ?.filter((t) => t.kind === "function")
-            .map((t) => (
-              <Pill label={t.label} key={t.index} />
-            ))}
+          {getTokens(["functions", "methods", "properties"]).map((t) => (
+            <Pill label={t.label} key={t.index} />
+          ))}
         </div>
         <KissCodeBlock
           highlightedTokens={highlightedTokens}

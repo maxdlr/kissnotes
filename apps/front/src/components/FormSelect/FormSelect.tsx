@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
 } from "react";
+import useOnClickOutside from "@/hooks/useClickOutside";
 import { Button } from "../Button";
 import InputText from "../FormInput/_components/InputText";
 import Pill from "../Pill/Pill";
@@ -132,11 +133,17 @@ const FormSelect = <T,>({
   const [prompt, setPrompt] = useState("");
   const [max, setMax] = useState(10);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const formSelectRef = useRef<HTMLDivElement | null>(null);
+  const [focus, setFocus] = useState(false);
 
-  /** Move focus back to the search input after any interaction. */
   const refocus = useCallback(() => {
-    if (searchable) inputRef.current?.focus();
+    if (searchable) {
+      inputRef.current?.focus();
+      setFocus(true);
+    }
   }, [searchable]);
+
+  useOnClickOutside<HTMLDivElement>(formSelectRef, () => setFocus(false));
 
   const filterOptions = useCallback(
     (opts: T[]) => {
@@ -167,7 +174,6 @@ const FormSelect = <T,>({
     [prompt, property, multiple, value],
   );
 
-  // Derive filtered options synchronously — no stale-state lag.
   const localOptions = useMemo(
     () => filterOptions(options),
     [filterOptions, options],
@@ -190,6 +196,7 @@ const FormSelect = <T,>({
     } else {
       onChange({ name, value: option });
     }
+    setPrompt("");
     refocus();
   };
 
@@ -225,16 +232,24 @@ const FormSelect = <T,>({
   // Render
   // ---------------------------------------------------------------------------
 
+  const showSearch =
+    (searchable && multiple && options.length) ||
+    (searchable && !multiple && !isValue && options.length);
+
   return (
     <AnimatePresence mode="popLayout">
+      {/** biome-ignore lint/a11y/useKeyWithClickEvents: dont care */}
+      {/** biome-ignore lint/a11y/noStaticElementInteractions:  dont care */}
       <div
-        className={`border border-accent p-4 rounded-3xl grid grid-flow-row items-start gap-4 transition-all h-fit min-h-36 w-full ${className}`}
+        onClick={refocus}
+        ref={formSelectRef}
+        className={`border ${focus ? "border-secondary" : "border-accent"} p-4 rounded-3xl grid grid-flow-row items-start gap-4 transition-all h-fit min-h-36 w-full ${className}`}
       >
         {/* HEADER */}
         <div className="flex justify-between items-center w-full transition-all">
           <div className="font-semibold flex items-center transition-all">
             {label &&
-              (searchable && !isValue ? (
+              (showSearch ? (
                 <InputText
                   value={prompt}
                   ref={inputRef}
@@ -242,6 +257,7 @@ const FormSelect = <T,>({
                   placeholder={label as string}
                   onChange={handlePrompt}
                   className="ps-1.5"
+                  onFocus={() => setFocus(true)}
                 />
               ) : (
                 <p className="ps-1.5 w-full">{label}</p>
@@ -264,7 +280,11 @@ const FormSelect = <T,>({
                   onClick={handleClear}
                   Icon={XMarkIcon}
                   size="sm"
-                  shortcut={{ keys: ["ESC"], ignoreInputs: false }}
+                  shortcut={{
+                    keys: ["ESC"],
+                    ignoreInputs: false,
+                    blockers: [!focus],
+                  }}
                 />
               </div>
             )}
@@ -282,20 +302,12 @@ const FormSelect = <T,>({
         </div>
 
         {/* EMPTY STATE */}
-        {!isValue && (
+        {!isValue && placeholder && (
           <div className="flex justify-start items-center gap-2">
             {placeholder && (
               <Pill
                 label={placeholder}
                 className="w-fit bg-transparent border-accent/40 text-accent/40"
-              />
-            )}
-            {searchable && (
-              <Button
-                Icon={PlusIcon}
-                variant="outline"
-                size="sm"
-                onClick={() => inputRef.current?.focus()}
               />
             )}
           </div>
@@ -325,14 +337,18 @@ const FormSelect = <T,>({
               (option, index) =>
                 RenderOption?.(option, index) || (
                   <Button
-                    key={String(option[property])}
+                    key={`${String(option[property])}-${index}`}
                     variant="fill-accent"
                     size="sm"
                     onClick={() => handleOnSelect(option)}
                     label={option[property] as string}
                     shortcut={
                       localOptions.length === 1 || index === 0
-                        ? { keys: ["enter"], ignoreInputs: false }
+                        ? {
+                            keys: ["enter"],
+                            ignoreInputs: false,
+                            blockers: [!focus],
+                          }
                         : undefined
                     }
                   />
@@ -345,18 +361,20 @@ const FormSelect = <T,>({
               size="sm"
               onClick={() => setMax(localOptions.length)}
               label="More..."
-              shortcut={{ keys: ["+"] }}
+              shortcut={{ keys: ["+"], blockers: [!focus] }}
             />
           )}
-          {!!localOptions.length && localOptions.length <= max && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setMax(maxOptions)}
-              label="Less..."
-              shortcut={{ keys: ["-"] }}
-            />
-          )}
+          {!!localOptions.length &&
+            localOptions.length <= max &&
+            options.length >= max && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setMax(maxOptions)}
+                label="Less..."
+                shortcut={{ keys: ["-"], blockers: [!focus] }}
+              />
+            )}
         </div>
       </div>
     </AnimatePresence>

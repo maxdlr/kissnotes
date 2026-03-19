@@ -6,7 +6,7 @@ export type TokenKind =
   | "unknown";
 
 export interface CallArgument {
-  id: number;
+  id: Id;
   /** Parameter name, if declared in NativeExpressionModel.arguments */
   name?: string;
   /** Raw string value as it appears in the expression */
@@ -14,7 +14,7 @@ export interface CallArgument {
 }
 
 export interface ExpressionToken {
-  id: number;
+  id: Id;
   /** Empty function signature e.g. "wiggle()" — or bare name for non-functions e.g. "position" */
   label: string;
   /** Full raw match as it appears in code e.g. "wiggle(2, 30)" */
@@ -44,7 +44,7 @@ export interface ExpressionToken {
 }
 
 export interface ExpressionSymbol {
-  id: number;
+  id: Id;
   /** Full expression text (lines joined with \n) */
   text: string;
   /** All tokens sorted by their occurrence in the source */

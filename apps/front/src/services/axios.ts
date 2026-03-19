@@ -4,18 +4,25 @@ import axios, {
 } from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+
 let isRefreshing = false;
 
+const MAX_REFRESH_ATTEMPTS = 3;
+const REFRESH_COUNT_KEY = "auth_refresh_count";
+
+const getRefreshCount = () =>
+  parseInt(sessionStorage.getItem(REFRESH_COUNT_KEY) ?? "0", 10);
+const incrementRefreshCount = () =>
+  sessionStorage.setItem(REFRESH_COUNT_KEY, String(getRefreshCount() + 1));
+const resetRefreshCount = () => sessionStorage.removeItem(REFRESH_COUNT_KEY);
+
 const instance = axios.create({
-  withCredentials: true, // required — sends the signed auth cookie on every request
+  withCredentials: true,
   baseURL,
 });
 
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    // Attach CSRF token if your backend requires it (e.g. a custom header)
-    // const csrf = getCsrfToken();
-    // if (csrf) config.headers["x-csrf-token"] = csrf;
     return config;
   },
   (error: unknown) => Promise.reject(error),
@@ -23,7 +30,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
-    // Normalise all responses so callers always read `response.data.data`
     if (
       response.data &&
       typeof response.data === "object" &&
@@ -46,12 +52,14 @@ instance.interceptors.response.use(
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      if (!isRefreshing) {
+      if (!isRefreshing && getRefreshCount() < MAX_REFRESH_ATTEMPTS) {
         isRefreshing = true;
+        incrementRefreshCount();
         try {
-          await instance.post("/refresh"); // hits the new route
+          await instance.post("/refresh");
           isRefreshing = false;
-          return instance(originalRequest); // retry the original request
+          resetRefreshCount();
+          return instance(originalRequest);
         } catch {
           isRefreshing = false;
           const isPrivate = ["/me"].includes(window.location.pathname);

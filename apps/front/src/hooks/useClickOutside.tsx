@@ -1,7 +1,7 @@
 import { type RefObject, useEffect } from "react";
 
-const useOnClickOutside = <T extends HTMLElement>(
-  ref: RefObject<T>,
+const useOnClickOutside = <T,>(
+  ref: RefObject<T | null>,
   handler: (event: MouseEvent | TouchEvent) => void,
   portalClass = "",
 ): void => {
@@ -13,7 +13,10 @@ const useOnClickOutside = <T extends HTMLElement>(
           return;
         }
       }
-      if (!ref.current || ref.current.contains(event.target as Node)) {
+      if (
+        !ref.current ||
+        (ref.current as unknown as HTMLElement).contains(event.target as Node)
+      ) {
         return;
       }
       handler(event);
