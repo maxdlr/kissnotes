@@ -16,6 +16,9 @@ const Expressions = () => {
 
   const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: filters?.author?.id as number } as UserModel,
+    symbols: filters?.tokens
+      ? { tokens: [...filters.tokens.map((t) => t.id)] }
+      : null,
   });
 
   useEffect(() => {
@@ -27,7 +30,6 @@ const Expressions = () => {
 
   const handleFilter = (updatedFilters: SidebarValue) => {
     setFilters(updatedFilters);
-    // setExpressions(data || []);
   };
 
   return (

@@ -3,11 +3,13 @@
 import type { KRes, Model } from "@kissnotes/types";
 import useSWR from "swr";
 
+export type BrowseFilters<T extends Model[]> = Partial<
+  Record<keyof T[number], T[number][keyof T[number]] | null | undefined>
+>;
+
 const useBrowse = <T extends Model[]>(
   model: string,
-  params?: Partial<
-    Record<keyof T[number], T[number][keyof T[number]] | null | undefined>
-  >,
+  params?: BrowseFilters<T>,
 ) => {
   const filteredParams = params
     ? (Object.fromEntries(
