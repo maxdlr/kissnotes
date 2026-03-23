@@ -190,6 +190,7 @@ const makeUsers = async (
   author.password = "password";
   return await manager.save(UserEntity, author);
 };
+
 export const loadFixtures = async () => {
   return await ExpressionRepository.manager.transaction(async (manager) => {
     await manager.deleteAll(NativeExpressionEntity);
@@ -229,6 +230,7 @@ export const loadFixtures = async () => {
     );
 
     const users = (await makeUsers(manager, 20)) as UserEntity[];
+    await makeUsers(manager);
 
     await manager.save(
       ExpressionEntity,

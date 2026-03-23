@@ -1,17 +1,20 @@
 "use client";
 import type { UserModel } from "@kissnotes/types";
 import { createContext, useContext } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
+import axios from "@/services/axios";
 
 const ME_RETRY_COUNT_KEY = "me_retry_count";
-const MAX_ME_RETRIES = 3;
+const MAX_ME_RETRIES = 2;
 
 const isClient = typeof window !== "undefined";
 
-const getMeRetryCount = () =>
-  isClient
+const getMeRetryCount = () => {
+  resetMeRetryCount();
+  return isClient
     ? parseInt(sessionStorage.getItem(ME_RETRY_COUNT_KEY) ?? "0", 10)
     : 0;
+};
 const incrementMeRetryCount = () =>
   isClient &&
   sessionStorage.setItem(ME_RETRY_COUNT_KEY, String(getMeRetryCount() + 1));
@@ -25,6 +28,7 @@ interface AuthProviderProps {
 interface AuthContextProps {
   user?: UserModel;
   isAuthUser: ({ username, id, email }: Partial<UserModel>) => boolean;
+  logOut: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -50,7 +54,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
   };
 
-  const value = { user, isAuthUser };
+  const logOut = async () => {
+    await axios.post("/logout");
+    window.location.pathname = "/";
+  };
+
+  const value = { user, isAuthUser, logOut };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

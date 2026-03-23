@@ -51,6 +51,7 @@ const FormInput = ({
 }: FormInputProps) => {
   const ref = useRef<HTMLInputElement | null>(null);
   useShortcut(shortcut, onClick ? onClick : () => ref.current?.focus());
+
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
     outline: "border-[1px] border-secondary",

@@ -8,8 +8,8 @@ import type {
 import useExpressions from "@/hooks/useExpressions";
 import { arrayUnique } from "@/utils/arrayUtils";
 import { Button } from "../Button";
-import { FormSelect } from "../FormSelect";
 import { FormInput } from "../FormInput";
+import { FormSelect } from "../FormSelect";
 import MasonryGrid from "../MasonryGrid/MasonryGrid";
 
 export type SidebarValue =

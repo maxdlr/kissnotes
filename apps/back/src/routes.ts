@@ -11,7 +11,7 @@ import logOut from "./api/auth/controllers/logOut";
 const router = Router();
 
 router.post("/login", logIn);
-router.post("/logout", logOut);
+router.post("/logout", authenticate, logOut);
 router.post("/refresh", getRefreshToken);
 
 router.get("/me", authenticate, getMe);

@@ -14,7 +14,7 @@ type VariantSet = {
 };
 
 const animate = { opacity: 1, scale: 1, y: 0, x: 0, rotate: 0 };
-const hidden = { opacity: 0, scale: 0.9, rotate: 3 };
+const hidden = { opacity: 0, scale: 0.9, rotate: 10 };
 const distance = 20;
 
 export const variants = {
@@ -29,14 +29,14 @@ export const variants = {
     exit: { ...hidden, y: -distance },
   },
   left: {
-    initial: { ...hidden, x: distance },
+    initial: { ...hidden, rotate: 0, x: distance },
     animate,
-    exit: { ...hidden, x: distance },
+    exit: { ...hidden, rotate: 0, x: distance },
   },
   right: {
-    initial: { ...hidden, x: -distance },
+    initial: { ...hidden, rotate: 0, x: -distance },
     animate,
-    exit: { ...hidden, x: -distance },
+    exit: { ...hidden, rotate: 0, x: -distance },
   },
   scale: { initial: { ...hidden }, animate, exit: { ...hidden } },
 } satisfies Record<string, VariantSet>;

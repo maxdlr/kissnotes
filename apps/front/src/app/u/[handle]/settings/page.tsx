@@ -1,15 +1,12 @@
 "use client";
 import { PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import type { UserModel } from "@kissnotes/types";
-import { useParams } from "next/navigation";
 import { type ChangeEvent, useState } from "react";
 import { Button } from "@/components/Button";
 import { FormInput } from "@/components/FormInput";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import { UserHandle } from "@/components/UserHandle";
 import useAuth from "@/hooks/AuthProvider";
-import useRead from "@/hooks/bread/useRead";
-import { getProfileHref, getUsername } from "@/utils/getProfileHref";
+import { getProfileHref } from "@/utils/getProfileHref";
 import SectionTitle from "./_components/Subtitle";
 
 interface ProfileSettingsPageProps {
@@ -17,18 +14,7 @@ interface ProfileSettingsPageProps {
 }
 
 const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
-  const { handle } = useParams();
-  const username = getUsername(handle);
-
-  const { user: authUser, isAuthUser } = useAuth();
-  const { data: unAuthUser } = useRead<UserModel>(
-    "users",
-    { username },
-    !isAuthUser({ username }),
-  );
-
-  const user: UserModel | undefined = unAuthUser || authUser;
-
+  const { user, logOut } = useAuth();
   const { isOpen } = useSearcher();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -49,21 +35,20 @@ const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
-  const handleLogout = () => {
-
-  };
-
   return (
     <div className="w-full h-full flex justify-center items-center">
       <div
         className={`sm:max-w-200 w-full h-fit sm:max-h-125 border border-secondary rounded-4xl grid sm:grid-cols-5 items-start gap-x-4 sm:gap-x-8 sm:gap-y-4 gap-y-2 p-4 sm:p-8`}
       >
         <div className="flex justify-between items-center col-span-full">
-          <div><UserHandle /><Button label="Logout" onClick={handleLogout} /></div>
+          <div>
+            <UserHandle />
+            <Button label="Logout" onClick={logOut} />
+          </div>
           <Button
             Icon={XMarkIcon}
             shortcut={{ keys: ["ESC"], blockers: [isOpen] }}
-            href={getProfileHref(username)}
+            href={getProfileHref(user?.username)}
             variant="ghost"
           />
         </div>

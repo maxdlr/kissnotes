@@ -16,7 +16,8 @@ const Header = () => {
       username: "maxdlr",
       password: "password",
     });
-    mutate("/me");
+
+    mutate({ url: "/me" });
   };
   return (
     <header className="grid grid-cols-3 md:grid-cols-5 items-center bg-darker">

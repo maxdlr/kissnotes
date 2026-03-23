@@ -1,3 +1,4 @@
+import privateUris from "@/enums/privateUris";
 import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
@@ -51,6 +52,7 @@ instance.interceptors.response.use(
 
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      console.log("401 - isPrivate", isRefreshing, getRefreshCount());
 
       if (!isRefreshing && getRefreshCount() < MAX_REFRESH_ATTEMPTS) {
         isRefreshing = true;
@@ -62,7 +64,10 @@ instance.interceptors.response.use(
           return instance(originalRequest);
         } catch {
           isRefreshing = false;
-          const isPrivate = ["/me"].includes(window.location.pathname);
+          const isPrivate = privateUris.some((pattern) =>
+            pattern.test(window.location.pathname),
+          );
+
           if (isPrivate) window.location.href = "/";
         }
       }

@@ -2,8 +2,9 @@
 
 import type { KissApiError, Model } from "@kissnotes/types";
 import type { AxiosError } from "axios";
-import { MotionConfig, motion } from "motion/react";
+import { MotionConfig } from "motion/react";
 import { SWRConfig } from "swr";
+import privateUris from "@/enums/privateUris";
 import { AuthProvider } from "@/hooks/AuthProvider";
 import axios from "@/services/axios";
 
@@ -25,6 +26,15 @@ const fetcher = async ({ url, params }: { url: string; params: Model }) => {
         "----- kissError -----": `${kissError?.status} - ${kissError?.message}`,
       });
     }
+
+    const isPrivate = privateUris.some((pattern) =>
+      pattern.test(window.location.pathname),
+    );
+
+    if (kissError?.status === 401 && isPrivate) {
+      window.location.href = "/";
+    }
+
     throw kissError;
   }
 };
