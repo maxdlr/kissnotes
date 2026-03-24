@@ -3,6 +3,7 @@ import { ArrowLeftIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/Button";
 import type { ButtonProps } from "@/components/Button/Button";
+import useAuth from "@/hooks/AuthProvider";
 import { getProfileHref, getUsername } from "@/utils/getProfileHref";
 
 interface ProfilePageLayoutProps {
@@ -11,15 +12,18 @@ interface ProfilePageLayoutProps {
 
 const ProfilePageLayout = ({ children }: ProfilePageLayoutProps) => {
   const { handle } = useParams();
+  const { isAuthUser } = useAuth();
 
-  const menu: ButtonProps[] = [
+  const menu: (ButtonProps & { enabled?: boolean })[] = [
     {
+      enabled: true,
       label: "Back",
       Icon: ArrowLeftIcon,
       shortcut: { keys: ["ESC"] },
       variant: "ghost",
     },
     {
+      enabled: isAuthUser({ username: getUsername(handle) as string }),
       label: `Settings`,
       Icon: UserIcon,
       href: `${getProfileHref(getUsername(handle))}/settings`,
@@ -43,9 +47,15 @@ const ProfilePageLayout = ({ children }: ProfilePageLayoutProps) => {
         ))}
       </aside>
       <aside className={`hidden sm:block ${asideCls}`}>
-        {menu.map((b) => (
-          <Button {...b} key={b.label as string} className={`${b.className}`} />
-        ))}
+        {menu
+          .filter((b) => b.enabled)
+          .map((b) => (
+            <Button
+              {...b}
+              key={b.label as string}
+              className={`${b.className}`}
+            />
+          ))}
       </aside>
       {children}
     </>

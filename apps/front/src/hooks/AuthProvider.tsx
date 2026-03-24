@@ -29,6 +29,7 @@ interface AuthContextProps {
   user?: UserModel;
   isAuthUser: ({ username, id, email }: Partial<UserModel>) => boolean;
   logOut: () => void;
+  logIn: (credentials: { username: string; password: string }) => void;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -54,12 +55,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
   };
 
-  const logOut = async () => {
-    await axios.post("/logout");
-    window.location.pathname = "/";
-  };
+  const logOut = (isProtectedPathname: boolean = true) =>
+    axios.post("/logout").catch(() => {
+      if (isProtectedPathname) {
+        window.location.href = "/";
+      }
+    });
 
-  const value = { user, isAuthUser, logOut };
+  const logIn = (credentials: { username: string; password: string }) =>
+    axios.post("/login", credentials).then(() => mutate({ url: "/me" }));
+
+  const value = { user, isAuthUser, logOut, logIn };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

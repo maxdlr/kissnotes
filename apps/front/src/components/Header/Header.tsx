@@ -1,23 +1,18 @@
 "use client";
-import { mutate } from "swr";
 import useAuth from "@/hooks/AuthProvider";
-import useAxios from "@/hooks/useAxios";
 import { Button } from "../Button";
 import { Logo } from "../Logo";
 import { SearchBar } from "../SearchBar";
 import { UserHandle } from "../UserHandle";
 
 const Header = () => {
-  const { postData } = useAxios("/login");
-  const { user } = useAuth();
+  const { user, logIn } = useAuth();
 
-  const handleSignIn = async () => {
-    await postData({
+  const handleSignIn = () => {
+    logIn({
       username: "maxdlr",
       password: "password",
     });
-
-    mutate({ url: "/me" });
   };
   return (
     <header className="grid grid-cols-3 md:grid-cols-5 items-center bg-darker">

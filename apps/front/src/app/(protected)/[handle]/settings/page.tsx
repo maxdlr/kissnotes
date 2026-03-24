@@ -9,11 +9,7 @@ import useAuth from "@/hooks/AuthProvider";
 import { getProfileHref } from "@/utils/getProfileHref";
 import SectionTitle from "./_components/Subtitle";
 
-interface ProfileSettingsPageProps {
-  className?: string;
-}
-
-const ProfileSettingsPage = ({ className }: ProfileSettingsPageProps) => {
+const ProfileSettingsPage = () => {
   const { user, logOut } = useAuth();
   const { isOpen } = useSearcher();
   const [isEdit, setIsEdit] = useState(false);
