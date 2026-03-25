@@ -1,15 +1,10 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dont care */
 
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
-import {
-  MagnifyingGlassIcon,
-  PlusIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import {
   type ChangeEvent,
-  type ElementType,
   useCallback,
   useMemo,
   useRef,
@@ -17,68 +12,10 @@ import {
 } from "react";
 import useOnClickOutside from "@/hooks/useClickOutside";
 import { Button } from "../Button";
+import Collapsible from "../Collapsible/Collapsible";
 import InputText from "../FormInput/_components/InputText";
 import Pill from "../Pill/Pill";
-
-interface FormSelectProps<T> {
-  /** The field name, used as the key in `onChange` payloads and as a fallback label. */
-  name: string;
-
-  /** Optional label displayed in the header. When `searchable` is true and no value
-   *  is selected, this is also used as the search input placeholder. */
-  label?: string | React.ReactNode;
-
-  /** Additional class names applied to the root container. */
-  className?: string;
-
-  /** Full list of options to select from. */
-  options: T[];
-
-  /**
-   * Current selected value(s).
-   * - Pass a `T[]` to enable multi-select mode.
-   * - Pass a single `T | null` to enable single-select mode.
-   */
-  value: T[] | T | null;
-
-  /**
-   * Called whenever the selection changes.
-   * `value` will be `T[]` in multi-select mode and `T | null` in single-select mode.
-   */
-  onChange: (change: { name: string; value: T[] | T | null }) => void;
-
-  /** Optional icon rendered in the header when a value is selected. */
-  Icon?: ElementType;
-
-  /** Custom renderer for each option in the dropdown list. */
-  RenderOption?: (option: T, index: number) => React.ReactNode;
-
-  /** Custom renderer for each selected value pill. */
-  SelectedRenderOption?: (option: T) => React.ReactNode;
-
-  /** The key of `T` whose value is used as the display label and for equality checks. */
-  property: keyof T;
-
-  /** Whether to show a search/filter input. Defaults to `true`. */
-  searchable?: boolean;
-
-  /** Whether to apply hover styles to unselected option pills. Defaults to `true`. */
-  useHovering?: boolean;
-
-  /**
-   * Placeholder text shown when no value is selected.
-   * Falls back to an empty pill if omitted — do **not** rely on `name` for user-facing copy.
-   */
-  placeholder?: string;
-
-  /** When `true`, enables multi-select mode. Derived from `value` type when omitted,
-   *  but providing this explicitly is safer and more readable. */
-  multiple?: boolean;
-
-  /**
-   * Maximum number of options to show in the dropdown list. */
-  maxOptions?: number;
-}
+import type { FormSelectProps } from "./interfaces";
 
 // ---------------------------------------------------------------------------
 // Sub-component: selected value pill row
@@ -135,6 +72,7 @@ const FormSelect = <T,>({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const formSelectRef = useRef<HTMLDivElement | null>(null);
   const [focus, setFocus] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const refocus = useCallback(() => {
     if (searchable) {
@@ -143,7 +81,12 @@ const FormSelect = <T,>({
     }
   }, [searchable]);
 
-  useOnClickOutside<HTMLDivElement>(formSelectRef, () => setFocus(false));
+  useOnClickOutside<HTMLDivElement>(formSelectRef, () => {
+    setFocus(false);
+    if (prompt === "" && selectedValues.length === 0) {
+      setCollapsed(true);
+    }
+  });
 
   const filterOptions = useCallback(
     (opts: T[]) => {
@@ -152,7 +95,7 @@ const FormSelect = <T,>({
         .filter((option) => {
           const optionValue = (option[property] as string).toLocaleLowerCase();
           const isPromptMatch = !prompt || optionValue.includes(lowerPrompt);
-          // Use property-based equality so object references don't matter.
+
           const selectedKeys = multiple
             ? (value as T[]).map((v) => v[property])
             : value
@@ -222,6 +165,11 @@ const FormSelect = <T,>({
     setPrompt(e.target.value);
   };
 
+  const handleFocus = () => {
+    setFocus(true);
+    setCollapsed(false);
+  };
+
   const isValue =
     (!multiple && value !== null && value !== undefined) ||
     (multiple && (value as T[]).length > 0);
@@ -243,7 +191,7 @@ const FormSelect = <T,>({
       <div
         onClick={refocus}
         ref={formSelectRef}
-        className={`border ${focus ? "border-secondary" : "border-accent"} p-4 rounded-3xl grid grid-flow-row items-start gap-4 transition-all h-fit min-h-36 w-full ${className}`}
+        className={`border ${focus ? "border-secondary" : "border-accent"} p-5 rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} w-full ${className}`}
       >
         {/* HEADER */}
         <div className="flex justify-between items-center w-full transition-all">
@@ -257,7 +205,7 @@ const FormSelect = <T,>({
                   placeholder={label as string}
                   onChange={handlePrompt}
                   className="ps-1.5"
-                  onFocus={() => setFocus(true)}
+                  onFocus={handleFocus}
                 />
               ) : (
                 <p className="ps-1.5 w-full">{label}</p>
@@ -301,81 +249,85 @@ const FormSelect = <T,>({
           </div>
         </div>
 
-        {/* EMPTY STATE */}
-        {!isValue && placeholder && (
-          <div className="flex justify-start items-center gap-2">
-            {placeholder && (
-              <Pill
-                label={placeholder}
-                className="w-fit bg-transparent border-accent/40 text-accent/40"
-              />
-            )}
-          </div>
-        )}
-
-        {/* SELECTED — unified single/multi render */}
-        {!!selectedValues.length && (
-          <div className="flex flex-wrap gap-2 transition-all">
-            {selectedValues.map((option) => (
-              <SelectedOption
-                key={String(option[property])}
-                option={option}
-                property={property}
-                SelectedRenderOption={SelectedRenderOption}
-                onDeselect={handleOnDeselect}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="bg-accent h-px" />
-
-        {/* OPTIONS */}
-        <div className="flex flex-wrap gap-2">
-          {localOptions
-            .map(
-              (option, index) =>
-                RenderOption?.(option, index) || (
-                  <Button
-                    key={`${String(option[property])}-${index}`}
-                    variant="fill-accent"
-                    size="sm"
-                    onClick={() => handleOnSelect(option)}
-                    label={option[property] as string}
-                    shortcut={
-                      localOptions.length === 1 || index === 0
-                        ? {
-                            keys: ["enter"],
-                            ignoreInputs: false,
-                            blockers: [!focus],
-                          }
-                        : undefined
-                    }
+        <Collapsible collapsed={collapsed}>
+          <div className="space-y-4 pt-4 ">
+            {/* EMPTY STATE */}
+            {!isValue && placeholder && (
+              <div className="flex justify-start items-center gap-2">
+                {placeholder && (
+                  <Pill
+                    label={placeholder}
+                    className="w-fit bg-transparent! border-accent/40 text-secondary/20"
                   />
-                ),
-            )
-            .filter((_, i) => i < max)}
-          {!!localOptions.length && localOptions.length > max && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setMax(localOptions.length)}
-              label="More..."
-              shortcut={{ keys: ["+"], blockers: [!focus] }}
-            />
-          )}
-          {!!localOptions.length &&
-            localOptions.length <= max &&
-            options.length >= max && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setMax(maxOptions)}
-                label="Less..."
-                shortcut={{ keys: ["-"], blockers: [!focus] }}
-              />
+                )}
+              </div>
             )}
-        </div>
+
+            {/* SELECTED — unified single/multi render */}
+            {!!selectedValues.length && (
+              <div className="flex flex-wrap gap-2 transition-all">
+                {selectedValues.map((option) => (
+                  <SelectedOption
+                    key={String(option[property])}
+                    option={option}
+                    property={property}
+                    SelectedRenderOption={SelectedRenderOption}
+                    onDeselect={handleOnDeselect}
+                  />
+                ))}
+              </div>
+            )}
+
+            {!!localOptions.length && <div className="bg-accent h-px" />}
+
+            {/* OPTIONS */}
+            {!!localOptions.length && (
+              <div className="flex flex-wrap gap-2">
+                {localOptions
+                  .map(
+                    (option, index) =>
+                      RenderOption?.(option, index) || (
+                        <Button
+                          key={`${String(option[property])}-${index}`}
+                          variant="fill-accent"
+                          size="sm"
+                          onClick={() => handleOnSelect(option)}
+                          label={option[property] as string}
+                          shortcut={
+                            localOptions.length === 1 || index === 0
+                              ? {
+                                  keys: ["enter"],
+                                  ignoreInputs: false,
+                                  blockers: [!focus],
+                                }
+                              : undefined
+                          }
+                        />
+                      ),
+                  )
+                  .filter((_, i) => i < max)}
+                {localOptions.length > max && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setMax(localOptions.length)}
+                    label="More..."
+                    shortcut={{ keys: ["+"], blockers: [!focus] }}
+                  />
+                )}
+                {localOptions.length <= max && options.length >= max && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setMax(maxOptions)}
+                    label="Less..."
+                    shortcut={{ keys: ["-"], blockers: [!focus] }}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </Collapsible>
       </div>
     </AnimatePresence>
   );

@@ -45,6 +45,7 @@ const ExpressionListSidebar = ({
     value: changeValue,
   }: {
     name: string;
+    // biome-ignore lint/suspicious/noExplicitAny: value can be of any type depending on the input
     value: any;
   }) => {
     onChange({ ...value, [name]: changeValue } as SidebarValue);

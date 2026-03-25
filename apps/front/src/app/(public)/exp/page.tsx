@@ -2,9 +2,8 @@
 import type { ExpressionModel, UserModel } from "@kissnotes/types";
 import { useEffect, useState } from "react";
 import { ExpressionCard } from "@/components/ExpressionCard";
-import ExpressionListSidebar, {
-  type SidebarValue,
-} from "@/components/ExpressionListSidebar/ExpressionListSidebar";
+import { ExpressionListSidebar } from "@/components/ExpressionListSidebar";
+import type { SidebarValue } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
 import useBrowse from "@/hooks/bread/useBrowse";
 
 const Expressions = () => {
