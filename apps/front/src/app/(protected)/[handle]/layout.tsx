@@ -1,32 +1,24 @@
 "use client";
-import { ArrowLeftIcon, UserIcon } from "@heroicons/react/24/outline";
-import { useParams } from "next/navigation";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import type { ButtonProps } from "@/components/Button/Button";
-import useAuth from "@/hooks/AuthProvider";
-import { getProfileHref, getUsername } from "@/utils/getProfileHref";
 
 interface ProfilePageLayoutProps {
   children?: React.ReactNode;
 }
 
 const ProfilePageLayout = ({ children }: ProfilePageLayoutProps) => {
-  const { handle } = useParams();
-  const { isAuthUser } = useAuth();
+  const router = useRouter();
 
   const menu: (ButtonProps & { enabled?: boolean })[] = [
     {
       enabled: true,
       label: "Back",
+      onClick: router.back,
       Icon: ArrowLeftIcon,
       shortcut: { keys: ["ESC"] },
       variant: "ghost",
-    },
-    {
-      enabled: isAuthUser({ username: getUsername(handle) as string }),
-      label: `Settings`,
-      Icon: UserIcon,
-      href: `${getProfileHref(getUsername(handle))}/settings`,
     },
   ];
 

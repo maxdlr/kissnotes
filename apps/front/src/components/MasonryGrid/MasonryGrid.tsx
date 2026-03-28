@@ -1,6 +1,6 @@
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 "use client";
 
-import { Breakpoint } from "@/types/Breakpoints";
 import {
   Children,
   type CSSProperties,
@@ -82,7 +82,7 @@ function distributeChildren(
   return cols;
 }
 
-const { MD, LG } = Breakpoint;
+// const { MD, LG } = Breakpoint;
 
 // Use useLayoutEffect on the client, useEffect on the server (SSR-safe)
 const useIsomorphicLayoutEffect =
@@ -97,7 +97,7 @@ const useIsomorphicLayoutEffect =
  *
  * @example
  * ```tsx
- * <MasonryGrid columns={{ 0: 1, 640: 2, 1024: 3 }} gap="20px">
+ * <MasonryGrid columns={{ 0: 1, 640: 2, 1280: 3 }} gap="20px">
  *   {items.map((item) => (
  *     <MyCard key={item.id} {...item} />
  *   ))}

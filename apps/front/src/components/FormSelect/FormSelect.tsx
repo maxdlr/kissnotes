@@ -1,7 +1,11 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dont care */
 
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  MagnifyingGlassIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import {
   type ChangeEvent,
@@ -64,6 +68,7 @@ const FormSelect = <T,>({
   placeholder,
   multiple: multipleProp,
   maxOptions = 10,
+  tooltip,
 }: FormSelectProps<T>) => {
   const multiple = multipleProp ?? Array.isArray(value);
 
@@ -122,7 +127,7 @@ const FormSelect = <T,>({
     [filterOptions, options],
   );
 
-  if (!options.length) return <div>Loading...</div>;
+  if (!options.length) return;
 
   // ---------------------------------------------------------------------------
   // Handlers
@@ -191,42 +196,41 @@ const FormSelect = <T,>({
       <div
         onClick={refocus}
         ref={formSelectRef}
-        className={`border ${focus ? "border-secondary" : "border-accent"} p-5 rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} w-full ${className}`}
+        className={`border ${focus ? "border-secondary" : "border-accent"} p-5 rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} ${className}`}
       >
         {/* HEADER */}
-        <div className="flex justify-between items-center w-full transition-all">
-          <div className="font-semibold flex items-center transition-all">
-            {label &&
-              (showSearch ? (
+        <div className="flex justify-between items-center">
+          {label && (
+            <div className="font-semibold flex items-center">
+              {showSearch ? (
                 <InputText
                   value={prompt}
                   ref={inputRef}
                   name={name}
                   placeholder={label as string}
                   onChange={handlePrompt}
-                  className="ps-1.5"
+                  className="ps-1"
                   onFocus={handleFocus}
+                  Icon={
+                    !isValue && Icon !== null
+                      ? Icon || MagnifyingGlassIcon
+                      : undefined
+                  }
                 />
               ) : (
                 <p className="ps-1.5 w-full">{label}</p>
-              ))}
-            {searchable && !isValue ? (
-              <MagnifyingGlassIcon className="ms-2 size-6" />
-            ) : (
-              Icon && <Icon className="ms-2 size-6" />
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
-          <div className="flex justify-center items-center gap-4 transition-all">
-            {/* <AnimatePresence mode="popLayout"> */}
+          <div className="flex justify-center items-center gap-2">
             {(isValue || prompt) && (
               <div className="flex justify-center items-center">
                 <Button
                   animDirection="right"
                   label="Clear"
-                  variant="ghost"
+                  variant="ghost-reveal"
                   onClick={handleClear}
-                  Icon={XMarkIcon}
                   size="sm"
                   shortcut={{
                     keys: ["ESC"],
@@ -236,16 +240,17 @@ const FormSelect = <T,>({
                 />
               </div>
             )}
-            {/* </AnimatePresence> */}
 
-            <div className="flex justify-center items-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                Icon={QuestionMarkCircleIcon}
-                className="text-accent"
-              />
-            </div>
+            {tooltip && (
+              <div className="flex justify-center items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  Icon={QuestionMarkCircleIcon}
+                  className="text-accent"
+                />
+              </div>
+            )}
           </div>
         </div>
 
@@ -309,19 +314,19 @@ const FormSelect = <T,>({
                 {localOptions.length > max && (
                   <Button
                     variant="outline"
+                    Icon={PlusIcon}
                     size="sm"
                     onClick={() => setMax(localOptions.length)}
                     label="More..."
-                    shortcut={{ keys: ["+"], blockers: [!focus] }}
                   />
                 )}
                 {localOptions.length <= max && options.length >= max && (
                   <Button
                     variant="outline"
+                    Icon={MinusIcon}
                     size="sm"
                     onClick={() => setMax(maxOptions)}
                     label="Less..."
-                    shortcut={{ keys: ["-"], blockers: [!focus] }}
                   />
                 )}
               </div>

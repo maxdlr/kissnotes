@@ -28,7 +28,7 @@ export interface FormSelectProps<T> {
   onChange: (change: { name: string; value: T[] | T | null }) => void;
 
   /** Optional icon rendered in the header when a value is selected. */
-  Icon?: ElementType;
+  Icon?: ElementType | null;
 
   /** Custom renderer for each option in the dropdown list. */
   RenderOption?: (option: T, index: number) => React.ReactNode;
@@ -58,4 +58,7 @@ export interface FormSelectProps<T> {
   /**
    * Maximum number of options to show in the dropdown list. */
   maxOptions?: number;
+
+  /** Show tooltip */
+  tooltip?: string;
 }

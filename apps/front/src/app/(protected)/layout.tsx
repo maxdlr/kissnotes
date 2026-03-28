@@ -7,12 +7,14 @@ import { getHandle, getUsername } from "@/utils/getProfileHref";
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const { handle } = useParams();
-  const { isAuthUser } = useAuth();
+  const { isAuthUser, user } = useAuth();
 
-  if (
-    pathname !== `/${getHandle(handle)}` &&
-    !isAuthUser({ username: getUsername(handle) as string })
-  ) {
+  const isPrivate = pathname !== `/${getHandle(handle)}`;
+  const isAuth =
+    user && isAuthUser({ username: getUsername(handle) as string });
+  const isAllowed = (isPrivate && isAuth) || !isPrivate;
+
+  if (user && !isAllowed) {
     window.location.href = "/";
     return null;
   }

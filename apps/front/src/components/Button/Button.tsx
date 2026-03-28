@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 "use client";
 
 import { motion } from "motion/react";
@@ -13,9 +14,13 @@ type VariantSet = {
   exit: object;
 };
 
-const animate = { opacity: 1, scale: 1, y: 0, x: 0, rotate: 0 };
-const hidden = { opacity: 0, scale: 0.9, rotate: 10 };
+const scaledDown = 0.95;
+const scaledUp = 1.05;
+const rotated = 10;
 const distance = 20;
+
+const animate = { opacity: 1, scale: 1, y: 0, x: 0, rotate: 0 };
+const hidden = { opacity: 0, scale: scaledDown, rotate: rotated };
 
 export const variants = {
   up: {
@@ -36,7 +41,7 @@ export const variants = {
   right: {
     initial: { ...hidden, rotate: 0, x: -distance },
     animate,
-    exit: { ...hidden, rotate: 0, x: -distance },
+    exit: { ...hidden, rotate: 0, x: distance },
   },
   scale: { initial: { ...hidden }, animate, exit: { ...hidden } },
 } satisfies Record<string, VariantSet>;
@@ -48,21 +53,87 @@ export interface ButtonProps {
   label?: string | number | React.ReactNode;
   href?: string;
   className?: string;
-  variant?: "fill" | "outline" | "ghost" | "fill-accent";
+  variant?: "fill" | "outline" | "ghost" | "fill-accent" | "ghost-reveal";
   onClick?: (event?: React.MouseEvent) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
+  HoverIcon?: ElementType;
   shortcut?: ShortcutDef;
   size?: "md" | "sm" | "lg";
   animDirection?: VariantDirection;
+  hoverUp?: boolean;
 }
 
 const MotionLink = motion(Link);
 
 const defaultVariants = {
-  initial: { opacity: 0.5 },
+  initial: { opacity: 0 },
   animate: { opacity: 1 },
-  exit: { opacity: 0.5 },
+  exit: { opacity: 0 },
+};
+
+const interactionVariants: Record<
+  NonNullable<ButtonProps["variant"]>,
+  { hover: object; tap: object }
+> = {
+  "fill-accent": {
+    hover: {
+      backgroundColor: "var(--color-accent)",
+      borderColor: "var(--color-secondary)",
+      color: "var(--color-primary)",
+      scale: scaledUp,
+    },
+    tap: {
+      backgroundColor: "var(--color-accent)",
+      borderColor: "var(--color-secondary)",
+      color: "var(--color-primary)",
+      scale: scaledDown,
+    },
+  },
+  fill: {
+    hover: {
+      backgroundColor:
+        "color-mix(in srgb, var(--color-secondary) 50%, transparent)",
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledUp,
+    },
+    tap: {
+      backgroundColor:
+        "color-mix(in srgb, var(--color-secondary) 50%, transparent)",
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledDown,
+    },
+  },
+  outline: {
+    hover: {
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledUp,
+    },
+    tap: {
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledDown,
+    },
+  },
+  ghost: {
+    hover: { color: "var(--color-secondary)", scale: scaledUp },
+    tap: { color: "var(--color-primary)", scale: scaledDown },
+  },
+  "ghost-reveal": {
+    hover: {
+      backgroundColor: "var(--color-accent)",
+      color: "var(--color-primary)",
+      scale: scaledUp,
+    },
+    tap: {
+      backgroundColor: "var(--color-secondary)",
+      color: "var(--color-darker)",
+      scale: scaledDown,
+    },
+  },
 };
 
 const Button = ({
@@ -74,9 +145,11 @@ const Button = ({
   type,
   onClick,
   Icon,
+  HoverIcon,
   shortcut,
   size = "md",
   animDirection,
+  hoverUp = false,
 }: ButtonProps) => {
   const router = useRouter();
 
@@ -95,7 +168,7 @@ const Button = ({
     sm: {
       text: "text-sm",
       gap: "gap-1",
-      padding: `${shortcut ? "pe-1! ps-2!" : "px-2!"} py-1!`,
+      padding: `${shortcut ? "pe-1! ps-2!" : "px-2"} py-1`,
       iconSize: "size-5",
     },
     lg: {
@@ -110,12 +183,11 @@ const Button = ({
   const baseStyle = `cursor-pointer rounded-3xl w-fit ${s.padding}`;
 
   const variantStyles = {
-    "fill-accent":
-      "border border-accent bg-accent/20 rounded-full hover:text-white hover:bg-accent hover:border-secondary",
+    "fill-accent": "border border-accent bg-accent/20 rounded-full",
     fill: "bg-secondary/20 border border-secondary",
-    outline:
-      "border border-secondary hover:text-accent hover:border-accent active:text-white active:border-white",
-    ghost: "!p-0 hover:text-primary active:text-darker",
+    outline: "border border-secondary",
+    ghost: "p-0!",
+    "ghost-reveal": "px-2!",
   };
 
   const safeId =
@@ -125,22 +197,32 @@ const Button = ({
       : undefined);
 
   const motionProps = animDirection ? variants[animDirection] : defaultVariants;
+  const { hover, tap } = interactionVariants[variant];
 
   const content =
     Icon || label ? (
-      <span
-        className={`transition-all flex justify-center items-center ${s.gap} ${s.text}`}
-      >
+      <span className={`flex justify-center items-center ${s.gap} ${s.text}`}>
         {Icon && (
-          <span>
-            <Icon className={s.iconSize} />
+          <span className="group">
+            <span className={HoverIcon ? "group-hover:hidden" : ""}>
+              <Icon className={s.iconSize} />
+            </span>
+            {HoverIcon && (
+              <span className="group-hover:block hidden">
+                <HoverIcon className={s.iconSize} />
+              </span>
+            )}
           </span>
         )}
         {label && (
           <span className="font-semibold whitespace-nowrap">{label}</span>
         )}
         {shortcut && (
-          <Shortcut shortcut={shortcut} className="ps-1" pill={size === "sm"} />
+          <Shortcut
+            shortcut={shortcut}
+            className="ps-1"
+            pill={size === "sm" && shortcut.keys.length === 1}
+          />
         )}
       </span>
     ) : null;
@@ -154,6 +236,8 @@ const Button = ({
         id={safeId}
         href={href}
         className={`block ${baseStyle} ${variantStyles[variant]} ${className}`}
+        whileHover={hoverUp ? hover : { ...(hover as any), scale: undefined }}
+        whileTap={tap as any}
       >
         {content}
       </MotionLink>
@@ -167,6 +251,8 @@ const Button = ({
       type={type}
       onClick={onClick}
       className={`${baseStyle} ${variantStyles[variant]} ${className}`}
+      whileHover={hoverUp ? hover : { ...(hover as any), scale: undefined }}
+      whileTap={tap as any}
     >
       {content}
     </motion.button>

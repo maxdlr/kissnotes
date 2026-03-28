@@ -21,11 +21,11 @@ const useRead = <T extends Model>(
 
   const url = fetchIf ? `/${model}/read` : null;
 
-  const { data, error } = useSWR<KRes<T>>({
+  const { data, error, isLoading } = useSWR<KRes<T>>({
     url,
     params,
   });
-  return { data, error };
+  return { data, error, loading: isLoading };
 };
 
 export default useRead;

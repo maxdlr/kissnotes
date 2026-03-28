@@ -53,6 +53,8 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
 
       if (!isRefreshing && getRefreshCount() < MAX_REFRESH_ATTEMPTS) {
+        console.log("refreshing");
+
         isRefreshing = true;
         incrementRefreshCount();
         try {

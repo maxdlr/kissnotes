@@ -1,11 +1,11 @@
 "use client";
-import type { ExpressionModel, ExpressionToken } from "@kissnotes/types";
+import type { ExpressionModel } from "@kissnotes/types";
+import useExpressions from "@/hooks/useExpressions";
 import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
 import { KissCodeBlock } from "../KissCodeBlock";
 import Pill from "../Pill/Pill";
 import { UserHandle } from "../UserHandle";
-import useExpressions from "@/hooks/useExpressions";
 
 interface ExpressionCardProps {
   expression: ExpressionModel;
@@ -20,7 +20,7 @@ const ExpressionCard = ({
   const { title, author, createdAt, description } = expression;
   const { getTokens } = useExpressions([expression]);
 
-  // if (!expression) return <div>Loading...</div>;
+  if (!expression) return "loading expression";
 
   return (
     <div

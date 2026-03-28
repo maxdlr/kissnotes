@@ -1,5 +1,4 @@
 "use client";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import type {
   ExpressionModel,
   ExpressionToken,
@@ -7,16 +6,15 @@ import type {
 } from "@kissnotes/types";
 import useExpressions from "@/hooks/useExpressions";
 import { arrayUnique } from "@/utils/arrayUtils";
-import { Button } from "../Button";
 import { FormInput } from "../FormInput";
 import { FormSelect } from "../FormSelect";
 import MasonryGrid from "../MasonryGrid/MasonryGrid";
 
 export type SidebarValue =
   | {
-      tokens: ExpressionToken[];
-      author: UserModel | null;
-      search: string;
+      tokens?: ExpressionToken[];
+      author?: UserModel | null;
+      search?: string;
     }
   | undefined;
 
@@ -25,6 +23,7 @@ interface ExpressListSideBarProps {
   expressions: ExpressionModel[];
   onChange: (filters: SidebarValue) => void;
   value: SidebarValue;
+  collapsed?: boolean;
 }
 
 const ExpressionListSidebar = ({
@@ -52,41 +51,44 @@ const ExpressionListSidebar = ({
   };
 
   return (
-    <aside className={`space-y-4 ${className}`}>
-      <Button
-        variant="ghost"
-        Icon={ArrowLeftIcon}
-        className="place-self-end self-start hidden md:block"
-        shortcut={{ keys: ["ctrl", "S"] }}
-      />
+    <aside className={`space-y-4 w-full ${className}`}>
       <MasonryGrid>
-        <FormInput
-          name="search"
-          onChange={(e) =>
-            handleOnChange({ name: "search", value: e.target.value })
-          }
-          shortcut={{
-            keys: value?.search ? ["ESC"] : ["cmd", "F"],
-            preventDefault: true,
-          }}
-          containerClassName="border-accent!"
-        />
-        <FormSelect<ExpressionToken>
-          name="tokens"
-          label="Expression contains..."
-          options={tokens}
-          onChange={handleOnChange}
-          value={value?.tokens || []}
-          property="label"
-        />
-        <FormSelect<UserModel>
-          name="author"
-          label="Author is..."
-          options={authors}
-          onChange={handleOnChange}
-          value={value?.author || null}
-          property="username"
-        />
+        {value?.search !== undefined && (
+          <FormInput
+            name="search"
+            onChange={(e) =>
+              handleOnChange({ name: "search", value: e.target.value })
+            }
+            shortcut={{
+              keys: value?.search ? ["ESC"] : ["cmd", "F"],
+              preventDefault: true,
+            }}
+            containerClassName="border-accent! rounded-4xl p-4.5!"
+            inputClassName="ps-1"
+          />
+        )}
+        {value?.tokens !== undefined && (
+          <FormSelect<ExpressionToken>
+            name="tokens"
+            label="Expression contains..."
+            options={tokens}
+            onChange={handleOnChange}
+            value={value?.tokens || []}
+            property="label"
+            tooltip="Filter expressions that contain specific tokens, such as functions, methods, or properties."
+          />
+        )}
+        {value?.author !== undefined && (
+          <FormSelect<UserModel>
+            name="author"
+            label="Author is..."
+            options={authors}
+            onChange={handleOnChange}
+            value={value?.author || null}
+            property="username"
+            tooltip="Filter expressions created by a specific author."
+          />
+        )}
       </MasonryGrid>
     </aside>
   );

@@ -40,7 +40,11 @@ const ExpressionDetails = () => {
             <UserHandle username={author.username} />
           </div>
           <LayerMockup layer={layer} property={property} />
-          <KissCodeBlock className="col-span-full" expression={expression} />
+          <KissCodeBlock
+            className="col-span-full"
+            expression={expression}
+            highlightedTokens={["comp"]}
+          />
         </div>
       </div>
       <div className="flex flex-col justify-stretch items-end gap-4">

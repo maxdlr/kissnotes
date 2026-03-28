@@ -1,0 +1,108 @@
+import {
+  AdjustmentsHorizontalIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
+import { Button } from "../Button";
+import { ExpressionCard } from "../ExpressionCard";
+import { ExpressionListSidebar } from "../ExpressionListSidebar";
+import MasonryGrid from "../MasonryGrid/MasonryGrid";
+import type { ExpressionListProps } from "./interfaces";
+
+const ExpressionList = ({
+  expressions,
+  filters,
+  onFilterChange,
+  className,
+  startCollapsed = false,
+}: ExpressionListProps) => {
+  const [collapsed, setCollapsed] = useState(startCollapsed);
+
+  return (
+    <div className={`flex flex-col lg:flex-row ${className}`}>
+      {filters && onFilterChange && (
+        <>
+          <div className="space-y-4 hidden lg:block">
+            <Button
+              variant="ghost"
+              size={collapsed ? "md" : "sm"}
+              Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronLeftIcon}
+              className="place-self-end self-start block"
+              shortcut={collapsed ? undefined : { keys: ["ctrl", "S"] }}
+              onClick={() => setCollapsed((v) => !v)}
+            />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.div
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{
+                    width: collapsed ? 30 : 350,
+                    opacity: collapsed ? 0 : 1,
+                  }}
+                  exit={{ width: 0, opacity: 0 }}
+                  style={{ overflow: "hidden", flexShrink: 0 }}
+                >
+                  <ExpressionListSidebar
+                    expressions={expressions || []}
+                    value={filters}
+                    onChange={onFilterChange}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="block lg:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronUpIcon}
+              className="place-self-end self-start block"
+              shortcut={{ keys: ["ctrl", "S"] }}
+              onClick={() => setCollapsed((v) => !v)}
+            />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{
+                    height: collapsed ? 0 : "auto",
+                    opacity: collapsed ? 0 : 1,
+                  }}
+                  exit={{ height: 0, opacity: 0 }}
+                  style={{ overflow: "hidden", flexShrink: 0 }}
+                >
+                  <ExpressionListSidebar
+                    expressions={expressions || []}
+                    value={filters}
+                    onChange={onFilterChange}
+                    collapsed={false}
+                    className="pt-4"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </>
+      )}
+
+      {expressions?.length ? (
+        <div className="max-lg:pt-4 lg:ps-4 w-full">
+          <MasonryGrid columns={{ 0: 1, 840: 2, 1280: 3 }}>
+            {expressions?.map((expression) => (
+              <ExpressionCard
+                highlightedTokens={[]}
+                key={expression.id}
+                expression={expression}
+              />
+            ))}
+          </MasonryGrid>
+        </div>
+      ) : (
+        <p>no expressions</p>
+      )}
+    </div>
+  );
+};
+export default ExpressionList;

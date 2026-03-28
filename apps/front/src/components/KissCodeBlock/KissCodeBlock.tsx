@@ -99,6 +99,7 @@ const KissCodeBlock = ({
         <Button
           className="absolute top-8 right-8"
           Icon={ClipboardIcon}
+          size="sm"
           shortcut={{ keys: ["cmd", "shift", "C"] }}
           variant="ghost"
         />

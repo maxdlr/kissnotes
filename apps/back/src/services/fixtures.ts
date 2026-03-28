@@ -216,7 +216,7 @@ export const loadFixtures = async () => {
     });
 
     const codes: CodeEntity[] = await Promise.all(
-      Array.from({ length: 30 }).map(() =>
+      Array.from({ length: 50 }).map(() =>
         manager
           .save(
             LineEntity,
@@ -229,12 +229,15 @@ export const loadFixtures = async () => {
       ),
     );
 
-    const users = (await makeUsers(manager, 20)) as UserEntity[];
-    await makeUsers(manager);
+    const users = [
+      ...((await makeUsers(manager, 10)) as UserEntity[]),
+      await makeUsers(manager),
+    ] as UserEntity[];
+    // await makeUsers(manager);
 
     await manager.save(
       ExpressionEntity,
-      Array.from({ length: 30 }).map((_v, i) => ({
+      Array.from({ length: 50 }).map((_v, i) => ({
         title: faker.lorem.sentence(),
         description: faker.lorem.paragraph(3),
         author: randomElement(users),
