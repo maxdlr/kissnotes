@@ -9,6 +9,7 @@ import { arrayUnique } from "@/utils/arrayUtils";
 import { FormInput } from "../FormInput";
 import { FormSelect } from "../FormSelect";
 import MasonryGrid from "../MasonryGrid/MasonryGrid";
+import { SearchBar } from "../SearchBar";
 
 export type SidebarValue =
   | {
@@ -54,8 +55,7 @@ const ExpressionListSidebar = ({
     <aside className={`space-y-4 w-full ${className}`}>
       <MasonryGrid>
         {value?.search !== undefined && (
-          <FormInput
-            name="search"
+          <SearchBar
             onChange={(e) =>
               handleOnChange({ name: "search", value: e.target.value })
             }
@@ -63,8 +63,8 @@ const ExpressionListSidebar = ({
               keys: value?.search ? ["ESC"] : ["cmd", "F"],
               preventDefault: true,
             }}
-            containerClassName="border-accent! rounded-4xl p-4.5!"
-            inputClassName="ps-1"
+            inputClassName="ps-1.5"
+            Icon={null}
           />
         )}
         {value?.tokens !== undefined && (

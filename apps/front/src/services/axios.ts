@@ -4,8 +4,7 @@ import axios, {
 } from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
-
-let isRefreshing = false;
+const isDev = process.env.NODE_ENV === "development";
 
 const MAX_REFRESH_ATTEMPTS = 3;
 const REFRESH_COUNT_KEY = "auth_refresh_count";
@@ -16,15 +15,27 @@ const incrementRefreshCount = () =>
   sessionStorage.setItem(REFRESH_COUNT_KEY, String(getRefreshCount() + 1));
 const resetRefreshCount = () => sessionStorage.removeItem(REFRESH_COUNT_KEY);
 
+let isRefreshing = false;
+let refreshSubscribers: Array<() => void> = [];
+
+const subscribeToRefresh = (cb: () => void) => {
+  refreshSubscribers.push(cb);
+};
+
+const flushRefreshSubscribers = () => {
+  refreshSubscribers.forEach((cb) => {
+    cb();
+  });
+  refreshSubscribers = [];
+};
+
 const instance = axios.create({
   withCredentials: true,
   baseURL,
 });
 
 instance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    return config;
-  },
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => config,
   (error: unknown) => Promise.reject(error),
 );
 
@@ -52,19 +63,31 @@ instance.interceptors.response.use(
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      if (!isRefreshing && getRefreshCount() < MAX_REFRESH_ATTEMPTS) {
-        console.log("refreshing");
+      const refreshCount = getRefreshCount();
+      const canRefresh = isDev || refreshCount < MAX_REFRESH_ATTEMPTS;
 
-        isRefreshing = true;
-        incrementRefreshCount();
-        try {
-          await instance.post("/refresh");
-          isRefreshing = false;
-          resetRefreshCount();
-          return instance(originalRequest);
-        } catch {
-          isRefreshing = false;
-        }
+      if (!canRefresh) return Promise.reject(error);
+
+      if (isRefreshing) {
+        // Queue this request to replay once the in-flight refresh completes
+        return new Promise<AxiosResponse>((resolve) => {
+          subscribeToRefresh(() => resolve(instance(originalRequest)));
+        });
+      }
+
+      isRefreshing = true;
+      if (!isDev) incrementRefreshCount();
+
+      try {
+        await instance.post("/refresh");
+        resetRefreshCount();
+        flushRefreshSubscribers();
+        return instance(originalRequest);
+      } catch (refreshError) {
+        refreshSubscribers = [];
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

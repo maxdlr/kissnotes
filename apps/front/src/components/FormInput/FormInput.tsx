@@ -1,8 +1,15 @@
-import { type ChangeEvent, type ElementType, useRef } from "react";
+"use client";
+import React, {
+  type ChangeEvent,
+  type ElementType,
+  type FocusEventHandler,
+  useRef,
+} from "react";
 import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
-import InputText, { type InputTextProps } from "./_components/InputText";
+import InputText from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
+import type { InputTextProps } from "./interfaces";
 
 interface FormInputProps {
   placeholder?: string | React.ReactNode;
@@ -17,6 +24,7 @@ interface FormInputProps {
   name: string;
   label?: string | React.ReactNode;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
   disabled?: boolean;
   type?:
     | "text"
@@ -30,6 +38,7 @@ interface FormInputProps {
     | "file"
     | "hidden";
   labelIn?: boolean;
+  ref?: React.RefObject<HTMLInputElement | null>;
 }
 
 const FormInput = ({
@@ -46,15 +55,22 @@ const FormInput = ({
   shortcut,
   label,
   onChange,
+  onFocus,
   disabled,
   labelIn = false,
+  ref,
 }: FormInputProps) => {
-  const ref = useRef<HTMLInputElement | null>(null);
-  useShortcut(shortcut, onClick ? onClick : () => ref.current?.focus());
+  const autoRef = useRef<HTMLInputElement | null>(null);
+  const localRef = ref || autoRef;
+
+  useShortcut(
+    shortcut,
+    onClick && localRef ? onClick : () => localRef?.current?.focus(),
+  );
 
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
-    outline: "border-[1px] border-secondary",
+    outline: "border-[1px] border-accent",
     ghost: "!p-0",
   };
 
@@ -93,7 +109,7 @@ const FormInput = ({
 
         {["text", "search", "email"].includes(type) && (
           <InputText
-            ref={ref}
+            ref={localRef}
             type={type as InputTextProps["type"]}
             name={name}
             placeholder={placeholder as InputTextProps["placeholder"]}
@@ -102,6 +118,7 @@ const FormInput = ({
             onClick={onClick}
             onChange={onChange}
             disabled={disabled}
+            onFocus={onFocus}
           />
         )}
         {shortcut && <Shortcut shortcut={shortcut} />}

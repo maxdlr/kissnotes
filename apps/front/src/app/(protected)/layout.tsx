@@ -14,7 +14,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
     user && isAuthUser({ username: getUsername(handle) as string });
   const isAllowed = (isPrivate && isAuth) || !isPrivate;
 
-  if (user && !isAllowed) {
+  if (!isAllowed) {
     window.location.href = "/";
     return null;
   }

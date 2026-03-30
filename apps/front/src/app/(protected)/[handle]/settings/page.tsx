@@ -39,7 +39,7 @@ const ProfileSettingsPage = () => {
         <div className="flex justify-between items-center col-span-full">
           <div>
             <UserHandle />
-            <Button label="Logout" onClick={logOut} />
+            <Button label="Logout" onClick={() => logOut()} />
           </div>
           <Button
             Icon={XMarkIcon}

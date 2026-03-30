@@ -115,6 +115,7 @@ export interface UserModel extends Model {
   email: string;
   username: string;
   password: string;
+  description: string;
   expressions: ExpressionModel[];
 }
 

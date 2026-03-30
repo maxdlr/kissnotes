@@ -1,15 +1,14 @@
 "use client";
 import type { ExpressionModel, UserModel } from "@kissnotes/types";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ExpressionList } from "@/components/ExpressionList";
 import type { SidebarValue } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
+import { UserHero } from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
-import useRead from "@/hooks/bread/useRead";
-import { getUsername } from "@/utils/getProfileHref";
+import useUser from "./hooks/UserContext";
 
 const ProfilePage = () => {
-  const { handle } = useParams();
   const router = useRouter();
   const [expressions, setExpressions] = useState<ExpressionModel[]>([]);
   const [filters, setFilters] = useState<SidebarValue>({
@@ -17,9 +16,8 @@ const ProfilePage = () => {
     search: "",
   });
 
-  const { data: user, loading } = useRead<UserModel>("users", {
-    username: getUsername(handle),
-  });
+  const { user, loading } = useUser();
+
   const { data } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: user?.id as string } as UserModel,
     symbols: filters?.tokens
@@ -46,14 +44,17 @@ const ProfilePage = () => {
   }
 
   return (
-    expressions && (
-      <ExpressionList
-        expressions={expressions}
-        filters={filters}
-        onFilterChange={setFilters}
-        startCollapsed
-      />
-    )
+    <>
+      <UserHero />
+      {expressions && (
+        <ExpressionList
+          expressions={expressions}
+          filters={filters}
+          onFilterChange={setFilters}
+          startCollapsed
+        />
+      )}
+    </>
   );
 };
 export default ProfilePage;
