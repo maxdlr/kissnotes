@@ -6,7 +6,8 @@ interface UserHandleProps {
   username?: string;
   className?: string;
 }
-const UserHandle = ({ username, className = "" }: UserHandleProps) => {
+const UserHandle = ({ username, className }: UserHandleProps) => {
+
   const { user } = useAuth();
   const shownUsername = username || user?.username;
 

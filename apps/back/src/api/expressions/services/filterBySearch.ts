@@ -14,14 +14,12 @@ const filterBySearch = (
 
   return collection.filter((expression) => {
     const inTitle = expression.title?.toLowerCase().includes(term);
-
+    const inAuthor = expression.author?.username.toLowerCase().includes(term);
     const inDescription = expression.description?.toLowerCase().includes(term);
-
     const inCode = expression.code?.lines?.some((line) =>
       line.content?.toLowerCase().includes(term),
     );
-
-    return inTitle || inDescription || inCode;
+    return [inTitle, inAuthor, inDescription, inCode].some(Boolean);
   });
 };
 

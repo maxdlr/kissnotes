@@ -12,7 +12,7 @@ import Button from "@/components/Button/Button";
 import { KissCodeBlock } from "@/components/KissCodeBlock";
 import { LayerMockup } from "@/components/LayerMockup";
 import { UserHandle } from "@/components/UserHandle";
-import useRead from "../../../../hooks/bread/useRead";
+import useRead from "@/hooks/bread/useRead";
 
 const ExpressionDetails = () => {
   const { id } = useParams();

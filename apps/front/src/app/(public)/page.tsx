@@ -3,6 +3,7 @@ import type { ExpressionModel, UserModel } from "@kissnotes/types";
 import { useEffect, useState } from "react";
 import { ExpressionList } from "@/components/ExpressionList";
 import type { SidebarValue } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
+import { Hero } from "@/components/Hero";
 import useBrowse from "@/hooks/bread/useBrowse";
 
 const Home = () => {
@@ -29,13 +30,16 @@ const Home = () => {
   }, [data, loading]);
 
   return (
-    expressions && (
-      <ExpressionList
-        expressions={expressions}
-        filters={filters}
-        onFilterChange={setFilters}
-      />
-    )
+    <>
+      <Hero />
+      {expressions && (
+        <ExpressionList
+          expressions={expressions}
+          filters={filters}
+          onFilterChange={setFilters}
+        />
+      )}
+    </>
   );
 };
 

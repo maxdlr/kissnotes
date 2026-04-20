@@ -4,14 +4,19 @@ import React, {
   type ElementType,
   type FocusEventHandler,
   useRef,
+  useState,
 } from "react";
 import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
 import InputText from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
 import type { InputTextProps } from "./interfaces";
+import useOnClickOutside from "@/hooks/useClickOutside";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Button } from "../Button";
 
 interface FormInputProps {
+  password?: boolean;
   placeholder?: string | React.ReactNode;
   inputClassName?: string;
   containerClassName?: string;
@@ -42,6 +47,7 @@ interface FormInputProps {
 }
 
 const FormInput = ({
+  password,
   type = "text",
   placeholder = "Search...",
   value,
@@ -62,6 +68,12 @@ const FormInput = ({
 }: FormInputProps) => {
   const autoRef = useRef<HTMLInputElement | null>(null);
   const localRef = ref || autoRef;
+  useOnClickOutside(localRef, () => {
+    setFocus(false);
+  });
+
+  const [focus, setFocus] = useState(false);
+  const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
 
   useShortcut(
     shortcut,
@@ -74,17 +86,23 @@ const FormInput = ({
     ghost: "!p-0",
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: dontcare
+  const handleFocus: FocusEventHandler = (e: any): void => {
+    setFocus(true);
+    onFocus?.(e);
+  };
+
   return (
     <div className={className}>
       {!labelIn && label && (
-        <div className="pb-2 ps-2">
+        <div className={`${disabled ? "" : "ps-2 pb-2"}`}>
           <label htmlFor={name} className="font-thin">
             {label}
           </label>
         </div>
       )}
       <div
-        className={`rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} ${containerClassName}`}
+        className={`${focus ? "border-secondary!" : "border-accent!"} rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} ${containerClassName}`}
       >
         {((label && labelIn) || Icon) && (
           <div>
@@ -109,6 +127,7 @@ const FormInput = ({
 
         {["text", "search", "email"].includes(type) && (
           <InputText
+            password={password}
             ref={localRef}
             type={type as InputTextProps["type"]}
             name={name}
@@ -118,7 +137,16 @@ const FormInput = ({
             onClick={onClick}
             onChange={onChange}
             disabled={disabled}
-            onFocus={onFocus}
+            onFocus={handleFocus}
+          />
+        )}
+        {password && (
+          <Button
+            size="sm"
+            Icon={isPasswordRevealed ? EyeIcon : EyeSlashIcon}
+            variant="ghost"
+            onClick={() => setIsPasswordRevealed((r) => !r)}
+            className={isPasswordRevealed ? "text-secondary!" : ""}
           />
         )}
         {shortcut && <Shortcut shortcut={shortcut} />}

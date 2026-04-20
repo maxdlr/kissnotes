@@ -1,5 +1,8 @@
 "use client";
-import { Cog6ToothIcon as Cog6ToothOutlineIcon } from "@heroicons/react/24/outline";
+import {
+  Cog6ToothIcon as Cog6ToothOutlineIcon,
+  HomeIcon,
+} from "@heroicons/react/24/outline";
 import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/AuthProvider";
@@ -10,47 +13,44 @@ import { SearchBar } from "../SearchBar";
 import { UserHandle } from "../UserHandle";
 
 const Header = () => {
-  const { user, logIn } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
-  const handleSignIn = () => {
-    logIn({
-      username: "maxdlr",
-      password: "password",
-    });
-  };
   return (
-    <header className="grid grid-cols-3 md:grid-cols-5 items-center bg-darker">
+    <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
       <Logo className="hidden md:block" />
+      <Button
+        Icon={HomeIcon}
+        variant="ghost"
+        onClick={() => router.push("/")}
+        className="block md:hidden"
+      />
       <SearchBar
-        className="col-span-2 md:col-span-3"
         shortcut={{ keys: ["cmd", "K"] }}
         modalSearcher
+        className="w-full"
       />
-      <div className="place-self-end self-center">
-        {user ? (
-          <div className="flex justify-center items-center gap-2">
-            <Button
-              Icon={Cog6ToothOutlineIcon}
-              HoverIcon={Cog6ToothFillIcon}
-              variant="ghost"
-              size="sm"
-              className="px-0!"
-              onClick={() =>
-                router.push(`${getProfileHref(user.username)}/settings`)
-              }
-            />
-            <UserHandle className="hover:text-primary!" />
-          </div>
-        ) : (
+      {user ? (
+        <div className="flex justify-center items-center gap-2">
           <Button
-            label="Log in"
-            shortcut={{ keys: ["cmd", "shift", "L"] }}
-            onClick={handleSignIn}
-            variant="outline"
+            Icon={Cog6ToothOutlineIcon}
+            HoverIcon={Cog6ToothFillIcon}
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              router.push(`${getProfileHref(user.username)}/settings`)
+            }
           />
-        )}
-      </div>
+          <UserHandle className="hover:text-primary!" />
+        </div>
+      ) : (
+        <Button
+          label="Log in"
+          shortcut={{ keys: ["cmd", "shift", "L"] }}
+          onClick={() => router.push("/login")}
+          variant="outline"
+        />
+      )}
     </header>
   );
 };

@@ -1,12 +1,12 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: dont care */
 "use client";
 
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { ElementType } from "react";
-import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
+import { useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
+import type { ButtonProps } from "./interfaces";
 
 type VariantSet = {
   initial: object;
@@ -48,22 +48,6 @@ export const variants = {
 
 export type VariantDirection = keyof typeof variants;
 
-export interface ButtonProps {
-  id?: string;
-  label?: string | number | React.ReactNode;
-  href?: string;
-  className?: string;
-  variant?: "fill" | "outline" | "ghost" | "fill-accent" | "ghost-reveal";
-  onClick?: (event?: React.MouseEvent) => void;
-  type?: "button" | "reset" | "submit";
-  Icon?: ElementType;
-  HoverIcon?: ElementType;
-  shortcut?: ShortcutDef;
-  size?: "md" | "sm" | "lg";
-  animDirection?: VariantDirection;
-  hoverUp?: boolean;
-}
-
 const MotionLink = motion(Link);
 
 const defaultVariants = {
@@ -74,9 +58,19 @@ const defaultVariants = {
 
 const interactionVariants: Record<
   NonNullable<ButtonProps["variant"]>,
-  { hover: object; tap: object }
+  {
+    resting: object;
+    hover: {
+      backgroundColor?: string | number | undefined;
+      borderColor?: string | number | undefined;
+      color?: string | undefined;
+      scale?: string | number;
+    };
+    tap: object;
+  }
 > = {
   "fill-accent": {
+    resting: {},
     hover: {
       backgroundColor: "var(--color-accent)",
       borderColor: "var(--color-secondary)",
@@ -91,6 +85,7 @@ const interactionVariants: Record<
     },
   },
   fill: {
+    resting: {},
     hover: {
       backgroundColor:
         "color-mix(in srgb, var(--color-secondary) 50%, transparent)",
@@ -107,6 +102,20 @@ const interactionVariants: Record<
     },
   },
   outline: {
+    resting: {},
+    hover: {
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledUp,
+    },
+    tap: {
+      borderColor: "var(--color-primary)",
+      color: "var(--color-primary)",
+      scale: scaledDown,
+    },
+  },
+  "outline-accent": {
+    resting: {},
     hover: {
       borderColor: "var(--color-primary)",
       color: "var(--color-primary)",
@@ -119,10 +128,15 @@ const interactionVariants: Record<
     },
   },
   ghost: {
+    resting: { color: "var(--color-accent)" },
     hover: { color: "var(--color-secondary)", scale: scaledUp },
     tap: { color: "var(--color-primary)", scale: scaledDown },
   },
   "ghost-reveal": {
+    resting: {
+      color: "var(--color-accent)",
+      backgroundColor: "transparent",
+    },
     hover: {
       backgroundColor: "var(--color-accent)",
       color: "var(--color-primary)",
@@ -142,7 +156,7 @@ const Button = ({
   href,
   className = "",
   variant = "fill",
-  type,
+  type = "button",
   onClick,
   Icon,
   HoverIcon,
@@ -150,10 +164,23 @@ const Button = ({
   size = "md",
   animDirection,
   hoverUp = false,
+  disabled = false,
+  loading = false,
+  danger = false,
 }: ButtonProps) => {
   const router = useRouter();
 
+  const handleOnClick = (e?: React.MouseEvent) => {
+    if (disabled || loading) {
+      e?.preventDefault();
+      return;
+    }
+    if (href) router.push(href);
+    else onClick?.(e);
+  };
+
   useShortcut(shortcut, () => {
+    if (disabled || loading) return;
     if (href) router.push(href);
     else onClick?.();
   });
@@ -182,10 +209,13 @@ const Button = ({
   const s = sizeStyles[size];
   const baseStyle = `cursor-pointer rounded-3xl w-fit ${s.padding}`;
 
+  const disabledClass = `${disabled ? "cursor-not-allowed! opacity-50!" : ""} ${loading ? "cursor-wait! opacity-75! border-emphasis!" : ""}`;
+
   const variantStyles = {
-    "fill-accent": "border border-accent bg-accent/20 rounded-full",
+    "fill-accent": "border border-accent bg-accent/20",
     fill: "bg-secondary/20 border border-secondary",
     outline: "border border-secondary",
+    "outline-accent": "border border-accent",
     ghost: "p-0!",
     "ghost-reveal": "px-2!",
   };
@@ -197,11 +227,17 @@ const Button = ({
       : undefined);
 
   const motionProps = animDirection ? variants[animDirection] : defaultVariants;
-  const { hover, tap } = interactionVariants[variant];
+  const { resting, hover, tap } = interactionVariants[variant];
+
+  // Merge the resting color into the animate target so Framer Motion
+  // always has a defined value to return to after whileHover ends.
+  const animateWithResting = { ...motionProps.animate, ...resting };
 
   const content =
     Icon || label ? (
-      <span className={`flex justify-center items-center ${s.gap} ${s.text}`}>
+      <span
+        className={`flex justify-center items-center ${href ? "h-full" : ""} ${s.gap} ${s.text}`}
+      >
         {Icon && (
           <span className="group">
             <span className={HoverIcon ? "group-hover:hidden" : ""}>
@@ -215,47 +251,67 @@ const Button = ({
           </span>
         )}
         {label && (
-          <span className="font-semibold whitespace-nowrap">{label}</span>
+          <span className="font-semibold whitespace-nowrap leading-none">
+            {label}
+          </span>
         )}
         {shortcut && (
-          <Shortcut
-            shortcut={shortcut}
-            className="ps-1"
-            pill={size === "sm" && shortcut.keys.length === 1}
-          />
+          <Shortcut shortcut={shortcut} className="ps-1" pill={size === "sm"} />
         )}
       </span>
     ) : null;
 
+  const loadingContent = (
+    <span className={`flex justify-center items-center ${s.gap} ${s.text}`}>
+      <motion.div
+        style={{
+          width: 12,
+          height: 12,
+          borderRadius: "50%",
+          background: "var(--color-emphasis)",
+        }}
+        animate={{
+          scale: [1, 1.5, 1],
+          opacity: [0.4, 1, 0.4],
+        }}
+        transition={{
+          duration: 1,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </span>
+  );
+
   if (!content) return null;
 
-  if (href) {
-    return (
-      <MotionLink
-        {...motionProps}
-        id={safeId}
-        href={href}
-        className={`block ${baseStyle} ${variantStyles[variant]} ${className}`}
-        whileHover={hoverUp ? hover : { ...(hover as any), scale: undefined }}
-        whileTap={tap as any}
-      >
-        {content}
-      </MotionLink>
-    );
-  }
+  const ButtonEl = href ? MotionLink : motion.button;
 
   return (
-    <motion.button
-      {...motionProps}
+    <ButtonEl
+      initial={motionProps.initial}
+      animate={animateWithResting}
+      exit={motionProps.exit}
       id={safeId}
+      href={href ? href : undefined}
       type={type}
-      onClick={onClick}
-      className={`${baseStyle} ${variantStyles[variant]} ${className}`}
-      whileHover={hoverUp ? hover : { ...(hover as any), scale: undefined }}
-      whileTap={tap as any}
+      className={`inline-block ${baseStyle} ${variantStyles[variant]} ${disabledClass} ${className}`}
+      whileHover={
+        hoverUp && !disabled
+          ? hover
+          : {
+              ...{
+                ...hover,
+                backgroundColor: danger ? "red" : hover.backgroundColor,
+              },
+              scale: undefined,
+            }
+      }
+      whileTap={!disabled ? (tap as any) : undefined}
+      onClick={href ? undefined : handleOnClick}
     >
-      {content}
-    </motion.button>
+      {loading ? loadingContent : content}
+    </ButtonEl>
   );
 };
 

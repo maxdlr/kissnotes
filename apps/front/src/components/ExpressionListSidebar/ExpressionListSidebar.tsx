@@ -6,7 +6,6 @@ import type {
 } from "@kissnotes/types";
 import useExpressions from "@/hooks/useExpressions";
 import { arrayUnique } from "@/utils/arrayUtils";
-import { FormInput } from "../FormInput";
 import { FormSelect } from "../FormSelect";
 import MasonryGrid from "../MasonryGrid/MasonryGrid";
 import { SearchBar } from "../SearchBar";
@@ -63,7 +62,7 @@ const ExpressionListSidebar = ({
               keys: value?.search ? ["ESC"] : ["cmd", "F"],
               preventDefault: true,
             }}
-            inputClassName="ps-1.5"
+            inputClassName="py-1 ps-1.5"
             Icon={null}
           />
         )}
