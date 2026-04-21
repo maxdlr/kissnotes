@@ -4,6 +4,7 @@ import {
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "../Button";
 import { ExpressionCard } from "../ExpressionCard";
@@ -19,6 +20,7 @@ const ExpressionList = ({
   startCollapsed = false,
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
+  const router = useRouter();
 
   return (
     <div className={`flex flex-col lg:flex-row ${className}`}>
@@ -95,6 +97,7 @@ const ExpressionList = ({
                 highlightedTokens={[]}
                 key={expression.id}
                 expression={expression}
+                onClick={() => router.push(`/exp/${expression.id}`)}
               />
             ))}
           </MasonryGrid>

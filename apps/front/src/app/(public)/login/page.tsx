@@ -56,11 +56,11 @@ const logIn = () => {
         onChange={handleOnchange}
       />
       <FormInput
-        password
         name="password"
         placeholder="imbatman"
         value={formData?.password}
         onChange={handleOnchange}
+        type="password"
       />
     </FormWrapper>
   );

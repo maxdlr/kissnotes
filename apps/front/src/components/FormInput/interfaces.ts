@@ -16,5 +16,4 @@ export interface InputTextProps {
   disabled?: boolean;
   type?: "text" | "search" | "email";
   ref?: Ref<HTMLInputElement | null>;
-  password?: boolean;
 }

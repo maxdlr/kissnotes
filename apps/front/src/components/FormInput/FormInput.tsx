@@ -16,7 +16,6 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Button } from "../Button";
 
 interface FormInputProps {
-  password?: boolean;
   placeholder?: string | React.ReactNode;
   inputClassName?: string;
   containerClassName?: string;
@@ -41,13 +40,13 @@ interface FormInputProps {
     | "date"
     | "email"
     | "file"
-    | "hidden";
+    | "hidden"
+    | "password";
   labelIn?: boolean;
   ref?: React.RefObject<HTMLInputElement | null>;
 }
 
 const FormInput = ({
-  password,
   type = "text",
   placeholder = "Search...",
   value,
@@ -125,11 +124,14 @@ const FormInput = ({
           />
         )}
 
-        {["text", "search", "email"].includes(type) && (
+        {["text", "search", "email", "password"].includes(type) && (
           <InputText
-            password={password}
             ref={localRef}
-            type={type as InputTextProps["type"]}
+            type={
+              isPasswordRevealed && type === "password"
+                ? "text"
+                : (type as InputTextProps["type"])
+            }
             name={name}
             placeholder={placeholder as InputTextProps["placeholder"]}
             className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap w-full ${inputClassName}`}
@@ -140,7 +142,7 @@ const FormInput = ({
             onFocus={handleFocus}
           />
         )}
-        {password && (
+        {type === "password" && (
           <Button
             size="sm"
             Icon={isPasswordRevealed ? EyeIcon : EyeSlashIcon}

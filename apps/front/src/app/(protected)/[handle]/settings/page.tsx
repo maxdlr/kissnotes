@@ -9,7 +9,7 @@ import { getProfileHref } from "@/utils/getProfileHref";
 import SettingsSection from "./_components/SettingsSection";
 
 const ProfileSettingsPage = () => {
-  const { user, logOut } = useAuth();
+  const { user } = useAuth();
   const { isOpen } = useSearcher();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,20 +35,6 @@ const ProfileSettingsPage = () => {
       <div
         className={`sm:max-w-200 w-full h-fit sm:max-h-125 border border-secondary rounded-4xl p-4 sm:p-8`}
       >
-        <div className="flex justify-between items-center">
-          <Button
-            Icon={XMarkIcon}
-            shortcut={{ keys: ["ESC"], blockers: [isOpen] }}
-            href={getProfileHref(user?.username)}
-            variant="ghost"
-          />
-          <Button
-            label="Logout"
-            onClick={() => logOut()}
-            variant="ghost-reveal"
-            className="hover:bg-red-700!"
-          />
-        </div>
         <SettingsSection
           title="Profile"
           subtitle="Personal information"

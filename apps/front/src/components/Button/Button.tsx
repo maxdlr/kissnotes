@@ -167,6 +167,7 @@ const Button = ({
   disabled = false,
   loading = false,
   danger = false,
+  labelClassName = "",
 }: ButtonProps) => {
   const router = useRouter();
 
@@ -207,7 +208,7 @@ const Button = ({
   };
 
   const s = sizeStyles[size];
-  const baseStyle = `cursor-pointer rounded-3xl w-fit ${s.padding}`;
+  const baseStyle = `rounded-3xl w-fit ${s.padding}`;
 
   const disabledClass = `${disabled ? "cursor-not-allowed! opacity-50!" : ""} ${loading ? "cursor-wait! opacity-75! border-emphasis!" : ""}`;
 
@@ -251,7 +252,9 @@ const Button = ({
           </span>
         )}
         {label && (
-          <span className="font-semibold whitespace-nowrap leading-none">
+          <span
+            className={`font-semibold text-nowrap leading-none ${labelClassName}`}
+          >
             {label}
           </span>
         )}
@@ -295,7 +298,7 @@ const Button = ({
       id={safeId}
       href={href ? href : undefined}
       type={type}
-      className={`inline-block ${baseStyle} ${variantStyles[variant]} ${disabledClass} ${className}`}
+      className={`inline-block cursor-pointer ${baseStyle} ${variantStyles[variant]} ${disabledClass} ${className}`}
       whileHover={
         hoverUp && !disabled
           ? hover

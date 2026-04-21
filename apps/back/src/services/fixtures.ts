@@ -199,10 +199,10 @@ const makeUsers = async (
 export const loadFixtures = async () => {
   return await ExpressionRepository.manager.transaction(async (manager) => {
     await manager.deleteAll(NativeExpressionEntity);
-    // await manager.deleteAll(LayerEntity);
-    // await manager.deleteAll(PropertyEntity);
-    // await manager.deleteAll(CodeEntity);
-    // await manager.deleteAll(LineEntity);
+    await manager.deleteAll(LayerEntity);
+    await manager.deleteAll(PropertyEntity);
+    await manager.deleteAll(CodeEntity);
+    await manager.deleteAll(LineEntity);
     await manager.deleteAll(ExpressionEntity);
     await manager.deleteAll(UserEntity);
 
@@ -244,7 +244,7 @@ export const loadFixtures = async () => {
       ExpressionEntity,
       Array.from({ length: 50 }).map((_v, i) => ({
         title: faker.lorem.sentence(),
-        description: faker.lorem.paragraph(3),
+        description: faker.lorem.paragraph(20),
         author: randomElement(users),
         layer,
         property,

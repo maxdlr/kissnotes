@@ -20,6 +20,10 @@
   --color-code: #061727;
   --color-emphasis: #9eff28;
 
+  /* Transition */
+  --default-transition-duration: 0.5s;
+  --default-transition-timing-function: cubic-bezier(0, 0.8, 0.3, 1);
+
   /* Font */
   /*--font-display: var(--font-gilroy), sans-serif;*/
   /*--default-font-family: var(--font-fira-code), monospace;*/

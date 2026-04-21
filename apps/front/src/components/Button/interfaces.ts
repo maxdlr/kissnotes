@@ -7,6 +7,7 @@ export interface ButtonProps {
   label?: string | number | React.ReactNode;
   href?: string;
   className?: string;
+  labelClassName?: string;
   variant?:
     | "fill"
     | "outline"
@@ -25,4 +26,5 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   danger?: boolean;
+  bare?: boolean;
 }
