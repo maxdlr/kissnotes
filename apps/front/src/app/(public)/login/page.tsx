@@ -16,7 +16,7 @@ const logIn = () => {
   });
 
   const router = useRouter();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this effect when the user changes, not when the router changes
   useEffect(() => {
     if (user) router.push("/");
   }, [user]);

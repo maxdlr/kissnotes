@@ -54,7 +54,7 @@ const ProfilePageLayout = ({ children }: ProfilePageLayoutProps) => {
   const { handle } = useParams();
   return (
     <UserProvider handle={handle}>
-      <ProfilePageLayoutContent currentHandle={handle}>
+      <ProfilePageLayoutContent currentHandle={handle as string}>
         {children}
       </ProfilePageLayoutContent>
     </UserProvider>
