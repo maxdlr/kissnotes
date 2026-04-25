@@ -9,7 +9,7 @@ export type BrowseFilters<T extends Model[]> = Partial<
 
 const useBrowse = <T extends Model[]>(
   model: string,
-  params?: BrowseFilters<T>,
+  params?: BrowseFilters<T> & { search?: string },
 ) => {
   const filteredParams = params
     ? (Object.fromEntries(

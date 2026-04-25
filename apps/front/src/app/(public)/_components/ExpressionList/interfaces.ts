@@ -8,4 +8,5 @@ export interface ExpressionListProps {
   onFilterChange?: (filters: SidebarValue) => void;
   startCollapsed?: boolean;
   loading?: boolean;
+  urlScope?: string;
 }

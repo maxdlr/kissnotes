@@ -7,9 +7,9 @@ import type {
 import useExpressions from "@/hooks/useExpressions";
 import type { FormChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
-import { FormSelect } from "../FormSelect";
-import MasonryGrid from "../MasonryGrid/MasonryGrid";
-import { SearchBar } from "../SearchBar";
+import { FormSelect } from "../../../../components/FormSelect";
+import MasonryGrid from "../../../../components/MasonryGrid/MasonryGrid";
+import { SearchBar } from "../../../../components/SearchBar";
 
 export type SidebarValue =
   | {

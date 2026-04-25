@@ -1,9 +1,13 @@
 "use client";
-import type { ExpressionModel, UserModel } from "@kissnotes/types";
+import type {
+  ExpressionModel,
+  ExpressionSymbol,
+  UserModel,
+} from "@kissnotes/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ExpressionList } from "@/components/ExpressionList";
-import type { SidebarValue } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
+import { ExpressionList } from "@/app/(public)/_components/ExpressionList";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 import { UserHero } from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useUser from "./hooks/UserContext";
@@ -29,10 +33,6 @@ const ProfilePage = () => {
   useEffect(() => {
     setExpressions(data || []);
   }, [data]);
-
-  if (loading) {
-    return "expression list loading";
-  }
 
   if (loading) {
     return "loading user";

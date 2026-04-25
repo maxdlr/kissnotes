@@ -55,20 +55,25 @@ const Modal = ({
 
   const handleClose = useCallback(
     (e?: Event | React.MouseEvent) => {
+      console.log("close");
       e?.stopPropagation();
       if (isPersistent) return;
       setIsOpen(false);
+      onClose?.(e);
     },
-    [isPersistent],
+    [isPersistent, onClose],
   );
 
   const handleExitComplete = useCallback(() => {
+    if (!document) return;
     document.body.style.cssText = "";
-    onClose?.();
-  }, [onClose]);
+    console.log("complete");
+    handleClose();
+  }, [handleClose]);
 
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent) => {
+      console.log("overlay close");
       if (!closeOnOverlay) return;
       if (e.target === e.currentTarget) handleClose();
     },

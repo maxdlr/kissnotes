@@ -6,10 +6,10 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button } from "../Button";
+import { Button } from "../../../../components/Button";
 import { ExpressionCard } from "../ExpressionCard";
 import { ExpressionListSidebar } from "../ExpressionListSidebar";
-import MasonryGrid from "../MasonryGrid/MasonryGrid";
+import MasonryGrid from "../../../../components/MasonryGrid/MasonryGrid";
 import type { ExpressionListProps } from "./interfaces";
 
 const ExpressionList = ({
@@ -18,6 +18,7 @@ const ExpressionList = ({
   onFilterChange,
   className,
   startCollapsed = false,
+  urlScope = "exp",
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -97,7 +98,7 @@ const ExpressionList = ({
                 highlightedTokens={[]}
                 key={expression.id}
                 expression={expression}
-                onClick={() => router.push(`/exp/${expression.id}`)}
+                onClick={() => router.push(`/${urlScope}/${expression.id}`)}
               />
             ))}
           </MasonryGrid>

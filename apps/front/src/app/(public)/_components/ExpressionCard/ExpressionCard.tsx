@@ -4,9 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import useExpressions from "@/hooks/useExpressions";
 import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
-import { KissCodeBlock } from "../KissCodeBlock";
-import Pill from "../Pill/Pill";
-import { UserHandle } from "../UserHandle";
+import { KissCodeBlock } from "../../../../components/KissCodeBlock";
+import Pill from "../../../../components/Pill/Pill";
+import { UserHandle } from "../../../../components/UserHandle";
 
 interface ExpressionCardProps {
   expression: ExpressionModel;
@@ -24,6 +24,7 @@ const ExpressionCard = ({
   const { getTokens } = useExpressions(expression);
 
   if (!expression) return "loading expression";
+
   return (
     <AnimatePresence initial={false} mode="wait">
       <motion.div
