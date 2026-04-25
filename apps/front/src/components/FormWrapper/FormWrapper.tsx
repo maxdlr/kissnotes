@@ -39,7 +39,7 @@ const FormWrapper = ({
     disabled: false,
   },
 }: FormWrapperProps) => {
-  const containerClass = "flex flex-col justify-center items-center gap-8";
+  const containerClass = "flex flex-col items-center gap-8";
 
   const hackChildren = () => {
     if (Array.isArray(children)) {
@@ -52,9 +52,14 @@ const FormWrapper = ({
   };
 
   const items = [
-    <h1 key="title" className="text-4xl font-extrabold text-center">
-      {title}
-    </h1>,
+    // biome-ignore lint/complexity/noUselessFragments: need
+    <>
+      {title && (
+        <h1 key="title" className="text-4xl font-extrabold text-center">
+          {title}
+        </h1>
+      )}
+    </>,
     ...hackChildren(),
     <Button key="submit" {...submit} />,
   ];
@@ -80,7 +85,11 @@ const FormWrapper = ({
       className={`${containerClass} ${className}`}
     >
       {items.map((item, i) => (
-        <motion.div key={i} variants={variants as any}>
+        <motion.div
+          key={i}
+          variants={variants as any}
+          className={`w-full flex items-center justify-center ${item.props.className}`}
+        >
           {item}
         </motion.div>
       ))}

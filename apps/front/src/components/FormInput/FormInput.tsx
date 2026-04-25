@@ -1,19 +1,19 @@
 "use client";
+import useOnClickOutside from "@/hooks/useClickOutside";
+import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
+import { FormChangeEvent } from "@/types/form.types";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import React, {
-  type ChangeEvent,
   type ElementType,
   type FocusEventHandler,
   useRef,
   useState,
 } from "react";
-import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
+import { Button } from "../Button";
 import { Shortcut } from "../ShortCut";
 import InputText from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
 import type { InputTextProps } from "./interfaces";
-import useOnClickOutside from "@/hooks/useClickOutside";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { Button } from "../Button";
 
 interface FormInputProps {
   placeholder?: string | React.ReactNode;
@@ -27,7 +27,7 @@ interface FormInputProps {
   shortcut?: ShortcutDef;
   name: string;
   label?: string | React.ReactNode;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (event: FormChangeEvent) => void;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   disabled?: boolean;
   type?:
@@ -92,7 +92,7 @@ const FormInput = ({
   };
 
   return (
-    <div className={className}>
+    <div className={`w-full ${className}`}>
       {!labelIn && label && (
         <div className={`${disabled ? "" : "ps-2 pb-2"}`}>
           <label htmlFor={name} className="font-thin">
@@ -101,7 +101,11 @@ const FormInput = ({
         </div>
       )}
       <div
-        className={`${focus ? "border-secondary!" : "border-accent!"} rounded-3xl py-3 px-4 flex ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} items-center gap-4 font-semibold text-lg ${variantStyles[variant]} ${containerClassName}`}
+        className={`${focus ? "border-secondary!" : "border-accent!"}
+rounded-3xl py-3 px-4 flex 
+${(label && labelIn) || Icon ? "justify-between" : "justify-start"} 
+items-center gap-4 font-semibold text-lg w-full
+${variantStyles[variant]} ${containerClassName}`}
       >
         {((label && labelIn) || Icon) && (
           <div>
@@ -134,7 +138,7 @@ const FormInput = ({
             }
             name={name}
             placeholder={placeholder as InputTextProps["placeholder"]}
-            className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap w-full ${inputClassName}`}
+            className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap ${inputClassName}`}
             value={value as InputTextProps["value"]}
             onClick={onClick}
             onChange={onChange}
@@ -142,6 +146,7 @@ const FormInput = ({
             onFocus={handleFocus}
           />
         )}
+
         {type === "password" && (
           <Button
             size="sm"
@@ -151,6 +156,7 @@ const FormInput = ({
             className={isPasswordRevealed ? "text-secondary!" : ""}
           />
         )}
+
         {shortcut && <Shortcut shortcut={shortcut} />}
       </div>
     </div>

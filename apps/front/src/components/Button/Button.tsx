@@ -168,6 +168,7 @@ const Button = ({
   loading = false,
   danger = false,
   labelClassName = "",
+  iconPosition = "left",
 }: ButtonProps) => {
   const router = useRouter();
 
@@ -234,23 +235,25 @@ const Button = ({
   // always has a defined value to return to after whileHover ends.
   const animateWithResting = { ...motionProps.animate, ...resting };
 
+  const iconContent = Icon && (
+    <span className="group">
+      <span className={HoverIcon ? "group-hover:hidden" : ""}>
+        <Icon className={s.iconSize} />
+      </span>
+      {HoverIcon && (
+        <span className="group-hover:block hidden">
+          <HoverIcon className={s.iconSize} />
+        </span>
+      )}
+    </span>
+  );
+
   const content =
     Icon || label ? (
       <span
         className={`flex justify-center items-center ${href ? "h-full" : ""} ${s.gap} ${s.text}`}
       >
-        {Icon && (
-          <span className="group">
-            <span className={HoverIcon ? "group-hover:hidden" : ""}>
-              <Icon className={s.iconSize} />
-            </span>
-            {HoverIcon && (
-              <span className="group-hover:block hidden">
-                <HoverIcon className={s.iconSize} />
-              </span>
-            )}
-          </span>
-        )}
+        {iconPosition === "left" && iconContent}
         {label && (
           <span
             className={`font-semibold text-nowrap leading-none ${labelClassName}`}
@@ -258,6 +261,7 @@ const Button = ({
             {label}
           </span>
         )}
+        {iconPosition === "right" && iconContent}
         {shortcut && (
           <Shortcut shortcut={shortcut} className="ps-1" pill={size === "sm"} />
         )}

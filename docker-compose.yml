@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: root
+      MARIADB_ROOT_USERNAME: root
     ports:
       - $DB_PORT:3306
   adminer:

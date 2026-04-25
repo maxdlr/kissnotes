@@ -1,6 +1,7 @@
 "use client";
 
-import { ClipboardIcon } from "@heroicons/react/24/outline";
+import { ClipboardIcon as ClipboardIconOutline } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import type { ExpressionModel } from "@kissnotes/types";
 import { type ReactElement, useEffect, useState } from "react";
 import { CodeBlock } from "react-code-block";
@@ -21,6 +22,12 @@ const KissCodeBlock = ({
   const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
   const text = code.lines.map((l) => l.content).join("\n");
   const [loading, setLoading] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const handleCopy = () => {
+    setCopied((v) => !v);
+    setTimeout(() => setCopied((v) => !v), 1000);
+  };
 
   const lineMatches: string[] = [];
 
@@ -92,20 +99,24 @@ const KissCodeBlock = ({
 
   return (
     <CodeBlock code={text} language="js" words={tokens} lines={lineMatches}>
-      <div className="relative bg-code p-8 pt-20 rounded-2xl overflow-hidden">
-        <div className="absolute top-8 left-8 text-sm text-accent">
-          {`${property.group}.${property.name}`}
+      <div
+        className={`relative bg-code rounded-2xl overflow-hidden p-8 space-y-8 ${className}`}
+      >
+        <div className="sticky w-full">
+          <div className="flex justify-between items-start">
+            <p className="text-sm text-accent leading-tight">
+              {`${property.group}.${property.name}`}
+            </p>
+            <Button
+              Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}
+              size="sm"
+              shortcut={{ keys: ["cmd", "C"] }}
+              variant="ghost"
+              onClick={handleCopy}
+            />
+          </div>
         </div>
-        <Button
-          className="absolute top-8 right-8"
-          Icon={ClipboardIcon}
-          size="sm"
-          shortcut={{ keys: ["cmd", "shift", "C"] }}
-          variant="ghost"
-        />
-        <div className={`relative overflow-scroll ${className}`}>
-          {codeBlock}
-        </div>
+        <div className="overflow-x-auto w-full relative">{codeBlock}</div>
       </div>
     </CodeBlock>
   );

@@ -13,7 +13,8 @@ const Searcher = ({
 }: SearcherProps) => {
   return (
     <Modal onClose={onClose}>
-      {() => <input name="search" placeholder={placeholder} value={value} />}
+      <h2 className="text-2xl font-bold mb-4">Search</h2>
+      <input name="search" placeholder={placeholder} value={value} />
     </Modal>
   );
 };

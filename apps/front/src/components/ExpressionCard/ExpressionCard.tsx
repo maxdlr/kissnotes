@@ -21,7 +21,7 @@ const ExpressionCard = ({
   onClick,
 }: ExpressionCardProps) => {
   const { title, author, createdAt, description } = expression;
-  const { getTokens } = useExpressions([expression]);
+  const { getTokens } = useExpressions(expression);
 
   if (!expression) return "loading expression";
   return (

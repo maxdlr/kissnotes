@@ -1,11 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { type ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { mutate } from "swr";
 import { FormInput } from "@/components/FormInput";
 import { FormWrapper } from "@/components/FormWrapper";
 import useAuth from "@/hooks/AuthProvider";
 import useAxios from "@/hooks/useAxios";
+import type { FormChangeEvent } from "@/types/form.types";
 
 const logIn = () => {
   const { postData, loading } = useAxios("/login");
@@ -21,9 +22,7 @@ const logIn = () => {
     if (user) router.push("/");
   }, [user]);
 
-  const handleOnchange = ({
-    target: { name, value },
-  }: ChangeEvent<HTMLInputElement>) => {
+  const handleOnchange = ({ target: { name, value } }: FormChangeEvent) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
@@ -45,8 +44,9 @@ const logIn = () => {
         label: "Get in",
         loading,
         variant: cannotSubmit ? "outline" : "fill",
+        className: "justify-center",
       }}
-      className="h-full w-full mt-36"
+      className="mt-36 w-sm mx-auto"
       animated
     >
       <FormInput

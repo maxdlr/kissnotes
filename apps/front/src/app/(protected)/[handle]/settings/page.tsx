@@ -1,11 +1,9 @@
 "use client";
-import { PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { type ChangeEvent, useState } from "react";
-import { Button } from "@/components/Button";
 import { FormInput } from "@/components/FormInput";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import useAuth from "@/hooks/AuthProvider";
-import { getProfileHref } from "@/utils/getProfileHref";
 import SettingsSection from "./_components/SettingsSection";
 
 const ProfileSettingsPage = () => {
@@ -33,7 +31,7 @@ const ProfileSettingsPage = () => {
   return (
     <div className="w-full h-full flex justify-center items-center">
       <div
-        className={`sm:max-w-200 w-full h-fit sm:max-h-125 border border-secondary rounded-4xl p-4 sm:p-8`}
+        className={`sm:max-w-200 w-full h-fit sm:max-h-125 rounded-4xl p-4 sm:p-8`}
       >
         <SettingsSection
           title="Profile"

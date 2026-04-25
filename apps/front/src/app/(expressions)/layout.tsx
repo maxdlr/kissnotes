@@ -1,12 +1,16 @@
 "use client";
 import type { ExpressionModel, UserModel } from "@kissnotes/types";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { ExpressionList } from "@/components/ExpressionList";
 import type { SidebarValue } from "@/components/ExpressionListSidebar/ExpressionListSidebar";
 import { Hero } from "@/components/Hero";
 import useBrowse from "@/hooks/bread/useBrowse";
 
-const Home = () => {
+export interface ExpressionsLayoutProps {
+  children: ReactNode;
+}
+
+const ExpressionsLayout = ({ children }: ExpressionsLayoutProps) => {
   const [expressions, setExpressions] = useState<ExpressionModel[]>([]);
   const [filters, setFilters] = useState<SidebarValue>({
     author: null,
@@ -31,16 +35,18 @@ const Home = () => {
 
   return (
     <>
+      {children}
       <Hero />
       {expressions && (
         <ExpressionList
           expressions={expressions}
           filters={filters}
           onFilterChange={setFilters}
+          startCollapsed={true}
         />
       )}
     </>
   );
 };
 
-export default Home;
+export default ExpressionsLayout;

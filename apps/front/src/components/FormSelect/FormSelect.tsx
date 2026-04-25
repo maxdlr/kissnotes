@@ -139,10 +139,10 @@ const FormSelect = <T,>({
         .map((v) => v[property])
         .includes(option[property]);
       if (!alreadySelected) {
-        onChange({ name, value: [...(value as T[]), option] });
+        onChange({ target: { name, value: [...(value as T[]), option] } });
       }
     } else {
-      onChange({ name, value: option });
+      onChange({ target: { name, value: option } });
     }
     setPrompt("");
     refocus();
@@ -151,17 +151,19 @@ const FormSelect = <T,>({
   const handleOnDeselect = (option: T) => {
     if (multiple) {
       onChange({
-        name,
-        value: (value as T[]).filter((o) => o[property] !== option[property]),
+        target: {
+          name,
+          value: (value as T[]).filter((o) => o[property] !== option[property]),
+        },
       });
     } else {
-      onChange({ name, value: null });
+      onChange({ target: { name, value: null } });
     }
     refocus();
   };
 
   const handleClear = () => {
-    onChange({ name, value: multiple ? [] : null });
+    onChange({ target: { name, value: multiple ? [] : null } });
     setPrompt("");
     refocus();
   };

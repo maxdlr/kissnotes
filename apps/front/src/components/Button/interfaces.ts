@@ -27,4 +27,5 @@ export interface ButtonProps {
   loading?: boolean;
   danger?: boolean;
   bare?: boolean;
+  iconPosition?: "left" | "right";
 }

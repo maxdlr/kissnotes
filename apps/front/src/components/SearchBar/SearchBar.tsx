@@ -1,8 +1,9 @@
 "use client";
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { type ChangeEvent, useRef } from "react";
+import { useRef } from "react";
 import type { ShortcutDef } from "@/hooks/useShortcut";
+import type { FormChangeEvent } from "@/types/form.types";
 import { FormInput } from "../FormInput";
 import { Searcher } from "../Searcher";
 import useSearcher from "../Searcher/hooks/useSearcher";
@@ -17,7 +18,7 @@ interface SearchBarProps {
   modalSearcher?: boolean;
   shortcut?: ShortcutDef;
   Icon?: React.ElementType | null;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: FormChangeEvent) => void;
 }
 
 const SearchBar = ({
@@ -34,11 +35,9 @@ const SearchBar = ({
   const { isOpen, setIsOpen, searchPrompt, setSearchPrompt } = useSearcher();
   const ref = useRef<HTMLInputElement | null>(null);
 
-  const handleOnChange = ({
-    target: { value },
-  }: ChangeEvent<HTMLInputElement>) => {
-    setSearchPrompt(value);
-    onChange?.({ target: { name, value } } as ChangeEvent<HTMLInputElement>);
+  const handleOnChange = (e: FormChangeEvent) => {
+    setSearchPrompt(e.target.value);
+    onChange?.(e);
   };
 
   return (
@@ -52,7 +51,7 @@ const SearchBar = ({
         onChange={handleOnChange}
         variant={variant}
         onClick={modalSearcher ? () => setIsOpen(true) : undefined}
-        Icon={Icon === null ? undefined : Icon || MagnifyingGlassIcon}
+        Icon={Icon || MagnifyingGlassIcon}
         shortcut={modalSearcher ? shortcut : undefined}
         containerClassName={`rounded-full`}
       />

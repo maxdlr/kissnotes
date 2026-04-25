@@ -18,7 +18,7 @@ const InputText = ({
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex w-full items-center gap-2 ${className}`}>
       <input
         ref={ref}
         type={type}

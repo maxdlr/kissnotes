@@ -5,13 +5,23 @@ import type {
 } from "@kissnotes/types";
 import { arrayUnique } from "@/utils/arrayUtils";
 
-const useExpressions = (expressions: ExpressionModel[]) => {
+const useExpressions = (expressions: ExpressionModel[] | ExpressionModel) => {
   const getTokens = (
     kinds?: (keyof ExpressionSymbol["groups"])[],
     property?: keyof ExpressionToken,
-  ) => {
-    if (!expressions.length) {
-      return [];
+  ): ExpressionToken[] => {
+    if (!Array.isArray(expressions)) {
+      if (kinds) {
+        return arrayUnique(
+          kinds.flatMap((k) => expressions.symbols?.groups[k] || []),
+          property || "label",
+        );
+      }
+
+      return arrayUnique<ExpressionToken>(
+        expressions.symbols?.tokens || [],
+        property || "label",
+      );
     }
     const symbols = expressions
       .map((expression: ExpressionModel) => expression.symbols)
@@ -24,9 +34,11 @@ const useExpressions = (expressions: ExpressionModel[]) => {
       );
     }
 
-    return arrayUnique<ExpressionToken>(
-      symbols.flatMap((s): ExpressionToken[] => s.tokens),
-      property || "label",
+    return (
+      arrayUnique<ExpressionToken>(
+        symbols.flatMap((s): ExpressionToken[] => s.tokens),
+        property || "label",
+      ) || []
     );
   };
 

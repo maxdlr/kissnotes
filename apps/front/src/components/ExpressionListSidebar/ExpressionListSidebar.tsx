@@ -5,6 +5,7 @@ import type {
   UserModel,
 } from "@kissnotes/types";
 import useExpressions from "@/hooks/useExpressions";
+import type { FormChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
 import { FormSelect } from "../FormSelect";
 import MasonryGrid from "../MasonryGrid/MasonryGrid";
@@ -40,13 +41,8 @@ const ExpressionListSidebar = ({
   );
 
   const handleOnChange = ({
-    name,
-    value: changeValue,
-  }: {
-    name: string;
-    // biome-ignore lint/suspicious/noExplicitAny: value can be of any type depending on the input
-    value: any;
-  }) => {
+    target: { name, value: changeValue },
+  }: FormChangeEvent<unknown>) => {
     onChange({ ...value, [name]: changeValue } as SidebarValue);
   };
 
@@ -55,9 +51,7 @@ const ExpressionListSidebar = ({
       <MasonryGrid>
         {value?.search !== undefined && (
           <SearchBar
-            onChange={(e) =>
-              handleOnChange({ name: "search", value: e.target.value })
-            }
+            onChange={handleOnChange}
             shortcut={{
               keys: value?.search ? ["ESC"] : ["cmd", "F"],
               preventDefault: true,

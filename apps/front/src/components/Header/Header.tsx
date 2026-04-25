@@ -4,7 +4,6 @@ import {
   HomeIcon,
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/AuthProvider";
 import { getProfileHref } from "@/utils/getProfileHref";
 import { Button } from "../Button";
@@ -14,7 +13,6 @@ import { UserHandle } from "../UserHandle";
 
 const Header = () => {
   const { user } = useAuth();
-  const router = useRouter();
 
   return (
     <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
@@ -22,7 +20,7 @@ const Header = () => {
       <Button
         Icon={HomeIcon}
         variant="ghost"
-        onClick={() => router.push("/")}
+        href="/"
         className="block md:hidden"
       />
       <SearchBar
@@ -37,9 +35,7 @@ const Header = () => {
             HoverIcon={Cog6ToothFillIcon}
             variant="ghost"
             size="sm"
-            onClick={() =>
-              router.push(`${getProfileHref(user.username)}/settings`)
-            }
+            href={`${getProfileHref(user.username)}/settings`}
           />
           <UserHandle className="hover:text-primary!" />
         </div>
@@ -47,7 +43,7 @@ const Header = () => {
         <Button
           label="Log in"
           shortcut={{ keys: ["cmd", "shift", "L"] }}
-          onClick={() => router.push("/login")}
+          href="/login"
           variant="outline"
         />
       )}
