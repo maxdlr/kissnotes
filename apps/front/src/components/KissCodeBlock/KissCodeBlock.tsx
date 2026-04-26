@@ -12,11 +12,15 @@ interface CodeBlockProps {
   expression: ExpressionModel;
   className?: string;
   highlightedTokens: string[];
+  enableCopy?: boolean;
+  enableLineCopy?: boolean;
 }
 const KissCodeBlock = ({
   expression,
   className,
   highlightedTokens,
+  enableCopy = false,
+  enableLineCopy = false,
 }: CodeBlockProps) => {
   const { code, property } = expression;
   const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
@@ -33,7 +37,7 @@ const KissCodeBlock = ({
 
   const tokenHighlightedCode: ReactElement = (
     <CodeBlock.Code>
-      <KissLineContent>
+      <KissLineContent interactive={enableLineCopy}>
         <CodeBlock.Token>
           {({ isTokenHighlighted, children }) => (
             <span
@@ -55,6 +59,7 @@ const KissCodeBlock = ({
     <CodeBlock.Code>
       {({ isLineHighlighted }) => (
         <KissLineContent
+          interactive={enableLineCopy}
           className={isLineHighlighted ? "bg-violet-500/30" : "opacity-60"}
           lineNumberClassName={
             isLineHighlighted ? "text-gray-300" : "text-gray-500"
@@ -68,7 +73,7 @@ const KissCodeBlock = ({
 
   const normalCode: ReactElement = (
     <CodeBlock.Code>
-      <KissLineContent>
+      <KissLineContent interactive={enableLineCopy}>
         <CodeBlock.Token />
       </KissLineContent>
     </CodeBlock.Code>
@@ -107,13 +112,15 @@ const KissCodeBlock = ({
             <p className="text-sm text-accent leading-tight">
               {`${property.group}.${property.name}`}
             </p>
-            <Button
-              Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}
-              size="sm"
-              shortcut={{ keys: ["cmd", "C"] }}
-              variant="ghost"
-              onClick={handleCopy}
-            />
+            {enableCopy && (
+              <Button
+                Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}
+                size="sm"
+                shortcut={{ keys: ["cmd", "C"] }}
+                variant="ghost"
+                onClick={handleCopy}
+              />
+            )}
           </div>
         </div>
         <div className="overflow-x-auto w-full relative">{codeBlock}</div>

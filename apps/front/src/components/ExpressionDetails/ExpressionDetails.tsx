@@ -78,6 +78,8 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
       </div>
 
       <KissCodeBlock
+        enableCopy
+        enableLineCopy
         expression={expression}
         highlightedTokens={highlightedTokens}
         className="col-span-1 md:col-span-full"

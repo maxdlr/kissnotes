@@ -4,6 +4,7 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { MouseEvent, useState } from "react";
 import { useShortcut } from "@/hooks/useShortcut";
 import { Shortcut } from "../ShortCut";
 import type { ButtonProps } from "./interfaces";
@@ -172,7 +173,7 @@ const Button = ({
 }: ButtonProps) => {
   const router = useRouter();
 
-  const handleOnClick = (e?: React.MouseEvent) => {
+  const handleOnClick = (e?: MouseEvent | KeyboardEvent) => {
     if (disabled || loading) {
       e?.preventDefault();
       return;
@@ -180,12 +181,6 @@ const Button = ({
     if (href) router.push(href);
     else onClick?.(e);
   };
-
-  useShortcut(shortcut, () => {
-    if (disabled || loading) return;
-    if (href) router.push(href);
-    else onClick?.();
-  });
 
   const sizeStyles = {
     md: {
@@ -231,8 +226,6 @@ const Button = ({
   const motionProps = animDirection ? variants[animDirection] : defaultVariants;
   const { resting, hover, tap } = interactionVariants[variant];
 
-  // Merge the resting color into the animate target so Framer Motion
-  // always has a defined value to return to after whileHover ends.
   const animateWithResting = { ...motionProps.animate, ...resting };
 
   const iconContent = Icon && (
@@ -263,7 +256,12 @@ const Button = ({
         )}
         {iconPosition === "right" && iconContent}
         {shortcut && (
-          <Shortcut shortcut={shortcut} className="ps-1" pill={size === "sm"} />
+          <Shortcut
+            shortcut={shortcut}
+            onTrigger={handleOnClick}
+            className="ps-1"
+            pill={size === "sm"}
+          />
         )}
       </span>
     ) : null;
@@ -309,7 +307,9 @@ const Button = ({
           : {
               ...{
                 ...hover,
-                backgroundColor: danger ? "red" : hover.backgroundColor,
+                backgroundColor: danger
+                  ? "var(--color-danger)"
+                  : hover.backgroundColor,
               },
               scale: undefined,
             }

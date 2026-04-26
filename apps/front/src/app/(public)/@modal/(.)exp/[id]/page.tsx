@@ -6,7 +6,7 @@ import { Modal } from "@/components/Modal";
 const ProfileExpressionDetailsPage = () => {
   const router = useRouter();
   const handleClose = () => {
-    router.replace("/");
+    router.back();
   };
   return (
     <Modal

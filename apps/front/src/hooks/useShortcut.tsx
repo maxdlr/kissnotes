@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ModName } from "@/components/ShortCut";
 
 // ─── ModName — must match your Shortcut component's index.ts ─────────────────
@@ -65,6 +65,7 @@ export function useShortcut(
     target = null,
     blockers,
   } = shortcut ?? {};
+  const [active, setActive] = useState(false);
 
   // Stable handler ref — callers don't need useCallback
   const handlerRef = useRef(handler);
@@ -97,7 +98,9 @@ export function useShortcut(
       if (ke.key.toLowerCase() !== triggerKey.toLowerCase()) return;
 
       if (preventDefault) ke.preventDefault();
+      setActive(true);
       handlerRef?.current(ke);
+      setTimeout(() => setActive(false), 300);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -118,6 +121,8 @@ export function useShortcut(
     el.addEventListener(event, listener);
     return () => el.removeEventListener(event, listener);
   }, [target, event, listener, triggerKey]);
+
+  return { active };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-import type { ElementType } from "react";
+import type { ElementType, MouseEvent } from "react";
 import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { VariantDirection } from "./Button";
 
@@ -15,7 +15,7 @@ export interface ButtonProps {
     | "ghost"
     | "fill-accent"
     | "ghost-reveal";
-  onClick?: (event?: React.MouseEvent) => void;
+  onClick?: (event?: MouseEvent | KeyboardEvent) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
   HoverIcon?: ElementType;

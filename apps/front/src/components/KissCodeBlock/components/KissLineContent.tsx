@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button";
 import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
@@ -9,6 +8,7 @@ interface KissLineContentProps {
   lineContentClassName?: string;
   lineNumberClassName?: string;
   className?: string;
+  interactive?: boolean;
 }
 
 const KissLineContent = ({
@@ -16,6 +16,7 @@ const KissLineContent = ({
   className,
   lineContentClassName,
   lineNumberClassName,
+  interactive = false,
 }: KissLineContentProps) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
@@ -26,12 +27,7 @@ const KissLineContent = ({
   return (
     <button
       type="button"
-      className="block cursor-text
-      hover:scale-101 active:scale-99 
-      origin-center transition-all 
-      leading-none select-text
-      w-full
-      group"
+      className={`block ${interactive ? "group cursor-text hover:scale-99.5 active:scale-98" : ""} origin-center transition-all leading-none select-text`}
       onClick={handleCopy}
     >
       <div className={`flex items-center w-full ${className}`}>
@@ -43,6 +39,7 @@ const KissLineContent = ({
         <div
           className={`
 group-hover:bg-emphasis/10 
+group-active:bg-emphasis/20 
 group-hover:border-emphasis/50 
 group-active:border-emphasis/80 
 group-hover:border 
@@ -52,15 +49,17 @@ px-2 py-1 rounded-md flex-1 whitespace-pre text-sm ${lineContentClassName}`}
             <div>{children}</div>
           </CodeBlock.LineContent>
         </div>
-        <div
-          className={`group-hover:bg-code select-none sticky right-0 ps-2 py-2 h-full w-fit z-10 group-hover:active-101 group-hover:scale-99`}
-        >
-          {!copied ? (
-            <ClipboardIcon className="hidden group-hover:block size-4" />
-          ) : (
-            <CheckBadgeIcon className="hidden group-hover:block size-4" />
-          )}
-        </div>
+        {interactive && (
+          <div
+            className={`group-hover:bg-code select-none sticky right-0 ps-2 py-2 h-full w-fit z-10`}
+          >
+            {!copied ? (
+              <ClipboardIcon className="hidden group-hover:block size-4" />
+            ) : (
+              <CheckBadgeIcon className="hidden group-hover:block size-4" />
+            )}
+          </div>
+        )}
       </div>
     </button>
   );

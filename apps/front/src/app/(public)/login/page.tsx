@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { mutate } from "swr";
 import { FormInput } from "@/components/FormInput";
@@ -9,11 +9,14 @@ import useAxios from "@/hooks/useAxios";
 import type { FormChangeEvent } from "@/types/form.types";
 
 const logIn = () => {
+  const searchParams = useSearchParams();
+  const referrer = searchParams.get("referrer");
+
   const { postData, loading } = useAxios("/login");
   const { user } = useAuth();
   const [formData, setFormData] = useState({
-    username: "",
-    password: "caca",
+    username: "maxdlr",
+    password: "password",
   });
 
   const router = useRouter();
@@ -30,6 +33,7 @@ const logIn = () => {
     e?.preventDefault();
     await postData(formData);
     await mutate({ url: "/me" });
+    router.push(referrer || "/");
   };
 
   const cannotSubmit = !Object.values(formData).every(Boolean);

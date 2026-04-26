@@ -19,6 +19,7 @@
   --color-darker: var(--background);
   --color-code: #061727;
   --color-emphasis: #9eff28;
+  --color-danger: #c62a2a;
 
   /* Transition */
   --default-transition-duration: 0.5s;

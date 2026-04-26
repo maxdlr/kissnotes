@@ -4,6 +4,7 @@ import {
   HomeIcon,
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/AuthProvider";
 import { getProfileHref } from "@/utils/getProfileHref";
 import { Button } from "../Button";
@@ -11,8 +12,14 @@ import { Logo } from "../Logo";
 import { SearchBar } from "../SearchBar";
 import { UserHandle } from "../UserHandle";
 
+const getLoginHref = () => {
+  const referrer = window.location.pathname;
+  return referrer && referrer !== "/" ? `/login?referrer=${referrer}` : "/login";
+};
+
 const Header = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
   return (
     <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
@@ -43,7 +50,7 @@ const Header = () => {
         <Button
           label="Log in"
           shortcut={{ keys: ["cmd", "shift", "L"] }}
-          href="/login"
+          onClick={() => router.push(getLoginHref())}
           variant="outline"
         />
       )}

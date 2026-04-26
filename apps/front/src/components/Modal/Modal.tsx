@@ -66,8 +66,7 @@ const Modal = ({
     if (!document) return;
     document.body.style.cssText = "";
     console.log("complete");
-    handleClose();
-  }, [handleClose]);
+  }, []);
 
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent) => {

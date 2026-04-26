@@ -1,5 +1,6 @@
 import type { ElementType } from "react";
-import type { ShortcutDef } from "@/hooks/useShortcut";
+import { useShortcut, type ShortcutDef } from "@/hooks/useShortcut";
+import { motion } from "motion/react";
 import type { ModName } from ".";
 
 const mods: Map<ModName, string> = new Map();
@@ -22,9 +23,13 @@ interface ShortcutProps {
   shortcut: ShortcutDef;
   className?: string;
   pill?: boolean;
+  active?: boolean;
+  onTrigger?: (e?: KeyboardEvent) => void;
 }
 
-const Shortcut = ({ shortcut, className, pill }: ShortcutProps) => {
+const Shortcut = ({ shortcut, className, pill, onTrigger }: ShortcutProps) => {
+  const { active } = useShortcut(shortcut, (e) => onTrigger?.(e));
+
   const shortcutKeys = shortcut?.keys?.map((key) => {
     if (typeof key !== "string") {
       const KeyElement = key as ElementType;
@@ -39,22 +44,37 @@ const Shortcut = ({ shortcut, className, pill }: ShortcutProps) => {
   });
 
   return (
-    <div className={`max-sm:hidden ${className}`}>
-      <div
+    <motion.div className={`max-sm:hidden ${className}`}>
+      <motion.div
         className={`overflow-hidden flex justify-center items-center gap-0.5  ${pill ? "rounded-full" : "rounded-lg"}`}
+        animate={{
+          scale: active ? 0.95 : 1,
+          rotate: active ? -2 : 0,
+        }}
       >
         {shortcutKeys.map((key, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: don't care
-          <p key={i} className="text-xs font-extrabold">
+          <motion.p
+            // biome-ignore lint/suspicious/noArrayIndexKey: This is a static list of keys, so using the index as a key is acceptable.
+            key={i}
+            className="text-xs font-extrabold"
+            initial={{
+              backgroundColor: "var(--color-secondary)",
+            }}
+            animate={{
+              backgroundColor: active
+                ? "var(--color-emphasis)"
+                : "var(--color-secondary)",
+            }}
+          >
             <span
-              className={`min-w-6 min-h-6 bg-secondary flex justify-center items-center px-2`}
+              className={`min-w-6 min-h-6 flex justify-center items-center px-2`}
             >
               <span className="text-dark">{key}</span>
             </span>
-          </p>
+          </motion.p>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

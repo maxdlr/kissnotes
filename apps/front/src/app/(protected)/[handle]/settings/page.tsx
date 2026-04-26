@@ -1,9 +1,12 @@
 "use client";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { type ChangeEvent, useState } from "react";
+import { useState } from "react";
+import { Button } from "@/components/Button";
 import { FormInput } from "@/components/FormInput";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import useAuth from "@/hooks/AuthProvider";
+import axios from "@/services/axios";
+import type { FormChangeEvent } from "@/types/form.types";
 import SettingsSection from "./_components/SettingsSection";
 
 const ProfileSettingsPage = () => {
@@ -18,13 +21,16 @@ const ProfileSettingsPage = () => {
     notifyShare: false,
   });
 
+  const logOut = () => {
+    axios.post("/logout").catch(() => {});
+    window.location.href = "/";
+  };
+
   if (!user) {
-    return null;
+    return "loading";
   }
 
-  const handleOnchange = ({
-    target: { name, value },
-  }: ChangeEvent<HTMLInputElement>) => {
+  const handleOnchange = ({ target: { name, value } }: FormChangeEvent) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
@@ -33,6 +39,17 @@ const ProfileSettingsPage = () => {
       <div
         className={`sm:max-w-200 w-full h-fit sm:max-h-125 rounded-4xl p-4 sm:p-8`}
       >
+        <div className="flex justify-end items-center">
+          <Button
+            className="ms-auto"
+            label="Logout"
+            onClick={logOut}
+            danger
+            shortcut={{ keys: ["cmd", "shift", "ESC"] }}
+            variant="outline-accent"
+            size="sm"
+          />
+        </div>
         <SettingsSection
           title="Profile"
           subtitle="Personal information"
