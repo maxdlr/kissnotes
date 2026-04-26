@@ -56,7 +56,7 @@ px-2 py-1 rounded-md flex-1 whitespace-pre text-sm ${lineContentClassName}`}
             {!copied ? (
               <ClipboardIcon className="hidden group-hover:block size-4" />
             ) : (
-              <CheckBadgeIcon className="hidden group-hover:block size-4" />
+              <CheckBadgeIcon className="hidden group-hover:block size-4 text-emphasis" />
             )}
           </div>
         )}

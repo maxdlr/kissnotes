@@ -250,6 +250,7 @@ export const loadFixtures = async () => {
         property,
         code: codes[i],
         symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
+        createdAt: faker.date.past(),
       })),
     );
 
