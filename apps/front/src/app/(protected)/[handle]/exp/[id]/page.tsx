@@ -3,7 +3,7 @@ import type { Id } from "@kissnotes/types";
 import { useParams } from "next/navigation";
 import { ExpressionDetails } from "@/components/ExpressionDetails";
 
-const ExpressionById = () => {
+const UserExpressionById = () => {
   const { id } = useParams();
   return (
     <article className="p-8">
@@ -12,4 +12,4 @@ const ExpressionById = () => {
   );
 };
 
-export default ExpressionById;
+export default UserExpressionById;

@@ -3,11 +3,13 @@ import type { Id } from "@kissnotes/types";
 import { useParams, useRouter } from "next/navigation";
 import { ExpressionDetails } from "@/components/ExpressionDetails";
 import { Modal } from "@/components/Modal";
+import { getProfileHref, getUsername } from "@/utils/getProfileHref";
 
 const ProfileExpressionDetailsPage = () => {
   const router = useRouter();
+  const { handle } = useParams();
   const handleClose = () => {
-    router.back();
+    router.push(getProfileHref(getUsername(handle as string)));
   };
   const { id } = useParams();
   return (

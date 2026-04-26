@@ -17,7 +17,6 @@ type ModalProps = {
   isFullWidth?: boolean;
   isFullHeight?: boolean;
   isCentered?: boolean;
-  closeButton?: boolean;
 };
 
 const overlayVariants = {
@@ -34,7 +33,6 @@ const Modal = ({
   isFullWidth = false,
   isFullHeight = false,
   isCentered = false,
-  closeButton = false,
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -88,7 +86,7 @@ const Modal = ({
   };
 
   const layoutClass = (() => {
-    const base = `${className} shadow-md w-full ${isFullHeight ? "" : "mb-8"}`;
+    const base = `relative shadow-md w-full ${isFullHeight ? "" : "mb-8"} ${className}`;
     if (isFullWidth) {
       return `${base} absolute bottom-0 top-0 sm:top-6 sm:rounded-t-6xl`;
     }
@@ -131,16 +129,14 @@ const Modal = ({
                   exit="hidden"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {onClose && closeButton && (
+                  {onClose && (
                     <Button
                       shortcut={{ keys: ["ESC"] }}
                       variant="ghost"
                       Icon={XMarkIcon}
                       onClick={handleClose}
-                      className={`absolute z-10 ${
-                        isFullWidth
-                          ? "top-0 right-0 sm:top-8 sm:right-8"
-                          : "top-2.5 right-2.5"
+                      className={`absolute z-10 sm:top-8 sm:right-8 ${
+                        isFullWidth ? "top-0 right-0" : "top-2.5 right-2.5"
                       }`}
                       aria-label="close"
                     />

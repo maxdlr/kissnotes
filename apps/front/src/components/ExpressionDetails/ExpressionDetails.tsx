@@ -1,8 +1,7 @@
 "use client";
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
-import { EyeIcon, ShareIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, ShareIcon } from "@heroicons/react/24/outline";
 import type { ExpressionModel, Id } from "@kissnotes/types";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "@/components/Button/Button";
 import { KissCodeBlock } from "@/components/KissCodeBlock";
@@ -17,7 +16,6 @@ export interface ExpressionDetailsProps {
 }
 
 const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
-  const router = useRouter();
   const { data: expression } = useRead<ExpressionModel>("expressions", {
     id: id as Id,
   });
@@ -36,19 +34,11 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
 
   return expression ? (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
-      <div className="flex justify-between items-center col-span-1 md:col-span-full">
+      <div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
         <UserHandle username={expression.author.username} />
-        <div className="flex justify-between items-center gap-6">
-          <Button variant="ghost" Icon={EyeIcon} label={14} />
-          <Button variant="ghost" Icon={ShareIcon} label={6} />
-          <span className="text-secondary">•</span>
-          <Button
-            shortcut={{ keys: ["ESC"] }}
-            variant="ghost"
-            Icon={XMarkIcon}
-            onClick={router.back}
-          />
-        </div>
+        <span className="text-secondary">•</span>
+        <Button variant="ghost" Icon={EyeIcon} label={14} />
+        <Button variant="ghost" Icon={ShareIcon} label={6} />
       </div>
 
       <h1 className="text-2xl font-bold col-span-1 md:col-span-full">

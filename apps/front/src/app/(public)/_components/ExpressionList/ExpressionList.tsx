@@ -18,7 +18,7 @@ const ExpressionList = ({
   onFilterChange,
   className,
   startCollapsed = false,
-  urlScope = "exp",
+  urlScope = "",
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -98,7 +98,7 @@ const ExpressionList = ({
                 highlightedTokens={[]}
                 key={expression.id}
                 expression={expression}
-                onClick={() => router.push(`/${urlScope}/${expression.id}`)}
+                onClick={() => router.push(`${urlScope}/exp/${expression.id}`)}
               />
             ))}
           </MasonryGrid>
