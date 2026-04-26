@@ -32,6 +32,8 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
     }
   };
 
+  const tokens = getTokens(["variables"]);
+
   return expression ? (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       <div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
@@ -57,8 +59,8 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
             <h3 className="text-lg font-semibold text-accent">Tokens</h3>
             <Button variant="ghost" Icon={QuestionMarkCircleIcon} size="sm" />
           </div>
-          <span className="text-secondary px-2">•</span>
-          {getTokens(["variables"]).map((t) => (
+          {!!tokens.length && <span className="text-secondary px-2">•</span>}
+          {tokens.map((t) => (
             <Button
               key={t.id}
               variant="ghost"

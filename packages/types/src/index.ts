@@ -48,7 +48,7 @@ export interface ExpressionSymbol {
   /** Full expression text (lines joined with \n) */
   text: string;
   /** All tokens sorted by their occurrence in the source */
-  tokens: ExpressionToken[];
+  tokens: ExpressionToken[] | string[];
   /** Tokens grouped by semantic kind for convenient frontend consumption */
   groups: {
     functions: ExpressionToken[];

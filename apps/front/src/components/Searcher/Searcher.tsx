@@ -1,7 +1,8 @@
+import type { KissClickEvent } from "@/types/form.types";
 import { Modal } from "../Modal";
 
 interface SearcherProps {
-  onClose?: (e?: Event | React.MouseEvent) => void;
+  onClose?: (e?: KissClickEvent) => void;
   placeholder?: string;
   value?: string;
 }

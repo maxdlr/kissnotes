@@ -1,4 +1,4 @@
-import { FormChangeEvent } from "@/types/form.types";
+import { KissChangeEvent } from "@/types/form.types";
 import type { ElementType } from "react";
 
 export interface FormSelectProps<T> {
@@ -26,7 +26,7 @@ export interface FormSelectProps<T> {
    * Called whenever the selection changes.
    * `value` will be `T[]` in multi-select mode and `T | null` in single-select mode.
    */
-  onChange: (change: FormChangeEvent<T[] | T | null>) => void;
+  onChange: (change: KissChangeEvent<T[] | T | null>) => void;
 
   /** Optional icon rendered in the header when a value is selected. */
   Icon?: ElementType | null;

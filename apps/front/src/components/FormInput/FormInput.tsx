@@ -1,7 +1,7 @@
 "use client";
 import useOnClickOutside from "@/hooks/useClickOutside";
 import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
-import { FormChangeEvent } from "@/types/form.types";
+import { KissChangeEvent } from "@/types/form.types";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import React, {
   type ElementType,
@@ -27,7 +27,7 @@ interface FormInputProps {
   shortcut?: ShortcutDef;
   name: string;
   label?: string | React.ReactNode;
-  onChange: (event: FormChangeEvent) => void;
+  onChange: (event: KissChangeEvent) => void;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   disabled?: boolean;
   type?:

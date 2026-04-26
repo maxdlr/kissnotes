@@ -8,6 +8,8 @@
 	"scripts": {
 		"dev:back": "npm run dev --workspace=apps/back",
 		"dev:front": "npm run dev --workspace=apps/front",
+		"build:back": "npm run build --workspace=apps/back",
+		"build:front": "npm run build --workspace=apps/front",
 		"install:back": "npm install --workspace=apps/back",
 		"install:front": "npm install --workspace=apps/front"
 	},

@@ -6,3 +6,4 @@
 *.pem
 .env*
 *.tsbuildinfo
+apps/**/dist

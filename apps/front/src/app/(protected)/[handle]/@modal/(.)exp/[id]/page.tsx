@@ -4,12 +4,12 @@ import { useParams, useRouter } from "next/navigation";
 import { ExpressionDetails } from "@/components/ExpressionDetails";
 import { Modal } from "@/components/Modal";
 
-const ProfileExpressionDetailsPage = () => {
+const UserExpressionByIdModal = () => {
   const router = useRouter();
-  const { id } = useParams();
   const handleClose = () => {
     router.back();
   };
+  const { id } = useParams();
   return (
     <Modal
       onClose={handleClose}
@@ -22,4 +22,4 @@ const ProfileExpressionDetailsPage = () => {
   );
 };
 
-export default ProfileExpressionDetailsPage;
+export default UserExpressionByIdModal;

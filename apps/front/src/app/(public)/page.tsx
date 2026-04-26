@@ -1,5 +1,9 @@
 "use client";
-import type { ExpressionModel, UserModel } from "@kissnotes/types";
+import type {
+  ExpressionModel,
+  ExpressionSymbol,
+  UserModel,
+} from "@kissnotes/types";
 import { useEffect, useState } from "react";
 import { ExpressionList } from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
@@ -16,9 +20,9 @@ const ExpressionListPage = () => {
 
   const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: filters?.author?.id as number } as UserModel,
-    symbols: filters?.tokens
-      ? { tokens: [...filters.tokens.map((t) => t.title)] }
-      : null,
+    symbols: {
+      tokens: [...(filters?.tokens || []).map((t) => t.title)],
+    } as ExpressionSymbol,
     search: filters?.search,
   });
 

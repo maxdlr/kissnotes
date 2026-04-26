@@ -35,6 +35,9 @@ dev: ## npm run dev for back and front
 	make create-db
 	make -j2 dev-f dev-b
 
+build: ## npm run build for back and front
+	npm run build:front && npm run build:back
+
 dev-f: ## npm run dev for back
 	npm run dev:front
 

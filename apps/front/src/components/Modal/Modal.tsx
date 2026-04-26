@@ -4,13 +4,14 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { KissClickEvent } from "@/types/form.types";
 import { getNextZIndex } from "@/utils/zIndexManager";
 import { Button } from "../Button";
 import { ClientPortal } from "../ClientPortal";
 
 type ModalProps = {
   className?: string;
-  onClose?: (e?: Event | React.MouseEvent) => void;
+  onClose?: (e?: KissClickEvent) => void;
   children: React.ReactNode;
   closeOnOverlay?: boolean;
   isPersistent?: boolean;
@@ -52,7 +53,7 @@ const Modal = ({
   }, []);
 
   const handleClose = useCallback(
-    (e?: Event | React.MouseEvent) => {
+    (e?: KissClickEvent) => {
       console.log("close");
       e?.stopPropagation();
       if (isPersistent) return;

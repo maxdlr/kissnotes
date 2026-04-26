@@ -1,14 +1,14 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { mutate } from "swr";
 import { FormInput } from "@/components/FormInput";
 import { FormWrapper } from "@/components/FormWrapper";
 import useAuth from "@/hooks/AuthProvider";
 import useAxios from "@/hooks/useAxios";
-import type { FormChangeEvent } from "@/types/form.types";
+import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 
-const logIn = () => {
+const LogIn = () => {
   const searchParams = useSearchParams();
   const referrer = searchParams.get("referrer");
 
@@ -25,11 +25,11 @@ const logIn = () => {
     if (user) router.push("/");
   }, [user]);
 
-  const handleOnchange = ({ target: { name, value } }: FormChangeEvent) => {
+  const handleOnchange = ({ target: { name, value } }: KissChangeEvent) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
-  const handleSubmit = async (e?: React.MouseEvent) => {
+  const handleSubmit = async (e: KissClickEvent) => {
     e?.preventDefault();
     await postData(formData);
     await mutate({ url: "/me" });
@@ -70,4 +70,12 @@ const logIn = () => {
   );
 };
 
-export default logIn;
+const LogInPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LogIn />
+    </Suspense>
+  );
+};
+
+export default LogInPage;

@@ -5,7 +5,7 @@ import type {
   UserModel,
 } from "@kissnotes/types";
 import useExpressions from "@/hooks/useExpressions";
-import type { FormChangeEvent } from "@/types/form.types";
+import type { KissChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
 import { FormSelect } from "../../../../components/FormSelect";
 import MasonryGrid from "../../../../components/MasonryGrid/MasonryGrid";
@@ -42,7 +42,7 @@ const ExpressionListSidebar = ({
 
   const handleOnChange = ({
     target: { name, value: changeValue },
-  }: FormChangeEvent<unknown>) => {
+  }: KissChangeEvent<unknown>) => {
     onChange({ ...value, [name]: changeValue } as SidebarValue);
   };
 

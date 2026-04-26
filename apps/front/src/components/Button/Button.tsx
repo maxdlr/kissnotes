@@ -4,8 +4,7 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useState } from "react";
-import { useShortcut } from "@/hooks/useShortcut";
+import type { KissClickEvent } from "@/types/form.types";
 import { Shortcut } from "../ShortCut";
 import type { ButtonProps } from "./interfaces";
 
@@ -173,7 +172,7 @@ const Button = ({
 }: ButtonProps) => {
   const router = useRouter();
 
-  const handleOnClick = (e?: MouseEvent | KeyboardEvent) => {
+  const handleOnClick = (e?: KissClickEvent) => {
     if (disabled || loading) {
       e?.preventDefault();
       return;

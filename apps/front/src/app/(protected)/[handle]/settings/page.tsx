@@ -6,7 +6,7 @@ import { FormInput } from "@/components/FormInput";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import useAuth from "@/hooks/AuthProvider";
 import axios from "@/services/axios";
-import type { FormChangeEvent } from "@/types/form.types";
+import type { KissChangeEvent } from "@/types/form.types";
 import SettingsSection from "./_components/SettingsSection";
 
 const ProfileSettingsPage = () => {
@@ -30,7 +30,7 @@ const ProfileSettingsPage = () => {
     return "loading";
   }
 
-  const handleOnchange = ({ target: { name, value } }: FormChangeEvent) => {
+  const handleOnchange = ({ target: { name, value } }: KissChangeEvent) => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 

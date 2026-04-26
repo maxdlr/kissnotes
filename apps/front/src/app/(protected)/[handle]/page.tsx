@@ -1,5 +1,9 @@
 "use client";
-import type { ExpressionModel, UserModel } from "@kissnotes/types";
+import type {
+  ExpressionModel,
+  ExpressionSymbol,
+  UserModel,
+} from "@kissnotes/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ExpressionList } from "@/app/(public)/_components/ExpressionList";
@@ -22,9 +26,9 @@ const ProfilePage = () => {
 
   const { data } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: user?.id as string } as UserModel,
-    symbols: filters?.tokens
-      ? { tokens: [...filters.tokens.map((t) => t.title)] }
-      : null,
+    symbols: {
+      tokens: [...(filters?.tokens || []).map((t) => t.title)],
+    } as ExpressionSymbol,
     search: filters?.search,
   });
 

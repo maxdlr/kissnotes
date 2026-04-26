@@ -6,7 +6,7 @@ import { ExpressionDetails } from "@/components/ExpressionDetails";
 const ExpressionById = () => {
   const { id } = useParams();
   return (
-    <article className="p-8">
+    <article className="w-full md:w-11/12 lg:w-10/12 xl:w-8/12 2xl:w-7/12 mx-auto">
       <ExpressionDetails id={id as Id} />
     </article>
   );

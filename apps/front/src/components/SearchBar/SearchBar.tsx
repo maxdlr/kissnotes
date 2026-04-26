@@ -3,7 +3,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import type { ShortcutDef } from "@/hooks/useShortcut";
-import type { FormChangeEvent } from "@/types/form.types";
+import type { KissChangeEvent } from "@/types/form.types";
 import { FormInput } from "../FormInput";
 import { Searcher } from "../Searcher";
 import useSearcher from "../Searcher/hooks/useSearcher";
@@ -18,7 +18,7 @@ interface SearchBarProps {
   modalSearcher?: boolean;
   shortcut?: ShortcutDef;
   Icon?: React.ElementType | null;
-  onChange?: (e: FormChangeEvent) => void;
+  onChange?: (e: KissChangeEvent) => void;
 }
 
 const SearchBar = ({
@@ -35,7 +35,7 @@ const SearchBar = ({
   const { isOpen, setIsOpen, searchPrompt, setSearchPrompt } = useSearcher();
   const ref = useRef<HTMLInputElement | null>(null);
 
-  const handleOnChange = (e: FormChangeEvent) => {
+  const handleOnChange = (e: KissChangeEvent) => {
     setSearchPrompt(e.target.value);
     onChange?.(e);
   };

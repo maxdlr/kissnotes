@@ -19,7 +19,7 @@ const useExpressions = (expressions: ExpressionModel[] | ExpressionModel) => {
       }
 
       return arrayUnique<ExpressionToken>(
-        expressions.symbols?.tokens || [],
+        (expressions.symbols?.tokens as ExpressionToken[]) || [],
         property || "label",
       );
     }
@@ -36,7 +36,9 @@ const useExpressions = (expressions: ExpressionModel[] | ExpressionModel) => {
 
     return (
       arrayUnique<ExpressionToken>(
-        symbols.flatMap((s): ExpressionToken[] => s.tokens),
+        symbols.flatMap(
+          (s): ExpressionToken[] => s.tokens as ExpressionToken[],
+        ),
         property || "label",
       ) || []
     );
