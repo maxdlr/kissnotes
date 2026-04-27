@@ -1,8 +1,7 @@
-"use client";
 import type { UserModel } from "@kissnotes/types";
-import { createContext, useContext } from "react";
+import axios from "axios";
 import useSWR, { mutate } from "swr";
-import axios from "@/services/axios";
+import AuthContext from "./AuthContext";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -26,16 +25,8 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-interface AuthContextProps {
-  user?: UserModel;
-  isAuthUser: ({ username, id, email }: Partial<UserModel>) => boolean;
-  logIn: (credentials: { username: string; password: string }) => void;
-}
-
-const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { data: user } = useSWR<UserModel>(
+const AuthProvider = ({ children }: AuthProviderProps) => {
+  const { data: user, isLoading: isUserLoading } = useSWR<UserModel>(
     { url: "/me" },
     {
       onSuccess: () => resetMeRetryCount(),
@@ -58,17 +49,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logIn = (credentials: { username: string; password: string }) =>
     axios.post("/login", credentials).then(() => mutate({ url: "/me" }));
 
-  const value = { user, isAuthUser, logIn };
+  const value = { user, isUserLoading, isAuthUser, logIn };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within a AuthProvider");
-  }
-  return context;
-};
-
-export default useAuth;
+export default AuthProvider;

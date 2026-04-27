@@ -5,7 +5,7 @@ import ExpressionRepository from "@/repositories/ExpressionRepository";
 const createExpression = async (
   expression: ExpressionEntity,
 ): Promise<ExpressionEntity> => {
-  const userExists = await doesUserExist(expression.user.id);
+  const userExists = await doesUserExist(expression.author.id);
   if (!userExists) {
     throw ApiError("Expression user doesn't exist.");
   }

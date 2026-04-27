@@ -2,7 +2,7 @@
 
 import { MotionConfig } from "motion/react";
 import { SWRConfig } from "swr";
-import { AuthProvider } from "@/hooks/AuthProvider";
+import AuthProvider from "@/contexts/AuthContext/AuthProvider";
 import fetcher, { onError } from "@/services/fetcher";
 
 export function Providers({ children }: { children: React.ReactNode }) {

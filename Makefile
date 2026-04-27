@@ -38,6 +38,18 @@ dev: ## npm run dev for back and front
 build: ## npm run build for back and front
 	npm run build:front && npm run build:back
 
+start: ## npm run start for back and front
+	make start-db
+	make wait-db
+	make create-db
+	make -j2 start-f start-b
+
+start-f: ## npm run start for front
+	npm run start:front
+
+start-b: ## npm run start for back
+	npm run start:back
+
 dev-f: ## npm run dev for back
 	npm run dev:front
 

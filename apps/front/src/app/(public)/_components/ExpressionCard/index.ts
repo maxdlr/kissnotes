@@ -1,1 +1,1 @@
-export { default as ExpressionCard } from "./ExpressionCard";
+export { default } from "./ExpressionCard";

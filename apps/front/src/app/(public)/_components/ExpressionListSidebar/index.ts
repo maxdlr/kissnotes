@@ -1,1 +1,1 @@
-export { default as ExpressionListSidebar } from "./ExpressionListSidebar";
+export { default } from "./ExpressionListSidebar";

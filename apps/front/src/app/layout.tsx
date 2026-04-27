@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: dont care */
 
 import type { Metadata } from "next";
-import { Header } from "@/components/Header";
+import Header from "@/components/Header";
 import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";

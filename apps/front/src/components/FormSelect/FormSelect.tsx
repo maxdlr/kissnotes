@@ -15,7 +15,7 @@ import {
   useState,
 } from "react";
 import useOnClickOutside from "@/hooks/useClickOutside";
-import { Button } from "../Button";
+import Button from "../Button";
 import Collapsible from "../Collapsible/Collapsible";
 import InputText from "../FormInput/_components/InputText";
 import Pill from "../Pill/Pill";

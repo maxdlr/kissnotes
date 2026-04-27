@@ -1,10 +1,10 @@
-import jwt from "jsonwebtoken";
+import jwt, { type SignOptions } from "jsonwebtoken";
 
 const deliverJwtToken = (
-  payload: any,
-  expiresIn = "3m",
-  secret = process.env.JWT_SECRET,
-  options = {},
+  payload: string | Buffer | object,
+  expiresIn: SignOptions["expiresIn"] = "3m",
+  secret = process.env.JWT_SECRET as string,
+  options: Omit<SignOptions, "expiresIn"> = {},
 ) => {
   if (!secret) {
     throw ApiError(500, "JWT secret is required");

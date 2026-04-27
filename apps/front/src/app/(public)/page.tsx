@@ -5,9 +5,10 @@ import type {
   UserModel,
 } from "@kissnotes/types";
 import { useEffect, useState } from "react";
-import { ExpressionList } from "@/app/(public)/_components/ExpressionList";
+import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import { Hero } from "@/components/Hero";
+import Hero from "@/components/Hero";
+import Loading from "@/components/Loading";
 import useBrowse from "@/hooks/bread/useBrowse";
 
 const ExpressionListPage = () => {
@@ -44,7 +45,7 @@ const ExpressionListPage = () => {
           startCollapsed={true}
         />
       ) : (
-        "loading"
+        <Loading />
       )}
     </>
   );

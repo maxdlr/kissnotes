@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 /** biome-ignore-all lint/suspicious/noExplicitAny: dontcare */
 import { motion } from "motion/react";
-import { Button } from "../Button";
+import Button from "../Button";
 import type { FormWrapperProps } from "./interfaces";
 import { ReactNode } from "react";
 

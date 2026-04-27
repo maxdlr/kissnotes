@@ -1,1 +1,1 @@
-export { default as LayerMockup } from "./LayerMockup";
+export { default } from "./LayerMockup";

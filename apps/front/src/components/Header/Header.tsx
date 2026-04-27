@@ -5,20 +5,23 @@ import {
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
-import useAuth from "@/hooks/AuthProvider";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/getProfileHref";
-import { Button } from "../Button";
-import { Logo } from "../Logo";
-import { SearchBar } from "../SearchBar";
-import { UserHandle } from "../UserHandle";
+import Button from "../Button";
+import Loading from "../Loading";
+import Logo from "../Logo";
+import SearchBar from "../SearchBar";
+import UserHandle from "../UserHandle";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;
-  return referrer && referrer !== "/" ? `/login?referrer=${referrer}` : "/login";
+  return referrer && referrer !== "/"
+    ? `/login?referrer=${referrer}`
+    : "/login";
 };
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, isUserLoading } = useAuth();
   const router = useRouter();
 
   return (
@@ -35,7 +38,9 @@ const Header = () => {
         modalSearcher
         className="w-full"
       />
-      {user ? (
+      {isUserLoading ? (
+        <Loading />
+      ) : user ? (
         <div className="flex justify-center items-center gap-2">
           <Button
             Icon={Cog6ToothOutlineIcon}

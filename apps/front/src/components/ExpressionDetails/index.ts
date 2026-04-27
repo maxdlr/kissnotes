@@ -1,1 +1,1 @@
-export { default as ExpressionDetails } from "./ExpressionDetails";
+export { default } from "./ExpressionDetails";

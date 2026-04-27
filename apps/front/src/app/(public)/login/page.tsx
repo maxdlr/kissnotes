@@ -2,9 +2,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { mutate } from "swr";
-import { FormInput } from "@/components/FormInput";
-import { FormWrapper } from "@/components/FormWrapper";
-import useAuth from "@/hooks/AuthProvider";
+import FormInput from "@/components/FormInput";
+import FormWrapper from "@/components/FormWrapper";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import useAxios from "@/hooks/useAxios";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 
@@ -31,7 +31,8 @@ const LogIn = () => {
 
   const handleSubmit = async (e: KissClickEvent) => {
     e?.preventDefault();
-    await postData(formData);
+    const res = await postData(formData);
+    console.log(res);
     await mutate({ url: "/me" });
     router.push(referrer || "/");
   };

@@ -6,9 +6,9 @@ import type {
 } from "@kissnotes/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ExpressionList } from "@/app/(public)/_components/ExpressionList";
+import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import { UserHero } from "@/components/UserHero";
+import UserHero from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
 import { getHandle } from "@/utils/getProfileHref";
 import useUser from "./hooks/UserContext";

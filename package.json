@@ -11,7 +11,9 @@
 		"build:back": "npm run build --workspace=apps/back",
 		"build:front": "npm run build --workspace=apps/front",
 		"install:back": "npm install --workspace=apps/back",
-		"install:front": "npm install --workspace=apps/front"
+		"install:front": "npm install --workspace=apps/front",
+		"start:back": "npm run start --workspace=apps/back",
+		"start:front": "npm run start --workspace=apps/front"
 	},
 	"dependencies": {
 		"jsonwebtoken": "^9.0.3"

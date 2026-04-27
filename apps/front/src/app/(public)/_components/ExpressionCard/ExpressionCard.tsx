@@ -4,9 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import useExpressions from "@/hooks/useExpressions";
 import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
-import { KissCodeBlock } from "../../../../components/KissCodeBlock";
-import Pill from "../../../../components/Pill/Pill";
-import { UserHandle } from "../../../../components/UserHandle";
+import KissCodeBlock from "@/components/KissCodeBlock";
+import Pill from "@/components/Pill";
+import UserHandle from "@/components/UserHandle";
 
 interface ExpressionCardProps {
   expression: ExpressionModel;

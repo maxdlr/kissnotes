@@ -1,13 +1,14 @@
 "use client";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { Button } from "@/components/Button";
-import { FormInput } from "@/components/FormInput";
+import Button from "@/components/Button";
+import FormInput from "@/components/FormInput";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
-import useAuth from "@/hooks/AuthProvider";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import axios from "@/services/axios";
 import type { KissChangeEvent } from "@/types/form.types";
 import SettingsSection from "./_components/SettingsSection";
+import Loading from "@/components/Loading";
 
 const ProfileSettingsPage = () => {
   const { user } = useAuth();
@@ -27,7 +28,7 @@ const ProfileSettingsPage = () => {
   };
 
   if (!user) {
-    return "loading";
+    return <Loading />;
   }
 
   const handleOnchange = ({ target: { name, value } }: KissChangeEvent) => {

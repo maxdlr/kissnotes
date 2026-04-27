@@ -5,7 +5,8 @@ import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import type { ExpressionModel } from "@kissnotes/types";
 import { type ReactElement, useEffect, useState } from "react";
 import { CodeBlock } from "react-code-block";
-import { Button } from "../Button";
+import Button from "../Button";
+import Loading from "../Loading";
 import KissLineContent from "./components/KissLineContent";
 
 interface CodeBlockProps {
@@ -100,7 +101,7 @@ const KissCodeBlock = ({
     setLoading(false);
   }, [highlightedTokens]);
 
-  if (loading) return "loading";
+  if (loading) return <Loading />;
 
   return (
     <CodeBlock code={text} language="js" words={tokens} lines={lineMatches}>

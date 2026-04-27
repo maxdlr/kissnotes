@@ -1,5 +1,4 @@
 import ExpressionEntity from "@/entities/ExpressionEntity";
-import { ExpressionToken } from "@kissnotes/types";
 
 /**
  * Filters expressions where every token title in the list
@@ -11,8 +10,8 @@ const filterByTokens = (
 ): ExpressionEntity[] => {
   return collection.filter((expression) =>
     tokenTitles.every((title) =>
-      expression.symbols?.tokens.some(
-        (t: ExpressionToken) => String(t.title) === title,
+      expression.symbols?.tokens.some((t) =>
+        typeof t === 'string' ? title === t : title === t.title,
       ),
     ),
   );

@@ -2,8 +2,8 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/Button";
-import useAuth from "@/hooks/AuthProvider";
+import Button from "@/components/Button";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import { getUsername } from "@/utils/getProfileHref";
 
 const UserProfileHeader = () => {

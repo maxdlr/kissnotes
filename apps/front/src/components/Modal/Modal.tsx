@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { KissClickEvent } from "@/types/form.types";
 import { getNextZIndex } from "@/utils/zIndexManager";
-import { Button } from "../Button";
-import { ClientPortal } from "../ClientPortal";
+import Button from "../Button";
+import ClientPortal from "../ClientPortal";
 
 type ModalProps = {
   className?: string;

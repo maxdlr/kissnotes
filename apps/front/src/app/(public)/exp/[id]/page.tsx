@@ -1,7 +1,7 @@
 "use client";
 import type { Id } from "@kissnotes/types";
 import { useParams } from "next/navigation";
-import { ExpressionDetails } from "@/components/ExpressionDetails";
+import ExpressionDetails from "@/components/ExpressionDetails";
 
 const ExpressionById = () => {
   const { id } = useParams();

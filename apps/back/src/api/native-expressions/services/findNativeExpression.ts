@@ -5,7 +5,7 @@ import { Id } from "@kissnotes/types";
 const findNativeExpression = async (
   id: Id,
 ): Promise<NativeExpressionEntity | null> => {
-  return await NativeExpressionRepository.findOneBy({ id });
+  return await NativeExpressionRepository.findOneBy({ id: id as number });
 };
 
 export default findNativeExpression;

@@ -199,11 +199,11 @@ const makeUsers = async (
 export const loadFixtures = async () => {
   return await ExpressionRepository.manager.transaction(async (manager) => {
     await manager.deleteAll(NativeExpressionEntity);
+    await manager.deleteAll(ExpressionEntity);
     await manager.deleteAll(LayerEntity);
     await manager.deleteAll(PropertyEntity);
-    await manager.deleteAll(CodeEntity);
     await manager.deleteAll(LineEntity);
-    await manager.deleteAll(ExpressionEntity);
+    await manager.deleteAll(CodeEntity);
     await manager.deleteAll(UserEntity);
 
     const nativeExpressions = await manager.save(NativeExpressionEntity, [

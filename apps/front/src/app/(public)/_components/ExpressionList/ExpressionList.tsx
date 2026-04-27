@@ -6,10 +6,10 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Button } from "../../../../components/Button";
-import { ExpressionCard } from "../ExpressionCard";
-import { ExpressionListSidebar } from "../ExpressionListSidebar";
-import MasonryGrid from "../../../../components/MasonryGrid/MasonryGrid";
+import Button from "../../../../components/Button";
+import ExpressionCard from "../ExpressionCard";
+import ExpressionListSidebar from "../ExpressionListSidebar";
+import MasonryGrid from "@/components/MasonryGrid";
 import type { ExpressionListProps } from "./interfaces";
 
 const ExpressionList = ({

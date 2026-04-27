@@ -1,6 +1,6 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
-import useAuth from "@/hooks/AuthProvider";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import { getUsername } from "@/utils/getProfileHref";
 import { UserProvider } from "./hooks/UserContext";
 

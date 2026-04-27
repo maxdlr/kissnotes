@@ -1,6 +1,6 @@
-import useAuth from "@/hooks/AuthProvider";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/getProfileHref";
-import { Button } from "../Button";
+import Button from "../Button";
 import { useRouter } from "next/navigation";
 
 interface UserHandleProps {

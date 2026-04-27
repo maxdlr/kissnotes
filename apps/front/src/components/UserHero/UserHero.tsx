@@ -1,7 +1,7 @@
 "use client";
 import useUser from "@/app/(protected)/[handle]/hooks/UserContext";
 import { SocialItem, type SocialType } from "@/types/socials.types";
-import { Button } from "../Button";
+import Button from "../Button";
 
 const UserHero = () => {
   const { user } = useUser();

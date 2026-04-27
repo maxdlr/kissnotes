@@ -5,7 +5,6 @@ const validateSignIn = ({
   password,
 }: AuthId): { error?: string[] } => {
   console.log("sign in", { username, password });
-  const error = {} as { error: string[] };
-  return {};
+  return {} as { error: string[] };
 };
 export default validateSignIn;

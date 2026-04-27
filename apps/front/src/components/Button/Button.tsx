@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { KissClickEvent } from "@/types/form.types";
-import { Shortcut } from "../ShortCut";
+import Shortcut from "../ShortCut";
 import type { ButtonProps } from "./interfaces";
 
 type VariantSet = {

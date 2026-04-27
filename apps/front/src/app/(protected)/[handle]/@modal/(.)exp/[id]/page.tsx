@@ -1,8 +1,8 @@
 "use client";
 import type { Id } from "@kissnotes/types";
 import { useParams, useRouter } from "next/navigation";
-import { ExpressionDetails } from "@/components/ExpressionDetails";
-import { Modal } from "@/components/Modal";
+import ExpressionDetails from "@/components/ExpressionDetails";
+import Modal from "@/components/Modal";
 
 const UserExpressionByIdModal = () => {
   const router = useRouter();

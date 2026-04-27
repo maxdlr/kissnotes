@@ -1,1 +1,1 @@
-export { default as KissCodeBlock } from "./KissCodeBlock";
+export { default } from "./KissCodeBlock";

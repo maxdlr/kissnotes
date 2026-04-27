@@ -1,1 +1,1 @@
-export { default as UserHandle } from "./UserHandle";
+export { default } from "./UserHandle";

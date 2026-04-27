@@ -1,1 +1,1 @@
-export { default as Searcher } from "./Searcher";
+export { default } from "./Searcher";
