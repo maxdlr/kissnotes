@@ -1,5 +1,5 @@
 import type { KissClickEvent } from "@/types/form.types";
-import Modal from "../Modal";
+import Modal from "@/components/Modal";
 
 interface SearcherProps {
   onClose?: (e?: KissClickEvent) => void;

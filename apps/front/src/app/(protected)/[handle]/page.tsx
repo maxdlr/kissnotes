@@ -10,7 +10,7 @@ import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 import UserHero from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
-import { getHandle } from "@/utils/getProfileHref";
+import { getHandle } from "@/utils/userUtils";
 import useUser from "./hooks/UserContext";
 
 const ProfilePage = () => {

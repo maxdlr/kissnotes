@@ -9,8 +9,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Button from "../Button";
-import Shortcut from "../ShortCut";
+import Button from "@/components/Button";
+import Shortcut from "@/components/ShortCut";
 import InputText from "./_components/InputText";
 import InputToggle from "./_components/InputToggle";
 import type { InputTextProps } from "./interfaces";

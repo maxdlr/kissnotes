@@ -1,7 +1,7 @@
 "use client";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import Button from "../Button";
-import Logo from "../Logo";
+import Button from "@/components/Button";
+import Logo from "@/components/Logo";
 
 const Hero = () => {
   const { user } = useAuth();

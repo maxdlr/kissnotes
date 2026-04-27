@@ -10,7 +10,7 @@ import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
 import useRead from "@/hooks/bread/useRead";
 import useExpressions from "@/hooks/useExpressions";
-import Loading from "../Loading";
+import Loading from "@/components/Loading";
 
 export interface ExpressionDetailsProps {
   id: Id;

@@ -15,10 +15,10 @@ import {
   useState,
 } from "react";
 import useOnClickOutside from "@/hooks/useClickOutside";
-import Button from "../Button";
-import Collapsible from "../Collapsible/Collapsible";
-import InputText from "../FormInput/_components/InputText";
-import Pill from "../Pill/Pill";
+import Button from "@/components/Button";
+import Collapsible from "@/components/Collapsible";
+import InputText from "@/components/FormInput/_components/InputText";
+import Pill from "@/components/Pill";
 import type { FormSelectProps } from "./interfaces";
 
 // ---------------------------------------------------------------------------

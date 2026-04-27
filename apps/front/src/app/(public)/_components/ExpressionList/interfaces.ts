@@ -1,5 +1,5 @@
 import type { ExpressionModel } from "@kissnotes/types";
-import type { SidebarValue } from "../ExpressionListSidebar/ExpressionListSidebar";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 
 export interface ExpressionListProps {
   expressions: ExpressionModel[];

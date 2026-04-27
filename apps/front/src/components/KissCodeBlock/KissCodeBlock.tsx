@@ -5,8 +5,8 @@ import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import type { ExpressionModel } from "@kissnotes/types";
 import { type ReactElement, useEffect, useState } from "react";
 import { CodeBlock } from "react-code-block";
-import Button from "../Button";
-import Loading from "../Loading";
+import Button from "@/components/Button";
+import Loading from "@/components/Loading";
 import KissLineContent from "./components/KissLineContent";
 
 interface CodeBlockProps {

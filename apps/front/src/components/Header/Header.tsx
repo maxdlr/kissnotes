@@ -5,13 +5,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
+import Loading from "@/components/Loading";
+import Logo from "@/components/Logo";
+import SearchBar from "@/components/SearchBar";
+import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import { getProfileHref } from "@/utils/getProfileHref";
-import Button from "../Button";
-import Loading from "../Loading";
-import Logo from "../Logo";
-import SearchBar from "../SearchBar";
-import UserHandle from "../UserHandle";
+import { getProfileHref } from "@/utils/userUtils";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;

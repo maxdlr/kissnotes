@@ -1,5 +1,5 @@
 import type { ChangeEvent, ElementType, FocusEventHandler, Ref } from "react";
-import type { ModName } from "../ShortCut";
+import type { ModName } from "@/components/ShortCut";
 
 export interface InputTextProps {
   placeholder?: string;

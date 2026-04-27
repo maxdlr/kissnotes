@@ -1,4 +1,4 @@
-import type { ButtonProps } from "../Button/interfaces";
+import type { ButtonProps } from "@/components/Button/interfaces";
 
 export interface FormWrapperProps {
   title?: string;

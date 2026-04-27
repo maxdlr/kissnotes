@@ -3,7 +3,7 @@ import type { UserModel } from "@kissnotes/types";
 import type { ParamValue } from "next/dist/server/request/params";
 import { createContext, useContext } from "react";
 import useRead from "@/hooks/bread/useRead";
-import { getUsername } from "@/utils/getProfileHref";
+import { getUsername } from "@/utils/userUtils";
 
 export interface UserContextProps {
   user: UserModel;

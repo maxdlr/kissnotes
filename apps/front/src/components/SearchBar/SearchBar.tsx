@@ -4,9 +4,9 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { KissChangeEvent } from "@/types/form.types";
-import FormInput from "../FormInput";
-import Searcher from "../Searcher";
-import useSearcher from "../Searcher/hooks/useSearcher";
+import FormInput from "@/components/FormInput";
+import Searcher from "@/components/Searcher";
+import useSearcher from "@/components/Searcher/hooks/useSearcher";
 
 interface SearchBarProps {
   placeholder?: string;

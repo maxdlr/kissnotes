@@ -1,6 +1,6 @@
 import useAuth from "@/contexts/AuthContext/useAuth";
-import { getProfileHref } from "@/utils/getProfileHref";
-import Button from "../Button";
+import { getProfileHref } from "@/utils/userUtils";
+import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 
 interface UserHandleProps {

@@ -1,7 +1,7 @@
 "use client";
 import { useParams, usePathname } from "next/navigation";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import { getUsername } from "@/utils/getProfileHref";
+import { getUsername } from "@/utils/userUtils";
 import { UserProvider } from "./hooks/UserContext";
 
 interface ProfilePageLayoutProps {
