@@ -1,10 +1,12 @@
 import type { UserModel } from "@kissnotes/types";
 import { createContext } from "react";
+import type { KeyedMutator } from "swr";
 
 interface AuthContextProps {
   user?: UserModel;
-  isUserLoading: boolean;
-  isAuthUser: ({ username, id, email }: Partial<UserModel>) => boolean;
+  loading: boolean;
+  mutateUser: KeyedMutator<UserModel>;
+  isAuthUser: (givenUser: Partial<UserModel>) => boolean;
   logIn: (credentials: { username: string; password: string }) => void;
 }
 

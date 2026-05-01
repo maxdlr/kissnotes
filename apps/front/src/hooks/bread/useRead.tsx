@@ -1,6 +1,7 @@
 "use client";
 
 import type { KRes, Model } from "@kissnotes/types";
+import { useState } from "react";
 import useSWR from "swr";
 
 const useRead = <T extends Model>(
@@ -8,6 +9,7 @@ const useRead = <T extends Model>(
   modelParams: Partial<T>,
   fetchIf: boolean = true,
 ) => {
+  const [loading, setLoading] = useState(true);
   const params: Partial<T> = Object.entries(modelParams).reduce(
     // biome-ignore lint/suspicious/noExplicitAny: don't care
     (acc: Partial<T>, value: [string, any]) => {
@@ -21,11 +23,21 @@ const useRead = <T extends Model>(
 
   const url = fetchIf ? `/${model}/read` : null;
 
-  const { data, error, isLoading } = useSWR<KRes<T>>({
-    url,
-    params,
-  });
-  return { data, error, loading: isLoading };
+  const { data, error } = useSWR<KRes<T>>(
+    {
+      url,
+      params,
+    },
+    {
+      onSuccess: () => {
+        setTimeout(() => setLoading(false), 1000);
+      },
+      onError: () => {
+        setTimeout(() => setLoading(false), 1000);
+      },
+    },
+  );
+  return { data, error, loading };
 };
 
 export default useRead;

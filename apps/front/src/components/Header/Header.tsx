@@ -7,7 +7,6 @@ import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
-import Logo from "@/components/Logo";
 import SearchBar from "@/components/SearchBar";
 import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
@@ -21,12 +20,12 @@ const getLoginHref = () => {
 };
 
 const Header = () => {
-  const { user, isUserLoading } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   return (
     <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
-      <Logo className="hidden md:block" />
+      {/* <Logo className="hidden md:block" /> */}
       <Button
         Icon={HomeIcon}
         variant="ghost"
@@ -38,8 +37,10 @@ const Header = () => {
         modalSearcher
         className="w-full"
       />
-      {isUserLoading ? (
-        <Loading />
+      {loading ? (
+        <div className="w-24">
+          <Loading count={8} minSize={1} maxSize={20} />
+        </div>
       ) : user ? (
         <div className="flex justify-center items-center gap-2">
           <Button

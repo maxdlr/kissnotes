@@ -1,6 +1,7 @@
 import type { UserModel } from "@kissnotes/types";
 import axios from "axios";
-import useSWR, { mutate } from "swr";
+import { useState } from "react";
+import useSWR, { mutate, type SWRConfiguration } from "swr";
 import AuthContext from "./AuthContext";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -26,17 +27,23 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { data: user, isLoading: isUserLoading } = useSWR<UserModel>(
-    { url: "/me" },
-    {
-      onSuccess: () => resetMeRetryCount(),
-      onError: () => incrementMeRetryCount(),
-      shouldRetryOnError: true,
-      errorRetryCount: isDev ? Infinity : MAX_ME_RETRIES,
-      errorRetryInterval: isDev ? 3000 : 0,
-      isPaused: () => !isDev && getMeRetryCount() >= MAX_ME_RETRIES,
+  const [loading, setLoading] = useState(true);
+
+  const { data: user, mutate: mutateUser } = useSWR<UserModel>({ url: "/me" }, {
+    onSuccess: () => {
+      resetMeRetryCount();
+      setLoading(false);
     },
-  );
+    onError: () => {
+      incrementMeRetryCount();
+      setLoading(false);
+    },
+    shouldRetryOnError: true,
+    errorRetryCount: isDev ? Infinity : MAX_ME_RETRIES,
+    errorRetryInterval: isDev ? 3000 : 0,
+    isPaused: () => !isDev && getMeRetryCount() >= MAX_ME_RETRIES,
+    onLoadingSlow: () => setLoading(false),
+  } as SWRConfiguration<UserModel>);
 
   const isAuthUser = (givenUser: Partial<UserModel>) => {
     if (!givenUser || !user) return false;
@@ -49,7 +56,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const logIn = (credentials: { username: string; password: string }) =>
     axios.post("/login", credentials).then(() => mutate({ url: "/me" }));
 
-  const value = { user, isUserLoading, isAuthUser, logIn };
+  const value = { user, loading, isAuthUser, logIn, mutateUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -6,11 +6,11 @@ import { useState } from "react";
 import Button from "@/components/Button/Button";
 import KissCodeBlock from "@/components/KissCodeBlock";
 import LayerMockup from "@/components/LayerMockup";
+import Loading from "@/components/Loading";
 import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
 import useRead from "@/hooks/bread/useRead";
 import useExpressions from "@/hooks/useExpressions";
-import Loading from "@/components/Loading";
 
 export interface ExpressionDetailsProps {
   id: Id;
@@ -94,7 +94,7 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
       </div>
     </div>
   ) : (
-    <Loading />
+    <Loading className="mt-64" />
   );
 };
 
