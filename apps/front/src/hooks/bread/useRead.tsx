@@ -29,12 +29,8 @@ const useRead = <T extends Model>(
       params,
     },
     {
-      onSuccess: () => {
-        setTimeout(() => setLoading(false), 1000);
-      },
-      onError: () => {
-        setTimeout(() => setLoading(false), 1000);
-      },
+      onSuccess: () => setLoading(false),
+      onError: () => setLoading(false),
     },
   );
   return { data, error, loading };

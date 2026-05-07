@@ -3,16 +3,17 @@ import { PencilIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import Button from "@/components/Button";
 import FormInput from "@/components/FormInput";
+import Loading from "@/components/Loading";
 import useSearcher from "@/components/Searcher/hooks/useSearcher";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import axios from "@/services/axios";
+import useToasts from "@/contexts/ToastsContext";
 import type { KissChangeEvent } from "@/types/form.types";
 import SettingsSection from "./_components/SettingsSection";
-import Loading from "@/components/Loading";
 
 const ProfileSettingsPage = () => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
   const { isOpen } = useSearcher();
+  const { addToast } = useToasts();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
     username: user?.username || "",
@@ -22,9 +23,13 @@ const ProfileSettingsPage = () => {
     notifyShare: false,
   });
 
-  const logOut = () => {
-    axios.post("/logout").catch(() => {});
-    window.location.href = "/";
+  const handleLogout = async () => {
+    await logOut();
+    addToast({
+      type: "success",
+      title: "Logged out",
+      message: "You have been logged out successfully.",
+    });
   };
 
   if (!user) {
@@ -44,7 +49,7 @@ const ProfileSettingsPage = () => {
           <Button
             className="ms-auto"
             label="Logout"
-            onClick={logOut}
+            onClick={handleLogout}
             danger
             shortcut={{ keys: ["cmd", "shift", "ESC"] }}
             variant="outline-accent"

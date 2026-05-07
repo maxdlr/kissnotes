@@ -4,8 +4,9 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { KissClickEvent } from "@/types/form.types";
+import Loading from "@/components/Loading";
 import Shortcut from "@/components/ShortCut";
+import type { KissClickEvent } from "@/types/form.types";
 import type { ButtonProps } from "./interfaces";
 
 type VariantSet = {
@@ -265,28 +266,6 @@ const Button = ({
       </span>
     ) : null;
 
-  const loadingContent = (
-    <span className={`flex justify-center items-center ${s.gap} ${s.text}`}>
-      <motion.div
-        style={{
-          width: 12,
-          height: 12,
-          borderRadius: "50%",
-          background: "var(--color-emphasis)",
-        }}
-        animate={{
-          scale: [1, 1.5, 1],
-          opacity: [0.4, 1, 0.4],
-        }}
-        transition={{
-          duration: 1,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </span>
-  );
-
   if (!content) return null;
 
   const ButtonEl = href ? MotionLink : motion.button;
@@ -316,7 +295,13 @@ const Button = ({
       whileTap={!disabled ? (tap as any) : undefined}
       onClick={href ? undefined : handleOnClick}
     >
-      {loading ? loadingContent : content}
+      {loading ? (
+        <div className="w-24">
+          <Loading count={8} minSize={1} maxSize={10} />
+        </div>
+      ) : (
+        content
+      )}
     </ButtonEl>
   );
 };

@@ -5,11 +5,13 @@ import type {
 } from "@kissnotes/types";
 import { arrayUnique } from "@/utils/arrayUtils";
 
-const useExpressions = (expressions: ExpressionModel[] | ExpressionModel) => {
+const useExpressions = (expressions?: ExpressionModel[] | ExpressionModel) => {
   const getTokens = (
     kinds?: (keyof ExpressionSymbol["groups"])[],
     property?: keyof ExpressionToken,
   ): ExpressionToken[] => {
+    if (!expressions) return [];
+
     if (!Array.isArray(expressions)) {
       if (kinds) {
         return arrayUnique(

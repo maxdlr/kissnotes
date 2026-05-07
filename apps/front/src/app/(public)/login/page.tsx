@@ -1,19 +1,20 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { mutate } from "swr";
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import useAxios from "@/hooks/useAxios";
+import useToasts from "@/contexts/ToastsContext";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 
 const LogIn = () => {
   const searchParams = useSearchParams();
+
   const referrer = searchParams.get("referrer");
 
-  const { postData, loading } = useAxios("/login");
-  const { user } = useAuth();
+  const { addToast } = useToasts();
+  const { user, logIn } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "maxdlr",
     password: "password",
@@ -31,9 +32,14 @@ const LogIn = () => {
 
   const handleSubmit = async (e: KissClickEvent) => {
     e?.preventDefault();
-    const res = await postData(formData);
-    console.log(res);
-    await mutate({ url: "/me" });
+    setLoading(true);
+    await logIn(formData);
+    setLoading(false);
+    addToast({
+      type: "success",
+      title: "Logged in",
+      message: `Welcome back, ${formData.username}!`,
+    });
     router.push(referrer || "/");
   };
 
@@ -49,7 +55,12 @@ const LogIn = () => {
         label: "Get in",
         loading,
         variant: cannotSubmit ? "outline" : "fill",
-        className: "justify-center",
+      }}
+      cancel={{
+        onClick: () => router.push("/register"),
+        label: "Register",
+        loading,
+        variant: "ghost",
       }}
       className="mt-36 w-sm mx-auto"
       animated

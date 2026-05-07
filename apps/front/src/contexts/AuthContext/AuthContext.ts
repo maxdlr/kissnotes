@@ -5,9 +5,10 @@ import type { KeyedMutator } from "swr";
 interface AuthContextProps {
   user?: UserModel;
   loading: boolean;
-  mutateUser: KeyedMutator<UserModel>;
+  refreshMe: KeyedMutator<UserModel | undefined>;
   isAuthUser: (givenUser: Partial<UserModel>) => boolean;
-  logIn: (credentials: { username: string; password: string }) => void;
+  logIn: (credentials: { username: string; password: string }) => Promise<void>;
+  logOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);

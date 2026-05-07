@@ -66,6 +66,8 @@ instance.interceptors.response.use(
       const refreshCount = getRefreshCount();
       const canRefresh = isDev || refreshCount < MAX_REFRESH_ATTEMPTS;
 
+      console.log({ canRefresh, refreshCount });
+
       if (!canRefresh) return Promise.reject(error);
 
       if (isRefreshing) {
@@ -84,6 +86,7 @@ instance.interceptors.response.use(
         flushRefreshSubscribers();
         return instance(originalRequest);
       } catch (refreshError) {
+        console.log("catching refresh error", { refreshError });
         refreshSubscribers = [];
         return Promise.reject(refreshError);
       } finally {

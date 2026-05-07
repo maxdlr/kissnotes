@@ -11,6 +11,7 @@ import ExpressionListSidebar from "@/app/(public)/_components/ExpressionListSide
 import Button from "@/components/Button";
 import MasonryGrid from "@/components/MasonryGrid";
 import type { ExpressionListProps } from "./interfaces";
+import Loading from "@/components/Loading";
 
 const ExpressionList = ({
   expressions,
@@ -92,7 +93,7 @@ const ExpressionList = ({
 
       {expressions?.length ? (
         <div className="max-lg:pt-4 lg:ps-4 w-full">
-          <MasonryGrid columns={{ 0: 1, 840: 2, 1280: 3 }}>
+          <MasonryGrid columns={{ 0: 1, 840: 2, 1280: 3 }} stagger>
             {expressions?.map((expression) => (
               <ExpressionCard
                 highlightedTokens={[]}
@@ -104,7 +105,7 @@ const ExpressionList = ({
           </MasonryGrid>
         </div>
       ) : (
-        <p>no expressions</p>
+        <Loading />
       )}
     </div>
   );

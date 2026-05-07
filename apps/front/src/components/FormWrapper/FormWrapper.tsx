@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 /** biome-ignore-all lint/suspicious/noExplicitAny: dontcare */
+
 import { motion } from "motion/react";
 import Button from "@/components/Button";
 import type { FormWrapperProps } from "./interfaces";
-import { ReactNode } from "react";
 
 const distance = 200;
 
@@ -38,6 +38,9 @@ const FormWrapper = ({
   submit = {
     disabled: false,
   },
+  cancel = {
+    disabled: false,
+  },
 }: FormWrapperProps) => {
   const containerClass = "flex flex-col items-center gap-8";
 
@@ -61,7 +64,13 @@ const FormWrapper = ({
       )}
     </>,
     ...hackChildren(),
-    <Button key="submit" {...submit} />,
+    <div
+      key="footer"
+      className={`w-full flex items-center ${cancel.onClick ? "justify-around" : "justify-center"}`}
+    >
+      <Button {...cancel} />
+      <Button {...submit} />
+    </div>,
   ];
 
   if (!animated) {

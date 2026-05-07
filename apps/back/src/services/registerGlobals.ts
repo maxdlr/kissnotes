@@ -14,14 +14,7 @@ const registerGlobalErrors = (): void => {
     return error;
   };
 
-  global.CrudError = (statusOrMessage: number | string, message?: string) => {
-    const hasStatus = typeof statusOrMessage === "number";
-    const error = new Error(
-      hasStatus ? message : statusOrMessage,
-    ) as TCrudError;
-    error.status = hasStatus ? statusOrMessage : 400;
-    return error;
-  };
+  global.Missing = (message: string) => ApiError(404, message);
 
   global.Unauthorized = (type: "user" | "origin" = "user") =>
     ApiError(401, `${type} authentication required`);

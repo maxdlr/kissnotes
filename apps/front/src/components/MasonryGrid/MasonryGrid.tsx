@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 "use client";
 
+import { motion } from "motion/react";
 import {
   Children,
   type CSSProperties,
@@ -37,6 +38,12 @@ export interface MasonryGridProps {
   style?: CSSProperties;
   /** Called whenever the column count changes */
   onColumnsChange?: (columns: number) => void;
+  /** Enable stagger animation on items. Default: false */
+  stagger?: boolean;
+  /** Delay between each item in seconds. Default: 0.06 */
+  staggerDelay?: number;
+  /** Vertical slide distance in px. Default: 30 */
+  staggerDistance?: number;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -111,6 +118,9 @@ export function MasonryGrid({
   className,
   style,
   onColumnsChange,
+  stagger = false,
+  staggerDelay = 0.06,
+  staggerDistance = 30,
 }: MasonryGridProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map());
@@ -213,15 +223,26 @@ export function MasonryGrid({
             }}
           >
             {indices.map((childIdx) => (
-              <div
+              <motion.div
                 key={childIdx}
                 ref={(el) => {
                   if (el) itemRefs.current.set(childIdx, el);
                   else itemRefs.current.delete(childIdx);
                 }}
+                {...(stagger
+                  ? {
+                      initial: { opacity: 0, y: staggerDistance },
+                      animate: { opacity: 1, y: 0 },
+                      transition: {
+                        type: "spring",
+                        bounce: 0.5,
+                        delay: childIdx * staggerDelay,
+                      },
+                    }
+                  : {})}
               >
                 {childArray[childIdx]}
-              </div>
+              </motion.div>
             ))}
           </div>
         ))}

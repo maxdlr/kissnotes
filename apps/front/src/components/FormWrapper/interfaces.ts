@@ -6,6 +6,7 @@ export interface FormWrapperProps {
   className?: string;
   animated?: boolean;
   submit?: ButtonProps;
+  cancel?: ButtonProps;
   animHeight?: number;
   errors?: Record<string, string>;
 }

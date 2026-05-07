@@ -11,6 +11,7 @@ import SearchBar from "@/components/SearchBar";
 import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/userUtils";
+import Logo from "../Logo";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;
@@ -21,11 +22,12 @@ const getLoginHref = () => {
 
 const Header = () => {
   const { user, loading } = useAuth();
+  console.log({user})
   const router = useRouter();
 
   return (
     <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
-      {/* <Logo className="hidden md:block" /> */}
+      <Logo className="hidden md:block" />
       <Button
         Icon={HomeIcon}
         variant="ghost"

@@ -10,7 +10,7 @@ const logOut = async ({ user, signedCookies }: Request, res: Response) => {
     await clearAuthCookies(res);
   }
 
-  throw Unauthorized();
+  return res.status(200).end();
 };
 
 export default logOut;

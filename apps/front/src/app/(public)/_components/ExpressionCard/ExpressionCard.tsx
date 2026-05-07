@@ -3,12 +3,12 @@
 import type { ExpressionModel } from "@kissnotes/types";
 import { AnimatePresence, motion } from "motion/react";
 import KissCodeBlock from "@/components/KissCodeBlock";
+import Loading from "@/components/Loading";
 import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
 import useExpressions from "@/hooks/useExpressions";
 import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
-import Loading from "@/components/Loading";
 
 interface ExpressionCardProps {
   expression?: ExpressionModel;

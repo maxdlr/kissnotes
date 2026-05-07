@@ -1,7 +1,5 @@
 "use client";
-import { useParams, usePathname } from "next/navigation";
-import useAuth from "@/contexts/AuthContext/useAuth";
-import { getUsername } from "@/utils/userUtils";
+import { useParams } from "next/navigation";
 import { UserProvider } from "./hooks/UserContext";
 
 interface ProfilePageLayoutProps {
@@ -17,20 +15,6 @@ const ProfilePageLayout = ({
   header,
 }: ProfilePageLayoutProps) => {
   const { handle } = useParams();
-  const pathname = usePathname();
-  const { isAuthUser, user } = useAuth();
-
-  const privateUris = [`settings`];
-
-  const isPrivate = privateUris.some((uri) => pathname.includes(uri));
-  const isAuth =
-    user && isAuthUser({ username: getUsername(handle) as string });
-  const isAllowed = (isPrivate && isAuth) || !isPrivate;
-
-  if (!isAllowed) {
-    window.location.href = "/";
-    return null;
-  }
   return (
     <UserProvider handle={handle}>
       {modal}

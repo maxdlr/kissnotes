@@ -1,7 +1,10 @@
 import type { UserModel } from "@kissnotes/types";
-import axios from "axios";
-import { useState } from "react";
-import useSWR, { mutate, type SWRConfiguration } from "swr";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useSWR, { type SWRConfiguration } from "swr";
+import privateUris from "@/enums/privateUris";
+import useAxios from "@/hooks/useAxios";
+import useToasts from "../ToastsContext";
 import AuthContext from "./AuthContext";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -28,8 +31,40 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { addToast } = useToasts();
 
-  const { data: user, mutate: mutateUser } = useSWR<UserModel>({ url: "/me" }, {
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
+
+  const redirectToHomeIfPrivate = useCallback(() => {
+    const isPrivate = privateUris.some((uri) => uri.test(pathnameRef.current));
+    if (isPrivate) {
+      router.push("/");
+      addToast({
+        type: "success",
+        title: "Logged out",
+        message: "You have been logged out successfully.",
+      });
+    }
+  }, [router, addToast]);
+
+  const isPaused = useCallback(
+    () => !isDev && getMeRetryCount() >= MAX_ME_RETRIES,
+    [],
+  );
+
+  useEffect(() => {
+    if (!isDev && getMeRetryCount() >= MAX_ME_RETRIES) {
+      setLoading(false);
+    }
+  }, []);
+
+  const { postData: postLogin } = useAxios("/login");
+  const { postData: postLogout } = useAxios("/logout");
+
+  const { data: user, mutate } = useSWR<UserModel>({ url: "/me" }, {
     onSuccess: () => {
       resetMeRetryCount();
       setLoading(false);
@@ -37,12 +72,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     onError: () => {
       incrementMeRetryCount();
       setLoading(false);
+      redirectToHomeIfPrivate();
     },
     shouldRetryOnError: true,
     errorRetryCount: isDev ? Infinity : MAX_ME_RETRIES,
     errorRetryInterval: isDev ? 3000 : 0,
-    isPaused: () => !isDev && getMeRetryCount() >= MAX_ME_RETRIES,
-    onLoadingSlow: () => setLoading(false),
+    isPaused,
+    onLoadingSlow: () => {
+      setLoading(false);
+      redirectToHomeIfPrivate();
+    },
+    revalidateOnFocus: true,
+    revalidateIfStale: true,
+    revalidateOnMount: true,
   } as SWRConfiguration<UserModel>);
 
   const isAuthUser = (givenUser: Partial<UserModel>) => {
@@ -53,10 +95,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     );
   };
 
-  const logIn = (credentials: { username: string; password: string }) =>
-    axios.post("/login", credentials).then(() => mutate({ url: "/me" }));
+  const refreshMe = useCallback(() => mutate(undefined), [mutate]);
 
-  const value = { user, loading, isAuthUser, logIn, mutateUser };
+  const logIn = async (credentials: { username: string; password: string }) =>
+    await postLogin(credentials).then(() => {
+      resetMeRetryCount();
+      refreshMe();
+    });
+
+  const logOut = async () => {
+    await postLogout({}).then(() => {
+      refreshMe();
+      redirectToHomeIfPrivate();
+    });
+  };
+
+  const value = { user, loading, isAuthUser, logIn, logOut, refreshMe };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

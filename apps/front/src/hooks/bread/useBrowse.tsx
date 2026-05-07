@@ -1,8 +1,8 @@
 "use client";
 
-import type { KRes, Model, UserModel } from "@kissnotes/types";
-import { useEffect, useState } from "react";
-import useSWR, { SWRConfiguration } from "swr";
+import type { KRes, Model } from "@kissnotes/types";
+import { useState } from "react";
+import useSWR, { type SWRConfiguration } from "swr";
 
 export type BrowseFilters<T extends Model[]> = Partial<
   Record<keyof T[number], T[number][keyof T[number]] | null | undefined>
@@ -25,12 +25,8 @@ const useBrowse = <T extends Model[]>(
       params: filteredParams,
     },
     {
-      onSuccess: () => {
-        setTimeout(() => setLoading(false), 500);
-      },
-      onError: () => {
-        setTimeout(() => setLoading(false), 500);
-      },
+      onSuccess: () => setLoading(false),
+      onError: () => setLoading(false),
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       retryCount: 3,
@@ -39,9 +35,7 @@ const useBrowse = <T extends Model[]>(
     } as SWRConfiguration<KRes<T>>,
   );
 
-  useEffect(() => console.log(loading), [loading]);
-
-  return { data: data || [1, 2, 3], error, loading, mutate };
+  return { data, error, loading, mutate };
 };
 
 export default useBrowse;
