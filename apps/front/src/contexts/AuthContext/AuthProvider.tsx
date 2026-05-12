@@ -63,6 +63,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { postData: postLogin } = useAxios("/login");
   const { postData: postLogout } = useAxios("/logout");
+  const { postData: postSignUp } = useAxios("/signup");
 
   const { data: user, mutate } = useSWR<UserModel>({ url: "/me" }, {
     onSuccess: () => {
@@ -97,20 +98,30 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshMe = useCallback(() => mutate(undefined), [mutate]);
 
-  const logIn = async (credentials: { username: string; password: string }) =>
-    await postLogin(credentials).then(() => {
-      resetMeRetryCount();
-      refreshMe();
-    });
-
-  const logOut = async () => {
-    await postLogout({}).then(() => {
-      refreshMe();
-      redirectToHomeIfPrivate();
-    });
+  const logIn = async (credentials: { username: string; password: string }) => {
+    await postLogin(credentials);
+    resetMeRetryCount();
+    refreshMe();
   };
 
-  const value = { user, loading, isAuthUser, logIn, logOut, refreshMe };
+  const logOut = async () => {
+    await postLogout({});
+    refreshMe();
+    redirectToHomeIfPrivate();
+  };
+
+  const signUp = async (credentials: {
+    email: string;
+    username: string;
+    password: string;
+  }) => {
+    const { error } = await postSignUp(credentials);
+    resetMeRetryCount();
+    refreshMe();
+    return error;
+  };
+
+  const value = { user, loading, isAuthUser, logIn, logOut, signUp, refreshMe };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

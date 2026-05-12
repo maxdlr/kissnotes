@@ -246,22 +246,30 @@ const Button = ({
       <span
         className={`flex justify-center items-center ${href ? "h-full" : ""} ${s.gap} ${s.text}`}
       >
-        {iconPosition === "left" && iconContent}
-        {label && (
-          <span
-            className={`font-semibold text-nowrap leading-none ${labelClassName}`}
-          >
-            {label}
-          </span>
-        )}
-        {iconPosition === "right" && iconContent}
-        {shortcut && (
-          <Shortcut
-            shortcut={shortcut}
-            onTrigger={handleOnClick}
-            className="ps-1"
-            pill={size === "sm"}
-          />
+        {loading ? (
+          <div className="w-24">
+            <Loading count={8} minSize={1} maxSize={10} />
+          </div>
+        ) : (
+          <>
+            {iconPosition === "left" && iconContent}
+            {label && (
+              <span
+                className={`font-semibold text-nowrap leading-none ${labelClassName}`}
+              >
+                {label}
+              </span>
+            )}
+            {iconPosition === "right" && iconContent}
+            {shortcut && (
+              <Shortcut
+                shortcut={shortcut}
+                onTrigger={handleOnClick}
+                className="ps-1"
+                pill={size === "sm"}
+              />
+            )}
+          </>
         )}
       </span>
     ) : null;
@@ -295,13 +303,7 @@ const Button = ({
       whileTap={!disabled ? (tap as any) : undefined}
       onClick={href ? undefined : handleOnClick}
     >
-      {loading ? (
-        <div className="w-24">
-          <Loading count={8} minSize={1} maxSize={10} />
-        </div>
-      ) : (
-        content
-      )}
+      {content}
     </ButtonEl>
   );
 };

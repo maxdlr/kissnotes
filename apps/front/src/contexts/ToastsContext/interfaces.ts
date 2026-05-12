@@ -5,7 +5,7 @@ export interface ToastData {
   key?: string;
   Icon?: ElementType;
   title?: string;
-  message: string;
+  message?: string;
   type: "info" | "success" | "error";
 }
 

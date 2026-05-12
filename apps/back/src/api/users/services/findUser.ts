@@ -39,7 +39,7 @@ const findUser = async (
   }
 
   if (!user) {
-    throw Missing("Cannot find user");
+    throw new Error("Cannot find user");
   }
 
   return user;

@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import Loading from "@/components/Loading";
 import UserHero from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
 import { getHandle } from "@/utils/userUtils";
@@ -41,17 +40,14 @@ const ProfilePage = () => {
   return (
     <div className="space-y-8">
       <UserHero />
-      {expressionLoading ? (
-        <Loading />
-      ) : (
-        <ExpressionList
-          expressions={expressions}
-          filters={filters}
-          onFilterChange={setFilters}
-          startCollapsed
-          urlScope={`/${getHandle(handle)}`}
-        />
-      )}
+      <ExpressionList
+        expressions={expressions}
+        filters={filters}
+        onFilterChange={setFilters}
+        startCollapsed
+        urlScope={`/${getHandle(handle)}`}
+        loading={expressionLoading}
+      />
     </div>
   );
 };

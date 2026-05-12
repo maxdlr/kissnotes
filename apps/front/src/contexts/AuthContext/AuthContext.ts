@@ -7,8 +7,16 @@ interface AuthContextProps {
   loading: boolean;
   refreshMe: KeyedMutator<UserModel | undefined>;
   isAuthUser: (givenUser: Partial<UserModel>) => boolean;
-  logIn: (credentials: { username: string; password: string }) => Promise<void>;
-  logOut: () => Promise<void>;
+  logIn: (credentials: {
+    username: string;
+    password: string;
+  }) => Promise<string | undefined>;
+  signUp: (credentials: {
+    email: string;
+    username: string;
+    password: string;
+  }) => Promise<string | undefined>;
+  logOut: () => Promise<string | undefined>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);

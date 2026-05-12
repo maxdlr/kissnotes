@@ -51,27 +51,25 @@ const LogIn = () => {
       submit={{
         disabled: cannotSubmit,
         onClick: handleSubmit,
-        type: "submit",
         label: "Get in",
-        loading,
-        variant: cannotSubmit ? "outline" : "fill",
       }}
       cancel={{
-        onClick: () => router.push("/register"),
-        label: "Register",
-        loading,
-        variant: "ghost",
+        onClick: () => router.push("/signup"),
+        label: "SignUp",
       }}
       className="mt-36 w-sm mx-auto"
       animated
+      loading={loading}
     >
       <FormInput
+        required
         name="username"
         placeholder="batman"
         value={formData?.username}
         onChange={handleOnchange}
       />
       <FormInput
+        required
         name="password"
         placeholder="imbatman"
         value={formData?.password}

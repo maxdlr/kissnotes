@@ -44,6 +44,7 @@ interface FormInputProps {
     | "password";
   labelIn?: boolean;
   ref?: React.RefObject<HTMLInputElement | null>;
+  required?: boolean;
 }
 
 const FormInput = ({
@@ -64,6 +65,7 @@ const FormInput = ({
   disabled,
   labelIn = false,
   ref,
+  required = false,
 }: FormInputProps) => {
   const autoRef = useRef<HTMLInputElement | null>(null);
   const localRef = ref || autoRef;
@@ -92,13 +94,24 @@ const FormInput = ({
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-full relative ${className}`}>
       {!labelIn && label && (
-        <div className={`${disabled ? "" : "ps-2 pb-2"}`}>
-          <label htmlFor={name} className="font-thin">
-            {label}
-          </label>
-        </div>
+        <label htmlFor={name} className="absolute -translate-y-1/2 w-full">
+          <span className="mx-6 text-sm flex justify-between items-center gap-2 leading-none">
+            <span className="flex text-accent px-2 bg-darker justify-start items-center gap-2">
+              <span>•</span>
+              {label}
+              <span>•</span>
+            </span>
+            {required && (
+              <span
+                className={`${value ? "text-emphasis" : "text-danger"} translate-y-[30%] px-1 bg-darker`}
+              >
+                *
+              </span>
+            )}
+          </span>
+        </label>
       )}
       <div
         className={`${focus ? "border-secondary!" : "border-accent!"}

@@ -9,11 +9,12 @@ import { useState } from "react";
 import ExpressionCard from "@/app/(public)/_components/ExpressionCard";
 import ExpressionListSidebar from "@/app/(public)/_components/ExpressionListSidebar";
 import Button from "@/components/Button";
+import Loading from "@/components/Loading";
 import MasonryGrid from "@/components/MasonryGrid";
 import type { ExpressionListProps } from "./interfaces";
-import Loading from "@/components/Loading";
 
 const ExpressionList = ({
+  loading,
   expressions,
   filters,
   onFilterChange,
@@ -26,7 +27,7 @@ const ExpressionList = ({
 
   return (
     <div className={`flex flex-col lg:flex-row ${className}`}>
-      {filters && onFilterChange && (
+      {filters && onFilterChange && !!expressions?.length && (
         <>
           <div className="space-y-4 hidden lg:block">
             <Button
@@ -91,7 +92,9 @@ const ExpressionList = ({
         </>
       )}
 
-      {expressions?.length ? (
+      {loading ? (
+        <Loading />
+      ) : (
         <div className="max-lg:pt-4 lg:ps-4 w-full">
           <MasonryGrid columns={{ 0: 1, 840: 2, 1280: 3 }} stagger>
             {expressions?.map((expression) => (
@@ -104,8 +107,6 @@ const ExpressionList = ({
             ))}
           </MasonryGrid>
         </div>
-      ) : (
-        <Loading />
       )}
     </div>
   );

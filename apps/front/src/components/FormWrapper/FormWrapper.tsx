@@ -35,12 +35,9 @@ const FormWrapper = ({
   animated = false,
   animHeight = distance,
   errors,
-  submit = {
-    disabled: false,
-  },
-  cancel = {
-    disabled: false,
-  },
+  submit,
+  cancel,
+  loading = false,
 }: FormWrapperProps) => {
   const containerClass = "flex flex-col items-center gap-8";
 
@@ -54,6 +51,23 @@ const FormWrapper = ({
     return [children];
   };
 
+  const footer = (
+    <div
+      key="footer"
+      className={`w-full flex items-center ${cancel?.onClick ? "justify-around" : "justify-center"}`}
+    >
+      {cancel && <Button variant="ghost" loading={loading} {...cancel} />}
+      {submit && (
+        <Button
+          type="submit"
+          variant={submit.disabled ? "outline" : "fill"}
+          loading={loading}
+          {...submit}
+        />
+      )}
+    </div>
+  );
+
   const items = [
     // biome-ignore lint/complexity/noUselessFragments: need
     <>
@@ -64,13 +78,7 @@ const FormWrapper = ({
       )}
     </>,
     ...hackChildren(),
-    <div
-      key="footer"
-      className={`w-full flex items-center ${cancel.onClick ? "justify-around" : "justify-center"}`}
-    >
-      <Button {...cancel} />
-      <Button {...submit} />
-    </div>,
+    footer,
   ];
 
   if (!animated) {
@@ -78,7 +86,7 @@ const FormWrapper = ({
       <div className={`${containerClass} ${className}`}>
         <h1 className="text-4xl font-extrabold text-center">{title}</h1>
         {children}
-        <Button {...submit} />
+        {footer}
       </div>
     );
   }

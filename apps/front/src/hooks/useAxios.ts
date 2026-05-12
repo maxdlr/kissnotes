@@ -1,162 +1,82 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: <explanation> */
-import type { KissResponseError, KRes } from "@kissnotes/types";
-import type { AxiosRequestConfig, AxiosResponseHeaders } from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import type { KissResponseError } from "@kissnotes/types";
+import { isAxiosError, type AxiosRequestConfig } from "axios";
+import { useEffect, useRef } from "react";
 import axios from "@/services/axios";
 
-type HttpMethod = "get" | "post" | "put" | "patch" | "delete";
-
-interface MakeRequestParams<TBody>
-  extends Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal"> {
-  url: string;
-  method: HttpMethod;
-  data?: TBody;
+interface RequestResult<TRes> {
+  data: TRes | undefined;
+  error: KissResponseError | undefined;
+  status: number | undefined;
 }
 
-interface SyncResult<TRes> {
-  syncError: KissResponseError | undefined;
-  syncData: KRes<TRes>;
-  syncHeaders: AxiosResponseHeaders | null;
-  syncLoading: boolean;
-  statusCode: number | undefined;
-}
+/**
+ * Imperative HTTP hook. Each call returns its own result — no shared state.
+ * Aborts in-flight requests on unmount.
+ */
+const useAxios = (url: string) => {
+  const controllerRef = useRef<AbortController | null>(null);
 
-const useAxios = <T>(url: string) => {
-  const abortController = useRef<AbortController | null>(null);
+  useEffect(() => {
+    return () => controllerRef.current?.abort();
+  }, []);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [responseData, setResponseData] = useState<KRes<T>>();
-  const [headers, setHeaders] = useState<AxiosResponseHeaders | null>(null);
-  const [error, setError] = useState<KissResponseError | undefined>();
-  const [errors, setErrors] = useState<string[]>([]);
-
-  const makeAxiosRequest = async <TRes, TBody = undefined>({
-    url,
-    method,
-    data,
-    ...rest
-  }: MakeRequestParams<TBody>): Promise<SyncResult<TRes>> => {
-    abortController.current = new AbortController();
-
-    let syncError: KissResponseError | undefined;
-    let syncData: KRes<TRes>;
-    let syncHeaders: AxiosResponseHeaders | null = null;
-    let syncLoading = true;
-    let statusCode: number | undefined;
-
-    setError(undefined);
-    setErrors([]);
-    setLoading(true);
+  const request = async <TRes, TBody = unknown>(
+    method: "get" | "post" | "put" | "patch" | "delete",
+    data?: TBody,
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ): Promise<RequestResult<TRes>> => {
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
 
     try {
-      const {
-        data: resData,
-        headers: resHeaders,
-        status,
-      } = await axios.request<KRes<TRes>>({
+      const response = await axios.request<TRes>({
         method,
         url,
         data,
-        signal: abortController.current.signal,
-        ...rest,
+        signal: controller.signal,
+        ...config,
       });
 
-      syncData = resData;
-      syncHeaders = resHeaders as AxiosResponseHeaders;
-      statusCode = status;
+      return { data: response.data, error: undefined, status: response.status };
+    } catch (err: unknown) {
+      if (isAxiosError(err) && err.code !== "ERR_CANCELED") {
+        const error: KissResponseError = err.response?.data.message ??
+          err.response?.data?.errors ?? {
+            message: "An unexpected error occurred",
+          };
 
-      setHeaders(syncHeaders);
-      setResponseData(syncData as KRes<T>);
-    } catch (err: any) {
-      if (err) {
-        statusCode = err.response?.status;
-
-        if (
-          !abortController.current.signal.aborted &&
-          err.code !== "ERR_CANCELED"
-        ) {
-          syncError =
-            err.response?.data?.errors?.message ??
-            err.response?.data?.errors ??
-            undefined;
-
-          setError(syncError);
-          setErrors(err.response?.data?.errors?.fields ?? []);
-        }
+        return { data: undefined, error, status: err.response?.status };
       }
-    } finally {
-      syncLoading = false;
-      setLoading(false);
+
+      return { data: undefined, error: undefined, status: undefined };
     }
-
-    return { syncError, syncData, syncHeaders, syncLoading, statusCode };
   };
 
-  const getData = useCallback(
-    <TRes>(config?: Omit<AxiosRequestConfig, "url" | "method">) =>
-      makeAxiosRequest<TRes, undefined>({ url, method: "get", ...config }),
-    [url],
-  );
+  const getData = <TRes>(
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ) => request<TRes>("get", undefined, config);
 
-  const postData = useCallback(
-    <TRes, TBody>(
-      data: TBody,
-      config?: Omit<AxiosRequestConfig, "url" | "method" | "data">,
-    ) =>
-      makeAxiosRequest<TRes, TBody>({ url, method: "post", data, ...config }),
-    [url],
-  );
+  const postData = <TRes, TBody = unknown>(
+    data: TBody,
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ) => request<TRes, TBody>("post", data, config);
 
-  const putData = useCallback(
-    <TRes, TBody>(
-      data: TBody,
-      config?: Omit<AxiosRequestConfig, "url" | "method" | "data">,
-    ) => makeAxiosRequest<TRes, TBody>({ url, method: "put", data, ...config }),
-    [url],
-  );
+  const putData = <TRes, TBody = unknown>(
+    data: TBody,
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ) => request<TRes, TBody>("put", data, config);
 
-  const patchData = useCallback(
-    <TRes, TBody>(
-      data: TBody,
-      config?: Omit<AxiosRequestConfig, "url" | "method" | "data">,
-    ) =>
-      makeAxiosRequest<TRes, TBody>({ url, method: "patch", data, ...config }),
-    [url],
-  );
+  const patchData = <TRes, TBody = unknown>(
+    data: TBody,
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ) => request<TRes, TBody>("patch", data, config);
 
-  const deleteData = useCallback(
-    <TRes>(config?: Omit<AxiosRequestConfig, "url" | "method">) =>
-      makeAxiosRequest<TRes, undefined>({ url, method: "delete", ...config }),
-    [url],
-  );
+  const deleteData = <TRes>(
+    config?: Omit<AxiosRequestConfig, "url" | "method" | "data" | "signal">,
+  ) => request<TRes>("delete", undefined, config);
 
-  const getDataSyncByUrl = useCallback(
-    <TRes>(url: string, config?: Omit<AxiosRequestConfig, "url" | "method">) =>
-      makeAxiosRequest<TRes, undefined>({ url, method: "get", ...config }),
-    [],
-  );
-
-  const overrideError = (error: KissResponseError | undefined) =>
-    setError(error);
-
-  useEffect(() => {
-    return () => abortController.current?.abort();
-  }, [url]);
-
-  return {
-    loading,
-    data: responseData,
-    error,
-    errors,
-    headers,
-    overrideError,
-    getData,
-    getDataSyncByUrl,
-    postData,
-    putData,
-    patchData,
-    deleteData,
-  };
+  return { getData, postData, putData, patchData, deleteData };
 };
 
 export default useAxios;

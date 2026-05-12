@@ -22,7 +22,6 @@ const getLoginHref = () => {
 
 const Header = () => {
   const { user, loading } = useAuth();
-  console.log({user})
   const router = useRouter();
 
   return (

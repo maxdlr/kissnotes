@@ -42,7 +42,7 @@ const UserHero = () => {
           >
             <div className="grid md:grid-cols-3 lg:w-2/3 mx-auto items-start gap-4">
               <div>
-                <h2 className="text-6xl md:text-5xl font-bold text-center">
+                <h2 className="text-3xl sm:text-6xl md:text-5xl font-bold text-center">
                   @{user.username}
                 </h2>
               </div>

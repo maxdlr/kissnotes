@@ -3,26 +3,11 @@ import Button from "@/components/Button";
 import Logo from "@/components/Logo";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
   const { user } = useAuth();
-  const { addToast } = useToasts();
-
-  const handleLogin = () => {
-    addToast({
-      type: "info",
-      title: String(Math.random()),
-      message: "Button clicked!",
-    });
-  };
-
-  const handleRegister = () => {
-    addToast({
-      type: "success",
-      title: "Check out the toast hey",
-      message: "Button clicked!",
-    });
-  };
+  const router = useRouter();
 
   if (!user) {
     return (
@@ -36,7 +21,7 @@ const Hero = () => {
             label="Sign up"
             className="text-primary"
             hoverUp
-            onClick={handleRegister}
+            onClick={() => router.push("/signup")}
           />
           <p className="hidden sm:block">or</p>
           <Button
@@ -44,7 +29,7 @@ const Hero = () => {
             className="text-primary"
             variant="outline"
             hoverUp
-            onClick={handleLogin}
+            onClick={() => router.push("/login")}
           />
         </div>
       </section>

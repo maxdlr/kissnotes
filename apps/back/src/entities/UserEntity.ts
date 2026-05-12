@@ -15,7 +15,7 @@ export default class UserEntity extends AbstractEntity implements UserModel {
   @Column({ unique: true })
   email!: string;
 
-  @Column()
+  @Column({ default: "" })
   description!: string;
 
   @OneToMany(() => ExpressionEntity, (expression) => expression.author)

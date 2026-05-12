@@ -9,4 +9,5 @@ export interface FormWrapperProps {
   cancel?: ButtonProps;
   animHeight?: number;
   errors?: Record<string, string>;
+  loading?: boolean;
 }
