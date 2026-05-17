@@ -1,12 +1,12 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Logo from "@/components/Logo";
 import useAuth from "@/contexts/AuthContext/useAuth";
-import useToasts from "@/contexts/ToastsContext";
-import { useRouter } from "next/navigation";
 
 const Hero = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   if (!user) {

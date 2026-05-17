@@ -41,7 +41,7 @@ const useAxios = (url: string) => {
       return { data: response.data, error: undefined, status: response.status };
     } catch (err: unknown) {
       if (isAxiosError(err) && err.code !== "ERR_CANCELED") {
-        const error: KissResponseError = err.response?.data.message ??
+        const error: KissResponseError = err.response?.data ??
           err.response?.data?.errors ?? {
             message: "An unexpected error occurred",
           };

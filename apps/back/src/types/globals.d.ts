@@ -1,3 +1,4 @@
+import { ValidationError } from "class-validator";
 import { Response } from "express";
 
 export {};
@@ -5,6 +6,11 @@ export {};
 declare global {
   interface TApiError extends Error {
     status: number;
+  }
+
+  interface TValidationError extends Error {
+    status: number;
+    validation: { property: string; messages: string[] }[];
   }
 
   interface TCrudError extends Error {
@@ -38,6 +44,9 @@ declare global {
 
   var Missing: (message: string) => TApiError;
 
+  var BadValidation: (
+    errors: TValidationError["validation"],
+  ) => TValidationError;
   var Unauthorized: (type?: "user" | "origin") => TApiError;
   var Forbidden: () => TApiError;
   var isApiError: (error: unknown) => error is TApiError;

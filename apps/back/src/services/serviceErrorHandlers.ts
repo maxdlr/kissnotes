@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-type HandledError = Error | TApiError | TCrudError;
+type HandledError = Error | TApiError | TCrudError | TValidationError;
 
 const serviceErrorHandler = (
   err: HandledError,
@@ -8,13 +8,15 @@ const serviceErrorHandler = (
   res: Response,
   _next: NextFunction,
 ) => {
-  // Log the error
   console.error(`[ERROR] ${req.method} ${req.originalUrl}:`, err);
 
-  // Send JSON response
+  const status = (err as any)?.status || 500;
+  const validation = (err as any)?.validation;
+
   return ApiResponse(res, {
-    status: (err as any)?.status || 500,
+    status,
     message: err?.message || "Something went wrong",
+    ...(validation && { errors: validation }),
     error: {
       endpoint: req.originalUrl,
       stack:

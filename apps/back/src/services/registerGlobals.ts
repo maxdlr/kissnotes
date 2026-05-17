@@ -16,6 +16,13 @@ const registerGlobalErrors = (): void => {
 
   global.Missing = (message: string) => ApiError(404, message);
 
+  global.BadValidation = (errors: TValidationError["validation"]) => {
+    const error = new Error() as TValidationError;
+    error.status = 400;
+    error.validation = errors;
+    return error;
+  };
+
   global.Unauthorized = (type: "user" | "origin" = "user") =>
     ApiError(401, `${type} authentication required`);
 

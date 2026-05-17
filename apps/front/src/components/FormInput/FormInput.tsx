@@ -1,51 +1,14 @@
 "use client";
-import useOnClickOutside from "@/hooks/useClickOutside";
-import { type ShortcutDef, useShortcut } from "@/hooks/useShortcut";
-import { KissChangeEvent } from "@/types/form.types";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import React, {
-  type ElementType,
-  type FocusEventHandler,
-  useRef,
-  useState,
-} from "react";
+import { type FocusEventHandler, type Ref, useRef, useState } from "react";
 import Button from "@/components/Button";
 import Shortcut from "@/components/ShortCut";
+import useOnClickOutside from "@/hooks/useClickOutside";
+import { useShortcut } from "@/hooks/useShortcut";
 import InputText from "./_components/InputText";
+import InputTextArea from "./_components/InputTextArea";
 import InputToggle from "./_components/InputToggle";
-import type { InputTextProps } from "./interfaces";
-
-interface FormInputProps {
-  placeholder?: string | React.ReactNode;
-  inputClassName?: string;
-  containerClassName?: string;
-  className?: string;
-  value?: string | number | boolean;
-  variant?: "fill" | "outline" | "ghost";
-  onClick?: (e?: Event | React.MouseEvent) => void;
-  Icon?: ElementType;
-  shortcut?: ShortcutDef;
-  name: string;
-  label?: string | React.ReactNode;
-  onChange: (event: KissChangeEvent) => void;
-  onFocus?: FocusEventHandler<HTMLInputElement>;
-  disabled?: boolean;
-  type?:
-    | "text"
-    | "number"
-    | "search"
-    | "button"
-    | "checkbox"
-    | "color"
-    | "date"
-    | "email"
-    | "file"
-    | "hidden"
-    | "password";
-  labelIn?: boolean;
-  ref?: React.RefObject<HTMLInputElement | null>;
-  required?: boolean;
-}
+import type { FormInputProps, InputTextProps } from "./interfaces";
 
 const FormInput = ({
   type = "text",
@@ -66,8 +29,9 @@ const FormInput = ({
   labelIn = false,
   ref,
   required = false,
+  errors,
 }: FormInputProps) => {
-  const autoRef = useRef<HTMLInputElement | null>(null);
+  const autoRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
   const localRef = ref || autoRef;
   useOnClickOutside(localRef, () => {
     setFocus(false);
@@ -84,7 +48,7 @@ const FormInput = ({
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
     outline: "border-[1px] border-accent",
-    ghost: "!p-0",
+    ghost: `!p-0 ${label && ["text", "search", "email", "password"].includes(type) ? "border border-transparent! py-3! px-4!" : ""}`,
   };
 
   // biome-ignore lint/suspicious/noExplicitAny: dontcare
@@ -105,7 +69,7 @@ const FormInput = ({
             </span>
             {required && (
               <span
-                className={`${value ? "text-emphasis" : "text-danger"} translate-y-[30%] px-1 bg-darker`}
+                className={`${value ? "text-emphasis" : !disabled ? "text-danger" : "text-accent/40"} translate-y-[30%] px-1 bg-darker`}
               >
                 *
               </span>
@@ -114,7 +78,7 @@ const FormInput = ({
         </label>
       )}
       <div
-        className={`${focus ? "border-secondary!" : "border-accent!"}
+        className={`${focus ? "border-secondary" : errors?.length ? "border-danger" : "border-accent"}
 rounded-3xl py-3 px-4 flex 
 ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} 
 items-center gap-4 font-semibold text-lg w-full
@@ -143,7 +107,7 @@ ${variantStyles[variant]} ${containerClassName}`}
 
         {["text", "search", "email", "password"].includes(type) && (
           <InputText
-            ref={localRef}
+            ref={localRef as Ref<HTMLInputElement>}
             type={
               isPasswordRevealed && type === "password"
                 ? "text"
@@ -153,10 +117,23 @@ ${variantStyles[variant]} ${containerClassName}`}
             placeholder={placeholder as InputTextProps["placeholder"]}
             className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap ${inputClassName}`}
             value={value as InputTextProps["value"]}
-            onClick={onClick}
             onChange={onChange}
+            onClick={onClick}
             disabled={disabled}
             onFocus={handleFocus}
+          />
+        )}
+
+        {type === "textarea" && (
+          <InputTextArea
+            ref={localRef as Ref<HTMLTextAreaElement>}
+            placeholder={placeholder as InputTextProps["placeholder"]}
+            name={name}
+            onChange={onChange}
+            onClick={onClick}
+            disabled={disabled}
+            onFocus={handleFocus}
+            value={value as InputTextProps["value"]}
           />
         )}
 
@@ -172,6 +149,11 @@ ${variantStyles[variant]} ${containerClassName}`}
 
         {shortcut && <Shortcut shortcut={shortcut} />}
       </div>
+      {errors?.map((e) => (
+        <p key={e} className="text-sm ps-8 text-danger mt-1">
+          {e}
+        </p>
+      ))}
     </div>
   );
 };

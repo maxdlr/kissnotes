@@ -14,6 +14,7 @@ export const requestLogger = (
   console.log(chalk.cyan("Params:"), req.params);
   console.log(chalk.cyan("Query:"), req.query);
   console.log(chalk.cyan("Body:"), req.body);
+  console.log(chalk.cyan("User:"), req.user?.username);
 
   // Patch res.json to log response body
   const originalJson = res.json.bind(res);

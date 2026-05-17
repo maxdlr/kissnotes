@@ -3,11 +3,18 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { KissClickEvent } from "@/types/form.types";
-import { getNextZIndex } from "@/utils/zIndexManager";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Button from "@/components/Button";
 import ClientPortal from "@/components/ClientPortal";
+import type { KissClickEvent } from "@/types/form.types";
+import { getNextZIndex } from "@/utils/zIndexManager";
 
 type ModalProps = {
   className?: string;
@@ -18,6 +25,7 @@ type ModalProps = {
   isFullWidth?: boolean;
   isFullHeight?: boolean;
   isCentered?: boolean;
+  HeaderChild?: ReactNode;
 };
 
 const overlayVariants = {
@@ -34,6 +42,7 @@ const Modal = ({
   isFullWidth = false,
   isFullHeight = false,
   isCentered = false,
+  HeaderChild,
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -117,7 +126,7 @@ const Modal = ({
                 className={`modalInner flex items-start justify-center fixed inset-0 overflow-y-scroll scroll ${
                   isFullWidth
                     ? ""
-                    : `p-2 sm:px-5 sm:pt-8 ${isCentered ? "sm:items-center" : ""}`
+                    : `p-2 sm:px-8 sm:pt-8 ${isCentered ? "sm:items-center" : ""}`
                 }`}
                 onClick={handleOverlayClick}
               >
@@ -129,18 +138,20 @@ const Modal = ({
                   exit="hidden"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {onClose && (
-                    <Button
-                      shortcut={{ keys: ["ESC"] }}
-                      variant="ghost"
-                      Icon={XMarkIcon}
-                      onClick={handleClose}
-                      className={`absolute z-10 sm:top-8 sm:right-8 ${
-                        isFullWidth ? "top-0 right-0" : "top-2.5 right-2.5"
-                      }`}
-                      aria-label="close"
-                    />
-                  )}
+                  <div
+                    className={`absolute z-10 top-4 sm:top-8 right-4 sm:right-8 flex justify-center items-center gap-4 sm:gap-8`}
+                  >
+                    {HeaderChild}
+                    {onClose && (
+                      <Button
+                        shortcut={{ keys: ["ESC"] }}
+                        variant="ghost"
+                        Icon={XMarkIcon}
+                        onClick={handleClose}
+                        aria-label="close"
+                      />
+                    )}
+                  </div>
                   <section ref={contentRef}>{children}</section>
                 </motion.div>
               </div>

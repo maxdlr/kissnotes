@@ -1,3 +1,4 @@
+import type { SocialType } from "@kissnotes/types";
 import BehanceIcon from "@/assets/img/behance.svg";
 import DiscordIcon from "@/assets/img/discord.svg";
 import DribbbleIcon from "@/assets/img/dribbble.svg";
@@ -14,29 +15,6 @@ import TiktokIcon from "@/assets/img/tiktok.svg";
 import TwitchIcon from "@/assets/img/twitch.svg";
 import XIcon from "@/assets/img/x.svg";
 import YoutubeIcon from "@/assets/img/youtube.svg";
-
-export type SocialType =
-  | "x"
-  | "instagram"
-  | "facebook"
-  | "linkedin"
-  | "discord"
-  | "dribbble"
-  | "behance"
-  | "signal"
-  | "snap"
-  | "telegram"
-  | "tiktok"
-  | "pinterest"
-  | "reddit"
-  | "twitch"
-  | "youtube"
-  | "github";
-
-export interface SocialButtonProps {
-  type: SocialType;
-  url: string;
-}
 
 export const SocialItem: Record<
   SocialType,

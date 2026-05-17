@@ -3,16 +3,14 @@ import { Request, Response } from "express";
 import updateUser from "../../users/services/updateUser";
 
 const editUser = async (
-  req: Request,
+  { user, body }: Request,
   res: Response,
 ): Promise<Response<UserModel>> => {
-  const { user } = req.body;
-
   if (!user) {
     throw ApiError("User missing");
   }
 
-  const updatedUser = await updateUser(user);
+  const updatedUser = await updateUser({ id: user.id, ...body });
   return res.status(200).send(updatedUser);
 };
 

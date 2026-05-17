@@ -58,7 +58,9 @@ instance.interceptors.response.use(
       _retry?: boolean;
     };
 
-    if (status === 404) return Promise.resolve(undefined);
+    if ([403, 404].includes(status ?? 0)) {
+      return Promise.reject(error);
+    }
 
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

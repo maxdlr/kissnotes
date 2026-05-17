@@ -14,9 +14,10 @@ import useExpressions from "@/hooks/useExpressions";
 
 export interface ExpressionDetailsProps {
   id: Id;
+  isModal?: boolean;
 }
 
-const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
+const ExpressionDetails = ({ id, isModal = false }: ExpressionDetailsProps) => {
   const { data: expression } = useRead<ExpressionModel>("expressions", {
     id: id as Id,
   });

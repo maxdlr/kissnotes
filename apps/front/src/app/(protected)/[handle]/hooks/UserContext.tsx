@@ -33,6 +33,7 @@ export const UserProvider = ({ children, handle }: UserProviderProps) => {
   const { addToast } = useToasts();
 
   useEffect(() => {
+    console.log({ user, error });
     if (error) {
       addToast({
         type: "error",
@@ -42,7 +43,7 @@ export const UserProvider = ({ children, handle }: UserProviderProps) => {
       });
       router.push("/");
     }
-  }, [error, router, addToast]);
+  }, [error, router, addToast, user]);
 
   const value = { user, loading };
 

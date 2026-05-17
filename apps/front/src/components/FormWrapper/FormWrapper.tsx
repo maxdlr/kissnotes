@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 /** biome-ignore-all lint/suspicious/noExplicitAny: dontcare */
 
+import { Children, cloneElement, isValidElement } from "react";
 import { motion } from "motion/react";
 import Button from "@/components/Button";
 import type { FormWrapperProps } from "./interfaces";
@@ -32,6 +33,7 @@ const FormWrapper = ({
   children,
   title,
   className,
+  fieldsetClassName,
   animated = false,
   animHeight = distance,
   errors,
@@ -41,14 +43,19 @@ const FormWrapper = ({
 }: FormWrapperProps) => {
   const containerClass = "flex flex-col items-center gap-8";
 
+  console.log(errors);
+
   const hackChildren = () => {
-    if (Array.isArray(children)) {
-      return children.map((child) => ({
-        ...child,
-        props: { ...child.props, error: errors?.[child.props.name] },
-      }));
-    }
-    return [children];
+    const flat = Children.toArray(children);
+    return flat.map((child) => {
+      if (isValidElement<any>(child)) {
+        const fieldErrors = errors?.find(
+          (e) => e.property === child.props.name,
+        )?.messages;
+        return cloneElement(child, { errors: fieldErrors });
+      }
+      return child;
+    });
   };
 
   const footer = (
@@ -68,18 +75,7 @@ const FormWrapper = ({
     </div>
   );
 
-  const items = [
-    // biome-ignore lint/complexity/noUselessFragments: need
-    <>
-      {title && (
-        <h1 key="title" className="text-4xl font-extrabold text-center">
-          {title}
-        </h1>
-      )}
-    </>,
-    ...hackChildren(),
-    footer,
-  ];
+  const items = [...hackChildren()];
 
   if (!animated) {
     return (
@@ -101,15 +97,23 @@ const FormWrapper = ({
       exit="exit"
       className={`${containerClass} ${className}`}
     >
-      {items.map((item, i) => (
-        <motion.div
-          key={i}
-          variants={variants as any}
-          className={`w-full flex items-center justify-center ${item.props.className}`}
-        >
-          {item}
-        </motion.div>
-      ))}
+      {title && (
+        <h1 key="title" className="text-4xl font-extrabold text-center">
+          {title}
+        </h1>
+      )}
+      <div className={fieldsetClassName}>
+        {items.map((item, i) => (
+          <motion.div
+            key={i}
+            variants={variants as any}
+            className={`${(item as any)?.props?.className ?? ""}`}
+          >
+            {item}
+          </motion.div>
+        ))}
+      </div>
+      {footer}
     </motion.form>
   );
 };

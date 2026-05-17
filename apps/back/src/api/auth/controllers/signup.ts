@@ -1,17 +1,12 @@
+import createUser from "@/api/users/services/createUser";
 import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import setAuthCookies from "../services/setAuthCookie";
-import createUser from "@/api/users/services/createUser";
 
 const signUp = async ({ body }: Request, res: Response) => {
-  const { email, username, password, description } = body;
+  const { email, username } = body;
 
-  const user = await createUser({
-    email,
-    username,
-    password,
-    description,
-  });
+  const user = await createUser(body);
 
   const cookiePayload: any = {
     id: user.id,

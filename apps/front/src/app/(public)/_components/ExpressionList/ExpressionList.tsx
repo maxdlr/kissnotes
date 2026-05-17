@@ -21,6 +21,7 @@ const ExpressionList = ({
   className,
   startCollapsed = false,
   urlScope = "",
+  openModals = false,
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -102,7 +103,11 @@ const ExpressionList = ({
                 highlightedTokens={[]}
                 key={expression.id}
                 expression={expression}
-                onClick={() => router.push(`${urlScope}/exp/${expression.id}`)}
+                onClick={() =>
+                  router.push(
+                    `${urlScope}/exp/${expression.id}${openModals ? "/m" : ""}`,
+                  )
+                }
               />
             ))}
           </MasonryGrid>

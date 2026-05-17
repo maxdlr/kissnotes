@@ -1,4 +1,4 @@
-import type { UserModel } from "@kissnotes/types";
+import type { KissResponseError, UserModel } from "@kissnotes/types";
 import { createContext } from "react";
 import type { KeyedMutator } from "swr";
 
@@ -15,7 +15,7 @@ interface AuthContextProps {
     email: string;
     username: string;
     password: string;
-  }) => Promise<string | undefined>;
+  }) => Promise<KissResponseError>;
   logOut: () => Promise<string | undefined>;
 }
 

@@ -5,7 +5,7 @@ export function TryCatch<T extends (...args: any[]) => any>(
     try {
       return await fn(...args);
     } catch (error: any) {
-      throw ApiError(error.status, error.message);
+      throw error;
     }
   };
 }

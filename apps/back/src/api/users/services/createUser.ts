@@ -1,30 +1,41 @@
 import UserEntity from "@/entities/UserEntity";
 import UserRepository from "@/repositories/UserRepository";
+import validateCrudPayload from "@/services/validateCrudPayload";
+import PasswordCheck from "@/utils/PasswordCheck";
 import { UserModel } from "@kissnotes/types";
+import { validate } from "class-validator";
 import findUser from "./findUser";
 
 const createUser = async (
   user: Pick<UserModel, "email" | "username" | "password" | "description">,
 ): Promise<UserEntity> => {
-  console.log({ user });
-  await findUser({ username: user.username })
-    .then(() => {
-      throw ApiError("User already exists");
-    })
-    .catch(() => {});
+  const existingUser = await findUser({ username: user.username }).catch(
+    () => {},
+  );
+  if (existingUser) {
+    throw ApiError("User already exists");
+  }
 
   const { email, username, password, description } = user;
 
   const userEntity = new UserEntity();
   userEntity.username = username;
   userEntity.email = email;
-  userEntity.password = password;
   userEntity.description = description;
 
-  const newUser = await UserRepository.save(userEntity).catch((err) => {
-    console.log({err})
+  // Validate password before hashing
+  const pwCheck = new PasswordCheck();
+  pwCheck.password = password;
+  const pwErrors = await validate(pwCheck);
+
+  userEntity.password = password;
+
+  await validateCrudPayload(userEntity, pwErrors);
+
+  const newUser = await UserRepository.save(userEntity).catch(() => {
     throw ApiError("Cannot create new user");
   });
+
   return newUser;
 };
 

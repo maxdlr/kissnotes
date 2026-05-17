@@ -37,16 +37,14 @@ const ExpressionListPage = () => {
   return (
     <>
       <Hero />
-      {expressions ? (
-        <ExpressionList
-          expressions={expressions}
-          filters={filters}
-          onFilterChange={setFilters}
-          startCollapsed={true}
-        />
-      ) : (
-        <Loading />
-      )}
+      <ExpressionList
+        loading={loading}
+        expressions={expressions}
+        filters={filters}
+        onFilterChange={setFilters}
+        startCollapsed={true}
+        openModals
+      />
     </>
   );
 };

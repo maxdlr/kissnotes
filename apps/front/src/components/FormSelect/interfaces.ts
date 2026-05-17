@@ -1,5 +1,5 @@
-import { KissChangeEvent } from "@/types/form.types";
 import type { ElementType } from "react";
+import type { KissChangeEvent } from "@/types/form.types";
 
 export interface FormSelectProps<T> {
   /** The field name, used as the key in `onChange` payloads and as a fallback label. */

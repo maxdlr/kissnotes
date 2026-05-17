@@ -2,6 +2,7 @@ import { Router } from "express";
 import expressionRoutes from "./api/expressions/routes/index";
 import nativeExpressionRoutes from "./api/native-expressions/routes/index";
 import userRoutes from "./api/users/routes/index";
+import socialLinkRoutes from "./api/socials/routes/index";
 import getMe from "./api/auth/controllers/getMe";
 import logIn from "./api/auth/controllers/logIn";
 import authenticate from "./middlewares/authenticate";
@@ -21,5 +22,6 @@ router.get("/me", authenticate, getMe);
 router.use("/expressions", expressionRoutes);
 router.use("/native-expressions", nativeExpressionRoutes);
 router.use("/users", userRoutes);
+router.use("/social-links", socialLinkRoutes);
 
 export default router;

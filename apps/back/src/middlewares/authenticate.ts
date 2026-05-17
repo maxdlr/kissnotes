@@ -34,6 +34,8 @@ const authenticate = async (
     return next(Unauthorized());
   }
 
+  console.log("Decoded JWT payload:", decoded);
+
   const user: UserEntity | null = await findUser({ id: Number(decoded.id) });
   if (!user) {
     return next(Unauthorized());

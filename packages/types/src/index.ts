@@ -111,12 +111,38 @@ export interface AuthId {
   token: string;
 }
 
+export enum SocialType {
+  X = "x",
+  Instagram = "instagram",
+  Facebook = "facebook",
+  Linkedin = "linkedin",
+  Discord = "discord",
+  Dribbble = "dribbble",
+  Behance = "behance",
+  Signal = "signal",
+  Snap = "snap",
+  Telegram = "telegram",
+  Tiktok = "tiktok",
+  Pinterest = "pinterest",
+  Reddit = "reddit",
+  Twitch = "twitch",
+  Youtube = "youtube",
+  Github = "github",
+}
+
+export interface SocialLinkModel {
+  name: SocialType;
+  url: string;
+  user: UserModel;
+}
+
 export interface UserModel extends Model {
   email: string;
   username: string;
   password: string;
   description: string;
   expressions: ExpressionModel[];
+  socials: SocialLinkModel[];
 }
 
 export interface LayerModel {
@@ -149,8 +175,13 @@ export interface KissApiResponse {
 
 export type KRes<T> = T | undefined;
 
+export type KissFormErrors =
+  | { property: string; messages: string[] }[]
+  | undefined;
+
 export interface KissResponseError {
   message: string;
+  errors?: KissFormErrors;
 }
 
 // --------------------------------------------------

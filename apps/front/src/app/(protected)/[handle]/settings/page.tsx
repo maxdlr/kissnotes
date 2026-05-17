@@ -1,6 +1,6 @@
 "use client";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import FormInput from "@/components/FormInput";
 import Loading from "@/components/Loading";
@@ -10,18 +10,32 @@ import useToasts from "@/contexts/ToastsContext";
 import type { KissChangeEvent } from "@/types/form.types";
 import SettingsSection from "./_components/SettingsSection";
 
+interface ProfileSettingsFormData {
+  username: string;
+  email: string;
+  password: string;
+  notifyLike: boolean;
+  notifyShare: boolean;
+}
+
 const ProfileSettingsPage = () => {
-  const { user, logOut } = useAuth();
+  const { user, loading, logOut } = useAuth();
   const { isOpen } = useSearcher();
   const { addToast } = useToasts();
   const [isEdit, setIsEdit] = useState(false);
-  const [formData, setFormData] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
-    password: "",
-    notifyLike: true,
-    notifyShare: false,
-  });
+  const [formData, setFormData] = useState<ProfileSettingsFormData>();
+
+  useEffect(() => {
+    if (!loading && user) {
+      setFormData({
+        username: user.username,
+        email: user.email,
+        password: "",
+        notifyLike: true,
+        notifyShare: false,
+      });
+    }
+  }, [user, loading]);
 
   const handleLogout = async () => {
     await logOut();
@@ -37,7 +51,7 @@ const ProfileSettingsPage = () => {
   }
 
   const handleOnchange = ({ target: { name, value } }: KissChangeEvent) => {
-    setFormData((f) => ({ ...f, [name]: value }));
+    setFormData((f) => ({ ...f, [name]: value }) as ProfileSettingsFormData);
   };
 
   return (
@@ -73,8 +87,10 @@ const ProfileSettingsPage = () => {
             value={formData?.username}
             placeholder="batman"
             onChange={handleOnchange}
-            variant={isEdit ? "fill" : "ghost"}
+            variant={isEdit ? "outline" : "ghost"}
             disabled={!isEdit}
+            containerClassName="border-dashed!"
+            required
           />
           <FormInput
             type="email"
@@ -83,8 +99,10 @@ const ProfileSettingsPage = () => {
             value={formData?.email}
             placeholder="batman@batcave.gc"
             onChange={handleOnchange}
-            variant={isEdit ? "fill" : "ghost"}
+            variant={isEdit ? "outline" : "ghost"}
             disabled={!isEdit}
+            containerClassName="border-dashed!"
+            required
           />
         </SettingsSection>
 

@@ -1,4 +1,3 @@
-// utils/zIndexManager.ts
 const baseZIndex = 0;
 let currentMax = baseZIndex;
 
@@ -7,6 +6,9 @@ let currentMax = baseZIndex;
  * Works with Tailwind z-* classes and inline style z-index.
  */
 export const getNextZIndex = (): number => {
+  if (typeof window === "undefined") {
+    return currentMax;
+  }
   const allElements = Array.from(
     document.querySelectorAll<HTMLElement>("body *"),
   );
