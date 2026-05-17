@@ -16,7 +16,7 @@ import TwitchIcon from "@/assets/img/twitch.svg";
 import XIcon from "@/assets/img/x.svg";
 import YoutubeIcon from "@/assets/img/youtube.svg";
 
-export const SocialItem: Record<
+export const SocialLinkIcon: Record<
   SocialType,
   React.FC<React.SVGProps<SVGSVGElement>>
 > = {

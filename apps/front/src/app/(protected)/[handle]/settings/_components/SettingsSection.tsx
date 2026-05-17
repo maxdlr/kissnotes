@@ -23,7 +23,7 @@ const SettingsSection = ({
       </div>
       <div className="w-full h-px bg-accent" />
       <p className="text-accent">{subtitle}</p>
-      <div className="grid grid-cols-2 gap-8 py-8">{children}</div>
+      {children}
     </div>
   );
 };

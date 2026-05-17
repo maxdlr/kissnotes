@@ -17,7 +17,9 @@ const createSocialLink = async (socialLink: DeepPartial<SocialLinkModel>) => {
   newSocialLink.url = socialLink.url as SocialType;
   newSocialLink.user = owner;
 
-  await validateCrudPayload(newSocialLink);
+  await validateCrudPayload(newSocialLink, undefined, {
+    property: socialLink.name as string,
+  });
 
   return await SocialLinkRepository.save(newSocialLink).catch(() => {
     throw ApiError("Cannot create new social link");

@@ -48,9 +48,9 @@ const SignUpPage = () => {
   const { putData: addSocials } = useAxios("social-links/edit");
 
   const [formData, setFormData] = useState<SignUpPayload>({
-    email: `${faker.lorem.word()}@${faker.lorem.word()}.${faker.lorem.word()}`,
-    username: faker.lorem.word(),
-    password: "P@ssword1234",
+    email: faker.internet.email(),
+    username: faker.internet.displayName().toLocaleLowerCase(),
+    password: faker.internet.password({ length: 8, memorable: false }),
     description: faker.lorem.paragraph(6),
     socials: [] as SocialLinkModel[],
   });
@@ -61,8 +61,7 @@ const SignUpPage = () => {
     setFormData((f) => ({ ...f, [name]: value }));
   };
 
-  const handleSubmitStepOne = async (e: KissClickEvent) => {
-    e?.preventDefault();
+  const handleSubmitStepOne = async () => {
     setLoading(true);
     const error = await signUp({
       email: formData.email,
@@ -88,8 +87,7 @@ const SignUpPage = () => {
     });
   };
 
-  const handleSubmitStepTwo = async (e: KissClickEvent) => {
-    e?.preventDefault();
+  const handleSubmitStepTwo = async () => {
     setLoading(true);
 
     const { data, error } = await updateUser<UserModel>({
@@ -103,6 +101,7 @@ const SignUpPage = () => {
         addToast({ type: "error", title: error.message });
       }
     }
+
     if (data) {
       setStep(3);
       addToast({
@@ -113,8 +112,8 @@ const SignUpPage = () => {
     setLoading(false);
   };
 
-  const handleSubmitStepThree = async (e: KissClickEvent) => {
-    e?.preventDefault();
+  const handleSubmitStepThree = async () => {
+    console.log("button clicked");
     setLoading(true);
 
     const { data, error } = await addSocials<SocialLinkModel>({
@@ -128,6 +127,7 @@ const SignUpPage = () => {
         addToast({ type: "error", title: error.message });
       }
     }
+
     if (data) {
       router.push(referrer || getProfileHref(formData.username));
       addToast({

@@ -57,7 +57,8 @@ const LogIn = () => {
         onClick: () => router.push("/signup"),
         label: "SignUp",
       }}
-      className="mt-36 w-sm mx-auto"
+      className="mt-36 sm:w-sm sm:mx-auto"
+      fieldsetClassName="space-y-4 sm:space-y-8"
       animated
       loading={loading}
     >

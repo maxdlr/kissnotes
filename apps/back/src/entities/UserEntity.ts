@@ -1,7 +1,7 @@
 import { UserModel } from "@kissnotes/types";
 import bcrypt from "bcrypt";
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, Unique } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
 import SocialLinkEntity from "./SocialEntity";

@@ -1,5 +1,5 @@
 import { SocialLinkModel, SocialType } from "@kissnotes/types";
-import { IsNotEmpty, IsUrl } from "class-validator";
+import { IsNotEmpty, IsUrl, ValidationOptions } from "class-validator";
 import { Column, Entity, ManyToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import UserEntity from "./UserEntity";
@@ -14,8 +14,15 @@ export default class SocialLinkEntity
   name!: SocialType;
 
   @Column({ nullable: false })
-  @IsUrl({}, { message: "It doesn't look like a valid Url" })
-  @IsNotEmpty({ message: "Required" })
+  @IsUrl({}, {
+    message: "It doesn't look like a valid Url",
+  } as ValidationOptions)
+  // @IsNotEmpty({
+  //   message: ({ object, property }) => {
+  //     console.log("Validation error for object:", object, property);
+  //     return "Required";
+  //   },
+  // } as ValidationOptions)
   url!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.socials, {

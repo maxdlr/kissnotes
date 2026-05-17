@@ -13,7 +13,7 @@ const SignUpStepTwo = ({
     <FormWrapper
       title="Say something about yourself"
       submit={{ label: "Save", onClick: onNext }}
-      className="mt-36 w-sm mx-auto"
+      className="mt-36 sm:w-sm sm:mx-auto"
       loading={loading}
       animated
       errors={errors}

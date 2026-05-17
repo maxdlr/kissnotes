@@ -8,4 +8,5 @@ export type KissClickEvent =
   | undefined
   | React.MouseEvent<HTMLButtonElement, MouseEvent>
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  | React.KeyboardEvent<HTMLButtonElement>;
+  | React.KeyboardEvent<HTMLButtonElement>
+  | React.SubmitEvent;

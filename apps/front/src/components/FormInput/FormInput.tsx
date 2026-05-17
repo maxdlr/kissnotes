@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "motion/react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { type FocusEventHandler, type Ref, useRef, useState } from "react";
 import Button from "@/components/Button";
@@ -9,6 +10,7 @@ import InputText from "./_components/InputText";
 import InputTextArea from "./_components/InputTextArea";
 import InputToggle from "./_components/InputToggle";
 import type { FormInputProps, InputTextProps } from "./interfaces";
+import Collapsible from "../Collapsible";
 
 const FormInput = ({
   type = "text",
@@ -30,6 +32,8 @@ const FormInput = ({
   ref,
   required = false,
   errors,
+  EndChild,
+  StartChild,
 }: FormInputProps) => {
   const autoRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
   const localRef = ref || autoRef;
@@ -84,6 +88,8 @@ ${(label && labelIn) || Icon ? "justify-between" : "justify-start"}
 items-center gap-4 font-semibold text-lg w-full
 ${variantStyles[variant]} ${containerClassName}`}
       >
+        {StartChild}
+
         {((label && labelIn) || Icon) && (
           <div>
             {Icon && (
@@ -147,13 +153,25 @@ ${variantStyles[variant]} ${containerClassName}`}
           />
         )}
 
+        {EndChild}
+
         {shortcut && <Shortcut shortcut={shortcut} />}
       </div>
-      {errors?.map((e) => (
-        <p key={e} className="text-sm ps-8 text-danger mt-1">
-          {e}
-        </p>
-      ))}
+      <Collapsible collapsed={!errors?.length}>
+        <ul className="list-disc list-inside">
+          {errors?.map((e) => (
+            <motion.li
+              initial={{ y: -10 }}
+              animate={{ y: 0 }}
+              exit={{ y: -10 }}
+              key={e}
+              className="text-sm ps-8 text-danger mt-1"
+            >
+              {e}
+            </motion.li>
+          ))}
+        </ul>
+      </Collapsible>
     </div>
   );
 };

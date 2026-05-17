@@ -8,6 +8,7 @@ import FormWrapper from "@/components/FormWrapper";
 import type { KissChangeEvent } from "@/types/form.types";
 import { asTitle } from "@/utils/stringUtils";
 import type { SignUpStepProps } from "../page";
+import { SocialLinkIcon } from "@/types/socials.types";
 
 const SignUpStepThree = ({
   loading,
@@ -44,7 +45,7 @@ const SignUpStepThree = ({
   return (
     <FormWrapper
       title="Connect Your Socials"
-      submit={{ label: "Save", onClick: onNext, type: "button" }}
+      submit={{ label: "Save", onClick: onNext }}
       className="mt-20 sm:mt-36 md:w-3xl mx-auto"
       fieldsetClassName="grid sm:grid-cols-2 gap-x-8"
       loading={loading}
@@ -62,23 +63,30 @@ const SignUpStepThree = ({
         className={`${selectedSocials.length ? "row-span-12" : "col-span-full"} max-sm:pb-4`}
       />
       {selectedSocials.map(({ name, url }) => (
-        <div className="flex w-full gap-2 pb-2" key={name}>
-          <FormInput
-            name={name}
-            onChange={handleSocialUrlChange}
-            value={url}
-            placeholder={asTitle(name)}
-          />
-          <Button
-            variant="ghost-reveal"
-            Icon={XMarkIcon}
-            onClick={() =>
-              setSelectedSocials((prev) => prev.filter((s) => s.name !== name))
-            }
-            size="sm"
-            className="aspect-square"
-          />
-        </div>
+        <FormInput
+          StartChild={
+            SocialLinkIcon[name]({ className: "size-6" }) as React.ReactNode
+          }
+          key={name}
+          name={name}
+          onChange={handleSocialUrlChange}
+          value={url}
+          placeholder={asTitle(name)}
+          className="pb-2"
+          EndChild={
+            <Button
+              variant="ghost-reveal"
+              Icon={XMarkIcon}
+              onClick={() =>
+                setSelectedSocials((prev) =>
+                  prev.filter((s) => s.name !== name),
+                )
+              }
+              size="sm"
+              className="aspect-square"
+            />
+          }
+        />
       ))}
     </FormWrapper>
   );

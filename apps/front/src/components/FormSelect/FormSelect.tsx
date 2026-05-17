@@ -303,7 +303,7 @@ const FormSelect = <T,>({
                           shortcut={
                             localOptions.length === 1 || index === 0
                               ? {
-                                  keys: ["enter"],
+                                  keys: ["shift", "tab"],
                                   ignoreInputs: false,
                                   blockers: [!focus],
                                 }

@@ -1,10 +1,11 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 /** biome-ignore-all lint/suspicious/noExplicitAny: dontcare */
 
-import { Children, cloneElement, isValidElement } from "react";
 import { motion } from "motion/react";
+import { Children, cloneElement, isValidElement } from "react";
 import Button from "@/components/Button";
 import type { FormWrapperProps } from "./interfaces";
+import { KissClickEvent } from "@/types/form.types";
 
 const distance = 200;
 
@@ -50,7 +51,7 @@ const FormWrapper = ({
     return flat.map((child) => {
       if (isValidElement<any>(child)) {
         const fieldErrors = errors?.find(
-          (e) => e.property === child.props.name,
+          (e) => e.property === (child.props as any).name,
         )?.messages;
         return cloneElement(child, { errors: fieldErrors });
       }
@@ -58,7 +59,18 @@ const FormWrapper = ({
     });
   };
 
-  const footer = (
+  const fieldSet = [...hackChildren()];
+  const variants = itemVariants(animHeight);
+  const FormTag = animated ? motion("form") : "form";
+  const FieldSetTag = animated ? motion("div") : "div";
+
+  const titleContent = title && (
+    <h1 key="title" className="text-4xl font-extrabold text-center">
+      {title}
+    </h1>
+  );
+
+  const footerContent = (
     <div
       key="footer"
       className={`w-full flex items-center ${cancel?.onClick ? "justify-around" : "justify-center"}`}
@@ -70,51 +82,44 @@ const FormWrapper = ({
           variant={submit.disabled ? "outline" : "fill"}
           loading={loading}
           {...submit}
+          onClick={undefined}
         />
       )}
     </div>
   );
 
-  const items = [...hackChildren()];
+  const fieldSetContent = (
+    <div className={`w-full ${fieldsetClassName}`}>
+      {fieldSet.map((field, i) => (
+        <FieldSetTag
+          key={i}
+          variants={variants as any}
+          className={`${(field as any)?.props?.className ?? ""}`}
+        >
+          {field}
+        </FieldSetTag>
+      ))}
+    </div>
+  );
 
-  if (!animated) {
-    return (
-      <div className={`${containerClass} ${className}`}>
-        <h1 className="text-4xl font-extrabold text-center">{title}</h1>
-        {children}
-        {footer}
-      </div>
-    );
-  }
-
-  const variants = itemVariants(animHeight);
+  const handleSubmit = (e: KissClickEvent) => {
+    e?.preventDefault();
+    submit?.onClick?.(e);
+  };
 
   return (
-    <motion.form
+    <FormTag
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
       className={`${containerClass} ${className}`}
+      onSubmit={handleSubmit}
     >
-      {title && (
-        <h1 key="title" className="text-4xl font-extrabold text-center">
-          {title}
-        </h1>
-      )}
-      <div className={fieldsetClassName}>
-        {items.map((item, i) => (
-          <motion.div
-            key={i}
-            variants={variants as any}
-            className={`${(item as any)?.props?.className ?? ""}`}
-          >
-            {item}
-          </motion.div>
-        ))}
-      </div>
-      {footer}
-    </motion.form>
+      {titleContent}
+      {fieldSetContent}
+      {footerContent}
+    </FormTag>
   );
 };
 

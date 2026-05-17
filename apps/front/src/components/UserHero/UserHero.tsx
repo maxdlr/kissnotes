@@ -7,21 +7,14 @@ import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import useUser from "@/app/(protected)/[handle]/hooks/UserContext";
 import Button from "@/components/Button";
-import { SocialItem } from "@/types/socials.types";
+import { SocialLinkIcon } from "@/types/socials.types";
 import Loading from "../Loading";
 
 const UserHero = () => {
   const { user, loading } = useUser();
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
-  console.log({user})
   const socials: SocialLinkModel[] = user?.socials || [];
-  // const tempsocials: { name: SocialType; url: string }[] = Object.keys(
-  //   SocialItem,
-  // ).map((k) => ({
-  //   name: k as SocialType,
-  //   url: "",
-  // }));
 
   const isReady = !loading;
 
@@ -50,7 +43,7 @@ const UserHero = () => {
                   @{user?.username}
                 </h2>
               </div>
-              <p className="w-1/2">
+              <p className="sm:w-2/3 lg:1/2">
                 {`${user?.description} ${faker.lorem.paragraph()}`}
               </p>
               <div className="flex flex-wrap justify-center items-center">
@@ -58,7 +51,7 @@ const UserHero = () => {
                   <Button
                     key={s.name}
                     variant="ghost-reveal"
-                    Icon={SocialItem[s.name]}
+                    Icon={SocialLinkIcon[s.name]}
                     href={s.url}
                     size="sm"
                     className="text-accent! hover:text-secondary! py-2!"

@@ -42,6 +42,8 @@ export interface FormInputProps {
   ref?: RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   required?: boolean;
   errors?: string[];
+  EndChild?: ReactNode;
+  StartChild?: ReactNode;
 }
 
 export interface InputTextProps {

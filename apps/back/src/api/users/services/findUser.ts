@@ -9,7 +9,7 @@ const findUser = async (
     email,
   }: Partial<Pick<UserModel, "id" | "username" | "email">>,
   withPassword: boolean = false,
-): Promise<UserEntity | null> => {
+): Promise<UserEntity> => {
   let user!: UserEntity | null;
 
   if (withPassword) {
