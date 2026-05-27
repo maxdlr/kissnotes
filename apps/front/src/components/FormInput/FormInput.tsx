@@ -1,16 +1,16 @@
 "use client";
-import { motion } from "motion/react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import { type FocusEventHandler, type Ref, useRef, useState } from "react";
 import Button from "@/components/Button";
 import Shortcut from "@/components/ShortCut";
-import useOnClickOutside from "@/hooks/useClickOutside";
+import useFocus from "@/hooks/bread/useFocus";
 import { useShortcut } from "@/hooks/useShortcut";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { motion } from "motion/react";
+import { type FocusEventHandler, type Ref, useState } from "react";
+import Collapsible from "../Collapsible";
 import InputText from "./_components/InputText";
 import InputTextArea from "./_components/InputTextArea";
 import InputToggle from "./_components/InputToggle";
 import type { FormInputProps, InputTextProps } from "./interfaces";
-import Collapsible from "../Collapsible";
 
 const FormInput = ({
   type = "text",
@@ -29,25 +29,16 @@ const FormInput = ({
   onFocus,
   disabled,
   labelIn = false,
+  labelBg = "bg-darker",
   ref,
   required = false,
   errors,
   EndChild,
   StartChild,
 }: FormInputProps) => {
-  const autoRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
-  const localRef = ref || autoRef;
-  useOnClickOutside(localRef, () => {
-    setFocus(false);
-  });
-
-  const [focus, setFocus] = useState(false);
+  const { ref: localRef, focus, isFocused } = useFocus(ref);
   const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
-
-  useShortcut(
-    shortcut,
-    onClick && localRef ? onClick : () => localRef?.current?.focus(),
-  );
+  useShortcut(shortcut, onClick && localRef ? onClick : () => focus());
 
   const variantStyles = {
     fill: "bg-secondary/20 border-[1px] border-secondary focus:bg-secondary/0 ",
@@ -57,7 +48,7 @@ const FormInput = ({
 
   // biome-ignore lint/suspicious/noExplicitAny: dontcare
   const handleFocus: FocusEventHandler = (e: any): void => {
-    setFocus(true);
+    focus();
     onFocus?.(e);
   };
 
@@ -66,7 +57,9 @@ const FormInput = ({
       {!labelIn && label && (
         <label htmlFor={name} className="absolute -translate-y-1/2 w-full">
           <span className="mx-6 text-sm flex justify-between items-center gap-2 leading-none">
-            <span className="flex text-accent px-2 bg-darker justify-start items-center gap-2">
+            <span
+              className={`flex text-accent px-2 ${labelBg} justify-start items-center gap-2`}
+            >
               <span>•</span>
               {label}
               <span>•</span>
@@ -82,7 +75,7 @@ const FormInput = ({
         </label>
       )}
       <div
-        className={`${focus ? "border-secondary" : errors?.length ? "border-danger" : "border-accent"}
+        className={`${isFocused ? "border-secondary" : errors?.length ? "border-danger" : "border-accent"}
 rounded-3xl py-3 px-4 flex 
 ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} 
 items-center gap-4 font-semibold text-lg w-full

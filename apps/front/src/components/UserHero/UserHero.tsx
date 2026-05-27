@@ -43,9 +43,7 @@ const UserHero = () => {
                   @{user?.username}
                 </h2>
               </div>
-              <p className="sm:w-2/3 lg:1/2">
-                {`${user?.description} ${faker.lorem.paragraph()}`}
-              </p>
+              <p className="sm:w-2/3 lg:1/2">{`${user?.description}`}</p>
               <div className="flex flex-wrap justify-center items-center">
                 {socials.map((s) => (
                   <Button

@@ -24,12 +24,14 @@ const InputTextArea = ({
         aria-label={name}
         autoComplete={name}
         placeholder={placeholder}
-        className={`focus:ring-0 placeholder:font-normal focus:outline-none whitespace-nowrap w-full ${className}`}
+        className={`focus:ring-0 placeholder:font-normal focus:outline-none w-full ${className}`}
         value={value}
         onClick={onClick}
         onChange={onChange}
         disabled={disabled}
         onFocus={onFocus}
+        wrap="hard"
+        rows={10}
       />
       {Icon && <Icon className="size-6 " />}
     </div>

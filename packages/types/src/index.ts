@@ -140,17 +140,17 @@ export interface UserModel extends Model {
   email: string;
   username: string;
   password: string;
-  description: string;
+  description?: string;
   expressions: ExpressionModel[];
   socials: SocialLinkModel[];
 }
 
-export interface LayerModel {
+export interface LayerModel extends Model {
   type: string;
   name: string;
 }
 
-export interface PropertyModel {
+export interface PropertyModel extends Model {
   group: string;
   name: string;
 }

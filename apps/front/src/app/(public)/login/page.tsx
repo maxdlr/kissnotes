@@ -6,11 +6,12 @@ import FormWrapper from "@/components/FormWrapper";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
+import useRead from "@/hooks/bread/useRead";
 
 const LogIn = () => {
-  const searchParams = useSearchParams();
+  const searchParam = useSearchParams();
 
-  const referrer = searchParams.get("referrer");
+  const referrer = searchParam.get("referrer");
 
   const { addToast } = useToasts();
   const { user, logIn } = useAuth();

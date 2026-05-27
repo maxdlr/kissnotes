@@ -39,6 +39,7 @@ export interface FormInputProps {
     | "hidden"
     | "password";
   labelIn?: boolean;
+  labelBg?: string;
   ref?: RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
   required?: boolean;
   errors?: string[];

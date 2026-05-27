@@ -1,5 +1,5 @@
 import type { KissResponseError } from "@kissnotes/types";
-import { isAxiosError, type AxiosRequestConfig } from "axios";
+import { type AxiosRequestConfig, isAxiosError } from "axios";
 import { useEffect, useRef } from "react";
 import axios from "@/services/axios";
 

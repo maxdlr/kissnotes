@@ -1,16 +1,14 @@
+import { faker } from "@faker-js/faker";
+import {
+  AtSymbolIcon,
+  BoltIcon,
+  ShieldCheckIcon,
+} from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
 import type { SignUpStepProps } from "../page";
-import {
-  AtSymbolIcon,
-  BoldIcon,
-  BoltIcon,
-  ServerStackIcon,
-  ShieldCheckIcon,
-} from "@heroicons/react/24/outline";
-import Button from "@/components/Button";
-import { faker } from "@faker-js/faker";
 
 const SignUpStepOne = ({
   loading,

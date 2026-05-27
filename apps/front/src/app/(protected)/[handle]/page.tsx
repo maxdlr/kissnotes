@@ -12,9 +12,13 @@ import UserHero from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
 import { getHandle } from "@/utils/userUtils";
 import useUser from "./hooks/UserContext";
+import Button from "@/components/Button";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import useAuth from "@/contexts/AuthContext/useAuth";
 
 const ProfilePage = () => {
   const { handle } = useParams();
+  const { user: authUser } = useAuth();
   const [filters, setFilters] = useState<SidebarValue>({
     tokens: [],
     search: "",
@@ -40,14 +44,25 @@ const ProfilePage = () => {
   return (
     <div className="space-y-8">
       <UserHero />
-      <ExpressionList
-        expressions={expressions}
-        filters={filters}
-        onFilterChange={setFilters}
-        startCollapsed
-        urlScope={`/${getHandle(handle)}`}
-        loading={expressionLoading}
-      />
+      {!expressionLoading && !expressions?.length ? (
+        <div className="w-full flex items-center justify-center">
+          <Button
+            label="Add an expression"
+            Icon={PlusIcon}
+            variant="outline"
+            href={`/${getHandle(authUser?.username)}/exp/add`}
+          />
+        </div>
+      ) : (
+        <ExpressionList
+          expressions={expressions}
+          filters={filters}
+          onFilterChange={setFilters}
+          startCollapsed
+          urlScope={`/${getHandle(handle)}`}
+          loading={expressionLoading}
+        />
+      )}
     </div>
   );
 };

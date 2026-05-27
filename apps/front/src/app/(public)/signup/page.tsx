@@ -51,7 +51,7 @@ const SignUpPage = () => {
     email: faker.internet.email(),
     username: faker.internet.displayName().toLocaleLowerCase(),
     password: faker.internet.password({ length: 8, memorable: false }),
-    description: faker.lorem.paragraph(6),
+    description: "",
     socials: [] as SocialLinkModel[],
   });
 

@@ -7,7 +7,8 @@ import useAxios from "@/hooks/useAxios";
 import useToasts from "../ToastsContext";
 import AuthContext from "./AuthContext";
 
-const isDev = process.env.NODE_ENV === "development";
+// const isDev = process.env.NODE_ENV === "development";
+const isDev = false;
 
 const ME_RETRY_COUNT_KEY = "me_retry_count";
 const MAX_ME_RETRIES = 2;

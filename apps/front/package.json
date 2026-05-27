@@ -7,8 +7,8 @@
     "dev": "next dev -p $FRONT_PORT",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "eslint .",
+    "format": "eslint . --fix"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -24,7 +24,6 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -32,6 +31,8 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "dotenv": "^17.3.1",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.1.6",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "@faker-js/faker": "^9.9.0"

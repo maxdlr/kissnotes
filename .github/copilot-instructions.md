@@ -8,19 +8,21 @@
   - `make dev` (runs DB, backend, and frontend)
 - **Frontend only:**
   - `npm run dev:front` (Next.js, port from $FRONT_PORT)
-  - **Lint:** `npm run lint` (uses Biome)
-  - **Format:** `npm run format`
+  - **Lint:** `npm run lint` (uses ESLint)
+  - **Format:** `npm run format` (ESLint `--fix`)
 - **Backend only:**
   - `npm run dev:back` (Express/TypeORM, MariaDB)
   - **Build:** `npm run build`
   - **Typecheck:** `npm run typecheck`
+  - **Lint:** `npm run lint` (uses ESLint)
+  - **Format:** `npm run format` (ESLint `--fix`)
 - **Database:**
   - `make start-db`, `make create-db`, `make drop-db`, `make wait-db`
 
 ## High-Level Architecture
 
 - **Monorepo** managed by npm workspaces:
-  - `apps/front`: Next.js frontend (React, SWR, axios, Biome for lint/format)
+  - `apps/front`: Next.js frontend (React, SWR, axios, ESLint for lint/format)
   - `apps/back`: Express backend (TypeORM, MariaDB, JWT, modular API routes)
   - `packages/types`: Shared TypeScript types
 - **Frontend:**
@@ -45,7 +47,7 @@
 - **Frontend API:**
   - Use `/services/axios.ts` and `/services/fetcher.ts` for all HTTP
 - **Linting/formatting:**
-  - Use Biome (`biome.json` config)
+  - Use ESLint (`eslint.config.mjs` config)
 - **Environment:**
   - `.env` for secrets/ports, loaded by Makefile and apps
 

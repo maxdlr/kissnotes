@@ -1,7 +1,7 @@
 import { UserModel } from "@kissnotes/types";
 import bcrypt from "bcrypt";
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
-import { Column, Entity, OneToMany, Unique } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
 import SocialLinkEntity from "./SocialEntity";
@@ -21,7 +21,7 @@ export default class UserEntity extends AbstractEntity implements UserModel {
   email!: string;
 
   @Column({ default: "", length: 2000 })
-  description!: string;
+  description?: string;
 
   @OneToMany(() => ExpressionEntity, (expression) => expression.author)
   expressions!: ExpressionEntity[];

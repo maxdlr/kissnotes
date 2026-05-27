@@ -1,5 +1,11 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dont care */
 
+import Button from "@/components/Button";
+import Collapsible from "@/components/Collapsible";
+import InputText from "@/components/FormInput/_components/InputText";
+import Pill from "@/components/Pill";
+import useFocus from "@/hooks/bread/useFocus";
+import useOnClickOutside from "@/hooks/useClickOutside";
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
 import {
   MagnifyingGlassIcon,
@@ -14,11 +20,6 @@ import {
   useRef,
   useState,
 } from "react";
-import useOnClickOutside from "@/hooks/useClickOutside";
-import Button from "@/components/Button";
-import Collapsible from "@/components/Collapsible";
-import InputText from "@/components/FormInput/_components/InputText";
-import Pill from "@/components/Pill";
 import type { FormSelectProps } from "./interfaces";
 
 // ---------------------------------------------------------------------------
@@ -71,23 +72,18 @@ const FormSelect = <T,>({
   tooltip,
 }: FormSelectProps<T>) => {
   const multiple = multipleProp ?? Array.isArray(value);
-
   const [prompt, setPrompt] = useState("");
   const [max, setMax] = useState(10);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const formSelectRef = useRef<HTMLDivElement | null>(null);
-  const [focus, setFocus] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
+  const { ref, focus, unfocus, isFocused } = useFocus();
 
   const refocus = useCallback(() => {
-    if (searchable) {
-      inputRef.current?.focus();
-      setFocus(true);
-    }
+    if (searchable) focus();
   }, [searchable]);
 
   useOnClickOutside<HTMLDivElement>(formSelectRef, () => {
-    setFocus(false);
+    unfocus();
     if (prompt === "" && selectedValues.length === 0) {
       setCollapsed(true);
     }
@@ -173,7 +169,7 @@ const FormSelect = <T,>({
   };
 
   const handleFocus = () => {
-    setFocus(true);
+    focus();
     setCollapsed(false);
   };
 
@@ -198,7 +194,7 @@ const FormSelect = <T,>({
       <div
         onClick={refocus}
         ref={formSelectRef}
-        className={`border ${focus ? "border-secondary" : "border-accent"} p-5 rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} ${className}`}
+        className={`border ${isFocused ? "border-secondary" : "border-accent"} p-5 rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} ${className}`}
       >
         {/* HEADER */}
         <div className="flex justify-between items-center">
@@ -207,7 +203,7 @@ const FormSelect = <T,>({
               {showSearch ? (
                 <InputText
                   value={prompt}
-                  ref={inputRef}
+                  ref={ref}
                   name={name}
                   placeholder={label as string}
                   onChange={handlePrompt}
