@@ -94,7 +94,7 @@ const FormWrapper = ({
         <FieldSetTag
           key={i}
           variants={variants as any}
-          className={`${(field as any)?.props?.className ?? ""}`}
+          className={`${(field as any)?.props["data-form-set"] ? "" : ((field as any)?.props?.className ?? "")}`}
         >
           {field}
         </FieldSetTag>
