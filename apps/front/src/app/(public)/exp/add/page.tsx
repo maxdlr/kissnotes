@@ -60,26 +60,17 @@ const AddExpressionPage = () => {
       title="Add Expression"
       className="p-4 sm:p-8"
       submit={{ label: "Add", onClick: handleOnSubmit }}
-      fieldsetClassName="grid grid-cols-2 gap-4 sm:gap-8"
+      fieldsetClassName="flex gap-4 sm:gap-8"
+      animated
     >
-      <FormInput
-        name="title"
-        label="Title"
-        onChange={handleOnChange}
-        value={formData?.title}
-        placeholder="My new expression"
-        className="col-span-full"
-      />
-      <FormInput
-        type="textarea"
-        name="description"
-        label="Description"
-        onChange={handleOnChange}
-        value={formData?.description}
-        placeholder="Describe the expression in a few words..."
-        className="col-span-full"
-      />
-      <div className="grid gap-4">
+      <FormWrapper.Layout className="shrink-0 flex flex-col gap-4 sm:gap-6 items-start justify-start">
+        <FormInput
+          name="title"
+          label="Title"
+          onChange={handleOnChange}
+          value={formData?.title}
+          placeholder="My new expression"
+        />
         <FormSelect<{ name: string }>
           name="layerType"
           label="Type of the layer"
@@ -87,17 +78,13 @@ const AddExpressionPage = () => {
           onChange={handleOnChange}
           value={formData.layerType}
           property="name"
-          className="self-center"
         />
         <FormInput
           name="layerName"
           onChange={handleOnChange}
           value={formData?.layerName}
           placeholder="Name of the layer"
-          className="self-center"
         />
-      </div>
-      <div className="grid gap-4">
         <FormSelect<{ name: string }>
           name="propertyGroup"
           label="Group of the property"
@@ -105,16 +92,32 @@ const AddExpressionPage = () => {
           onChange={handleOnChange}
           value={formData.propertyGroup}
           property="name"
-          className="self-center"
         />
         <FormInput
           name="propertyName"
           onChange={handleOnChange}
           value={formData?.propertyName}
           placeholder="Name of the property"
-          className="self-center"
         />
-      </div>
+      </FormWrapper.Layout>
+      <FormWrapper.Layout className="w-full">
+        <FormInput
+          type="textarea"
+          name="description"
+          label="Description"
+          onChange={handleOnChange}
+          value={formData?.description}
+          placeholder="Describe the expression in a few words..."
+        />
+        <FormInput
+          type="textarea"
+          name="description"
+          label="Description"
+          onChange={handleOnChange}
+          value={formData?.description}
+          placeholder="Describe the expression in a few words..."
+        />
+      </FormWrapper.Layout>
     </FormWrapper>
   );
 };

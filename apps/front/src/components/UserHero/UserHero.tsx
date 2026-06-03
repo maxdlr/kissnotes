@@ -5,10 +5,10 @@ import { faker } from "@faker-js/faker";
 import type { SocialLinkModel } from "@kissnotes/types";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import useUser from "@/app/(protected)/[handle]/hooks/UserContext";
 import Button from "@/components/Button";
 import { SocialLinkIcon } from "@/types/socials.types";
 import Loading from "../Loading";
+import useUser from "@/contexts/UserContext";
 
 const UserHero = () => {
   const { user, loading } = useUser();

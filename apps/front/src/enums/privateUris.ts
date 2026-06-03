@@ -1,4 +1,6 @@
-const privateUriPatterns: readonly string[] = ["^/@[^/]+/settings$"];
+const privateUriPatterns: readonly string[] = [
+  "^/@[^/]+/settings$",
+];
 
 const privateUris: readonly RegExp[] = privateUriPatterns.map(
   (pattern) => new RegExp(pattern),

@@ -11,6 +11,7 @@ const InputTextArea = ({
   onChange,
   disabled,
   Icon,
+  rows = 10
 }: InputTextAreaProps) => {
   if (disabled && !value) {
     return <div className="h-px w-50 bg-accent/30 my-2" />;
@@ -31,7 +32,7 @@ const InputTextArea = ({
         disabled={disabled}
         onFocus={onFocus}
         wrap="hard"
-        rows={10}
+        rows={rows}
       />
       {Icon && <Icon className="size-6 " />}
     </div>

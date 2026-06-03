@@ -7,19 +7,23 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { motion } from "motion/react";
 import { type FocusEventHandler, type Ref, useState } from "react";
 import Collapsible from "../Collapsible";
+import InputDropdown from "../InputDropdown/InputDropdown";
 import InputText from "./_components/InputText";
 import InputTextArea from "./_components/InputTextArea";
 import InputToggle from "./_components/InputToggle";
 import type { FormInputProps, InputTextProps } from "./interfaces";
 
-const FormInput = ({
+const FormInput = <T = "string",>({
   type = "text",
+  options = [],
   placeholder = "Search...",
   value,
+  property,
+  rows,
   name,
-  className,
-  inputClassName,
-  containerClassName,
+  className = "",
+  inputClassName = "",
+  containerClassName = "",
   variant = "outline",
   onClick,
   Icon,
@@ -35,7 +39,7 @@ const FormInput = ({
   errors,
   EndChild,
   StartChild,
-}: FormInputProps) => {
+}: FormInputProps<T>) => {
   const { ref: localRef, focus, isFocused } = useFocus(ref);
   const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
   useShortcut(shortcut, onClick && localRef ? onClick : () => focus());
@@ -75,14 +79,13 @@ const FormInput = ({
         </label>
       )}
       <div
-        className={`${isFocused ? "border-secondary" : errors?.length ? "border-danger" : "border-accent"}
+        className={`${isFocused ? "border-secondary" : errors?.length ? "border-danger" : "border-accent hover:border-secondary/50 cursor-pointer"}
 rounded-3xl py-3 px-4 flex 
 ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} 
 items-center gap-4 font-semibold text-lg w-full
 ${variantStyles[variant]} ${containerClassName}`}
       >
         {StartChild}
-
         {((label && labelIn) || Icon) && (
           <div>
             {Icon && (
@@ -94,7 +97,6 @@ ${variantStyles[variant]} ${containerClassName}`}
             {labelIn && <label htmlFor={name}>{label}</label>}
           </div>
         )}
-
         {type === "checkbox" && (
           <InputToggle
             value={value as boolean}
@@ -103,7 +105,6 @@ ${variantStyles[variant]} ${containerClassName}`}
             disabled={disabled}
           />
         )}
-
         {["text", "search", "email", "password"].includes(type) && (
           <InputText
             ref={localRef as Ref<HTMLInputElement>}
@@ -122,9 +123,9 @@ ${variantStyles[variant]} ${containerClassName}`}
             onFocus={handleFocus}
           />
         )}
-
         {type === "textarea" && (
           <InputTextArea
+            className={inputClassName}
             ref={localRef as Ref<HTMLTextAreaElement>}
             placeholder={placeholder as InputTextProps["placeholder"]}
             name={name}
@@ -133,9 +134,9 @@ ${variantStyles[variant]} ${containerClassName}`}
             disabled={disabled}
             onFocus={handleFocus}
             value={value as InputTextProps["value"]}
+            rows={rows}
           />
         )}
-
         {type === "password" && (
           <Button
             size="sm"
@@ -145,9 +146,18 @@ ${variantStyles[variant]} ${containerClassName}`}
             className={isPasswordRevealed ? "text-secondary!" : ""}
           />
         )}
-
+        {type === "dropdown" && (
+          <InputDropdown
+            label={label}
+            placeholder={placeholder}
+            onChange={onChange}
+            disabled={disabled}
+            options={options}
+            value={value as InputTextProps["value"]}
+            property={property}
+          />
+        )}
         {EndChild}
-
         {shortcut && <Shortcut shortcut={shortcut} />}
       </div>
       <Collapsible collapsed={!errors?.length}>

@@ -62,4 +62,7 @@ export interface FormSelectProps<T> {
 
   /** Show tooltip */
   tooltip?: string;
+
+  /** Whether the field is required. */
+  required?: boolean;
 }

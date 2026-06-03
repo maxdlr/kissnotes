@@ -10,7 +10,10 @@ import type { ModName } from "@/components/ShortCut";
 import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 
-export interface FormInputProps {
+export interface FormInputProps<T> {
+  options?: T[];
+  property: keyof T;
+  rows?: number;
   placeholder?: string | ReactNode;
   inputClassName?: string;
   containerClassName?: string;
@@ -37,6 +40,7 @@ export interface FormInputProps {
     | "email"
     | "file"
     | "hidden"
+    | "dropdown"
     | "password";
   labelIn?: boolean;
   labelBg?: string;
@@ -78,4 +82,5 @@ export interface InputTextAreaProps {
   onFocus?: FocusEventHandler<HTMLTextAreaElement>;
   disabled?: boolean;
   ref?: Ref<HTMLTextAreaElement | null>;
+  rows?: number;
 }

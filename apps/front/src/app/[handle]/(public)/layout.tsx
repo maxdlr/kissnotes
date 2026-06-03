@@ -1,26 +1,23 @@
 "use client";
+import { UserProvider } from "@/contexts/UserContext";
 import { useParams } from "next/navigation";
-import { UserProvider } from "./hooks/UserContext";
 
-interface ProfilePageLayoutProps {
+interface UserProfilePublicLayoutProps {
   children?: React.ReactNode;
   modal?: React.ReactNode;
-  header?: React.ReactNode;
   currentHandle?: string;
 }
 
-const ProfilePageLayout = ({
+const UserProfilePublicLayout = ({
   children,
   modal,
-  header,
-}: ProfilePageLayoutProps) => {
+}: UserProfilePublicLayoutProps) => {
   const { handle } = useParams();
   return (
     <UserProvider handle={handle}>
       {modal}
-      {header}
       {children}
     </UserProvider>
   );
 };
-export default ProfilePageLayout;
+export default UserProfilePublicLayout;
