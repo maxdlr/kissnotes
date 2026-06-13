@@ -185,3 +185,7 @@ export interface KissResponseError {
 }
 
 // --------------------------------------------------
+
+export type KissDeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? KissDeepPartial<T[P]> : T[P];
+};

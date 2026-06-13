@@ -116,10 +116,10 @@ const interactionVariants: Record<
     },
   },
   "outline-accent": {
-    resting: {},
+    resting: { color: "var(--color-accent)" },
     hover: {
-      borderColor: "var(--color-primary)",
-      color: "var(--color-primary)",
+      borderColor: "var(--color-secondary)",
+      color: "var(--color-secondary)",
       scale: scaledUp,
     },
     tap: {
@@ -132,6 +132,11 @@ const interactionVariants: Record<
     resting: { color: "var(--color-accent)" },
     hover: { color: "var(--color-secondary)", scale: scaledUp },
     tap: { color: "var(--color-primary)", scale: scaledDown },
+  },
+  "ghost-secondary": {
+    resting: { color: "var(--color-secondary)" },
+    hover: { color: "var(--color-primary)", scale: scaledUp },
+    tap: { color: "white", scale: scaledDown },
   },
   "ghost-reveal": {
     resting: {

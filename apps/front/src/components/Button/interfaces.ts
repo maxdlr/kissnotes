@@ -14,6 +14,7 @@ export interface ButtonProps {
     | "outline"
     | "outline-accent"
     | "ghost"
+    | "ghost-secondary"
     | "fill-accent"
     | "ghost-reveal";
   onClick?: (e?: KissClickEvent) => void;

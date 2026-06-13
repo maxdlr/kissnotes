@@ -4,8 +4,7 @@ import axios, {
 } from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
-const isDev = false;
-// const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === "development";
 
 const MAX_REFRESH_ATTEMPTS = 3;
 const REFRESH_COUNT_KEY = "auth_refresh_count";
@@ -41,16 +40,7 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => {
-    if (
-      response.data &&
-      typeof response.data === "object" &&
-      "data" in response.data
-    ) {
-      return response;
-    }
-    return { ...response, data: { data: response.data } };
-  },
+  (response: AxiosResponse): AxiosResponse => response,
   async (error: unknown) => {
     if (!axios.isAxiosError(error)) return Promise.reject(error);
 

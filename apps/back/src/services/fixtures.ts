@@ -1,7 +1,5 @@
-import CodeEntity from "@/entities/CodeEntity";
 import ExpressionEntity from "@/entities/ExpressionEntity";
 import LayerEntity from "@/entities/LayerEntity";
-import LineEntity from "@/entities/LineEntity";
 import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
 import PropertyEntity from "@/entities/PropertyEntity";
 import UserEntity from "@/entities/UserEntity";
@@ -202,8 +200,6 @@ export const loadFixtures = async () => {
     await manager.deleteAll(ExpressionEntity);
     await manager.deleteAll(LayerEntity);
     await manager.deleteAll(PropertyEntity);
-    await manager.deleteAll(LineEntity);
-    await manager.deleteAll(CodeEntity);
     await manager.deleteAll(UserEntity);
 
     const nativeExpressions = await manager.save(NativeExpressionEntity, [
@@ -220,19 +216,12 @@ export const loadFixtures = async () => {
       group: "transform",
     });
 
-    const codes: CodeEntity[] = await Promise.all(
-      Array.from({ length: 50 }).map(() =>
-        manager
-          .save(
-            LineEntity,
-            Array.from({ length: 1 }).map((_v, i) => ({
-              number: i + 1,
-              content: randomElement(expressionCodes),
-            })),
-          )
-          .then((lines) => manager.save(CodeEntity, { lines })),
-      ),
-    );
+    const codes: CodeModel[] = Array.from({ length: 50 }).map(() => {
+      const raw = randomElement(expressionCodes);
+      return {
+        lines: raw.split("\n").map((content, i) => ({ number: i + 1, content })),
+      };
+    });
 
     const users = [
       ...((await makeUsers(manager, 10)) as UserEntity[]),
@@ -249,7 +238,7 @@ export const loadFixtures = async () => {
         layer,
         property,
         code: codes[i],
-        symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
+        symbols: parseAeExpression(codes[i], nativeExpressions),
         createdAt: faker.date.past(),
       })),
     );

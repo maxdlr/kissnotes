@@ -16,6 +16,12 @@
 		"start:front": "npm run start --workspace=apps/front"
 	},
 	"dependencies": {
+		"@codemirror/lang-javascript": "^6.2.5",
+		"@uiw/codemirror-extensions-events": "^4.25.10",
+		"@uiw/codemirror-extensions-hyper-link": "^4.25.10",
+		"@uiw/codemirror-theme-tokyo-night": "^4.25.10",
+		"@uiw/codemirror-themes": "^4.25.10",
+		"@uiw/react-codemirror": "^4.25.10",
 		"jsonwebtoken": "^9.0.3"
 	}
 }

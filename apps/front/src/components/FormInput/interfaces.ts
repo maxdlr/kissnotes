@@ -1,3 +1,6 @@
+import type { ModName } from "@/components/ShortCut";
+import type { ShortcutDef } from "@/hooks/useShortcut";
+import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 import type {
   ChangeEvent,
   ElementType,
@@ -6,26 +9,25 @@ import type {
   Ref,
   RefObject,
 } from "react";
-import type { ModName } from "@/components/ShortCut";
-import type { ShortcutDef } from "@/hooks/useShortcut";
-import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 
 export interface FormInputProps<T> {
   options?: T[];
-  property: keyof T;
+  /** For code type, defines the height of the code editor */
+  codeHeight?: string;
+  property?: keyof T;
   rows?: number;
   placeholder?: string | ReactNode;
   inputClassName?: string;
   containerClassName?: string;
   className?: string;
-  value?: string | number | boolean;
+  value?: string | number | boolean | T;
   variant?: "fill" | "outline" | "ghost";
   onClick?: (e?: KissClickEvent) => void;
   Icon?: ElementType;
   shortcut?: ShortcutDef;
   name: string;
   label?: string | ReactNode;
-  onChange: (event: KissChangeEvent) => void;
+  onChange: (event: KissChangeEvent | KissChangeEvent<T>) => void;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   disabled?: boolean;
   type?:
@@ -41,7 +43,8 @@ export interface FormInputProps<T> {
     | "file"
     | "hidden"
     | "dropdown"
-    | "password";
+    | "password"
+    | "code";
   labelIn?: boolean;
   labelBg?: string;
   ref?: RefObject<HTMLInputElement | HTMLTextAreaElement | null>;
@@ -51,10 +54,10 @@ export interface FormInputProps<T> {
   StartChild?: ReactNode;
 }
 
-export interface InputTextProps {
+export interface InputTextProps<T = string> {
   placeholder?: string;
   className?: string;
-  value?: string;
+  value?: string | number | boolean | T;
   variant?: "fill" | "outline" | "ghost";
   onClick?: (e?: KissClickEvent) => void;
   Icon?: ElementType;
@@ -83,4 +86,32 @@ export interface InputTextAreaProps {
   disabled?: boolean;
   ref?: Ref<HTMLTextAreaElement | null>;
   rows?: number;
+}
+
+export interface FormDropdownProps<T> {
+  ref?: RefObject<HTMLDivElement | null>;
+  label?: string | ReactNode;
+  name?: string;
+  required?: boolean;
+  placeholder?: string | ReactNode;
+  className?: string;
+  property?: keyof T;
+  options?: T[];
+  value?: T;
+  disabled?: boolean;
+  onChange?: (e: KissChangeEvent<T>) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
+  onHover?: (hovered: boolean) => void;
+  onTap?: (tapped: boolean) => void;
+  open?: boolean;
+}
+
+export interface InputCodeProps {
+  value: string;
+  height?: string;
+  onChange: (e: KissChangeEvent) => void;
+  onFocus?: () => void;
+  onUnfocus?: () => void;
+  className?: string;
 }

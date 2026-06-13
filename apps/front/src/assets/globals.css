@@ -29,3 +29,27 @@
   /*--font-display: var(--font-gilroy), sans-serif;*/
   /*--default-font-family: var(--font-fira-code), monospace;*/
 }
+
+.cm-content,
+.cm-gutters {
+  line-height: 2;
+}
+
+.cm-gutters,
+.cm-gutters-before {
+  font-size: 16px;
+}
+
+.cm-gutters-before {
+  padding-right: 10px;
+}
+
+.cm-line {
+  border-radius: 8px;
+}
+
+.cm-foldGutter,
+.cm-lineNumbers {
+  /* padding-left: 8px; */
+  border-radius: 8px;
+}

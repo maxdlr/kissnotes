@@ -6,7 +6,7 @@ interface AuthContextProps {
   user?: UserModel;
   loading: boolean;
   refreshMe: KeyedMutator<UserModel | undefined>;
-  isAuthUser: (givenUser: Partial<UserModel>) => boolean;
+  isAuthUser: (givenUser?: Partial<UserModel>) => boolean;
   logIn: (credentials: {
     username: string;
     password: string;

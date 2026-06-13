@@ -10,7 +10,7 @@ import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 import UserHero from "@/components/UserHero";
 import useBrowse from "@/hooks/bread/useBrowse";
-import { getHandle } from "@/utils/userUtils";
+import { getHandle, getUsername } from "@/utils/userUtils";
 import Button from "@/components/Button";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import useAuth from "@/contexts/AuthContext/useAuth";
@@ -18,7 +18,7 @@ import useUser from "@/contexts/UserContext";
 
 const ProfilePage = () => {
   const { handle } = useParams();
-  const { user: authUser } = useAuth();
+  const { isAuthUser } = useAuth();
   const [filters, setFilters] = useState<SidebarValue>({
     tokens: [],
     search: "",
@@ -41,29 +41,33 @@ const ProfilePage = () => {
 
   useEffect(() => setExpressions(data as ExpressionModel[]), [data]);
 
+  const isAuth = isAuthUser(user) && user?.username === getUsername(handle);
+
   return (
     <div className="space-y-8">
       <UserHero />
-      {!expressionLoading && !expressions?.length ? (
+      {!expressionLoading && !expressions?.length && isAuth ? (
         <div className="w-full flex items-center justify-center">
           <Button
             label="Add an expression"
             Icon={PlusIcon}
             variant="outline"
-            href={`/exp/add`}
+            href={`/add`}
           />
         </div>
       ) : (
         <>
-          <div className="w-full flex items-center justify-center">
-            <Button
-              label="Add an expression"
-              Icon={PlusIcon}
-              variant="outline-accent"
-              href={`/exp/add`}
-              size="sm"
-            />
-          </div>
+          {isAuth && (
+            <div className="w-full flex items-center justify-center">
+              <Button
+                label="Add an expression"
+                Icon={PlusIcon}
+                variant="outline-accent"
+                href={`/add`}
+                size="sm"
+              />
+            </div>
+          )}
           <ExpressionList
             expressions={expressions}
             filters={filters}

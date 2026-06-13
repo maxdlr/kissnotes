@@ -7,8 +7,7 @@ import useAxios from "@/hooks/useAxios";
 import useToasts from "../ToastsContext";
 import AuthContext from "./AuthContext";
 
-// const isDev = process.env.NODE_ENV === "development";
-const isDev = false;
+const isDev = process.env.NODE_ENV === "development";
 
 const ME_RETRY_COUNT_KEY = "me_retry_count";
 const MAX_ME_RETRIES = 2;
@@ -89,7 +88,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     revalidateOnMount: true,
   } as SWRConfiguration<UserModel>);
 
-  const isAuthUser = (givenUser: Partial<UserModel>) => {
+  const isAuthUser = (givenUser?: Partial<UserModel>) => {
     if (!givenUser || !user) return false;
     const { username, id, email } = givenUser;
     return (

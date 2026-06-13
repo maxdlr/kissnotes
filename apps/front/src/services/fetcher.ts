@@ -8,7 +8,7 @@ const fetcher = async ({ url, params }: { url: string; params: Model }) => {
   try {
     if (!url) return null;
     const res = await axios.get(url, { params });
-    return res?.data?.data;
+    return res?.data;
   } catch (error) {
     const kissError: KissApiError = (error as AxiosError)?.response
       ?.data as KissApiError;

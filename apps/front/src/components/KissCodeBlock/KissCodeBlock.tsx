@@ -25,7 +25,7 @@ const KissCodeBlock = ({
 }: CodeBlockProps) => {
   const { code, property } = expression;
   const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
-  const text = code.lines.map((l) => l.content).join("\n");
+  const text = code?.lines.map((l) => l.content).join("\n") || "";
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -99,7 +99,7 @@ const KissCodeBlock = ({
     }
 
     setLoading(false);
-  }, [highlightedTokens]);
+  }, [highlightedTokens, tokenHighlightedCode, normalCode]);
 
   if (loading) return <Loading />;
 
@@ -109,10 +109,14 @@ const KissCodeBlock = ({
         className={`relative bg-code rounded-2xl overflow-hidden p-8 space-y-8 ${className}`}
       >
         <div className="sticky w-full">
-          <div className="flex justify-between items-start">
-            <p className="text-sm text-accent leading-tight">
-              {`${property.group}.${property.name}`}
-            </p>
+          <div
+            className={`flex ${property ? "justify-between" : "justify-end"} items-start`}
+          >
+            {property && (
+              <p className="text-sm text-accent leading-tight">
+                {`${property?.group || ""}${property?.name ? `.${property.name}` : ""}`}
+              </p>
+            )}
             {enableCopy && (
               <Button
                 Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}

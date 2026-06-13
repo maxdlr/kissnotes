@@ -38,19 +38,17 @@ const Collapsible = ({
   return (
     <>
       {headerChild && <div className="w-full">{headerChild}</div>}
-      <AnimatePresence initial={false}>
-        {!collapsed && (
-          <motion.div
-            key="content"
-            initial={{ gridTemplateRows: "0fr", opacity: 0 }}
-            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
-            exit={{ gridTemplateRows: "0fr", opacity: 0 }}
-            className={`grid overflow-hidden w-full`}
-          >
-            <div className={`min-h-0 ${className}`}>{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {!collapsed && (
+        <motion.div
+          key="content"
+          initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+          animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+          exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+          className={`grid overflow-hidden w-full`}
+        >
+          <div className={`min-h-0 ${className}`}>{children}</div>
+        </motion.div>
+      )}
     </>
   );
 };
