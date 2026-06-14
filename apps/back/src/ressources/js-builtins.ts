@@ -189,89 +189,10 @@ const jsBuiltins: Omit<NativeExpressionModel, "id">[] = [
 
   // ─────────────────────────────────────────────
   // CONTROL FLOW
+  // (Keywords are now handled by the parser's generic pass as "keyword" tokens.
+  //  Only the arrow function and spread operator remain here as they have
+  //  meaningful structural regex patterns.)
   // ─────────────────────────────────────────────
-  {
-    title: "var",
-    description:
-      "Declares a function-scoped (or globally-scoped) variable. In AE's JS expression engine, var is hoisted to the top of the expression scope. While still supported, prefer let or const in modern expressions for more predictable block scoping. Commonly seen in legacy expressions and tutorials that predate AE's switch to the V8 JS engine.",
-    regex:
-      "\\bvar\\s+(?<name>[a-zA-Z_$][\\w$]*)(?:\\s*=\\s*(?<init>[^;\\n]+))?",
-    arguments: ["name", "initialValue"].join(","),
-  },
-  {
-    title: "let",
-    description:
-      "Declares a block-scoped variable that can be reassigned. Available in AE's V8 JS engine (After Effects 16.0+). Unlike var, let is not hoisted and is scoped to the enclosing block — making it safer for use inside loops and conditionals. The preferred choice for mutable intermediate values in modern AE expressions.",
-    regex:
-      "\\blet\\s+(?<name>[a-zA-Z_$][\\w$]*)(?:\\s*=\\s*(?<init>[^;\\n]+))?",
-    arguments: ["name", "initialValue"].join(","),
-  },
-  {
-    title: "const",
-    description:
-      "Declares a block-scoped, read-only binding. The variable must be initialized at declaration and cannot be reassigned (though object/array contents can still be mutated). Available in AE's V8 JS engine. Use const for any value that won't change — it makes expressions easier to read and prevents accidental reassignment bugs.",
-    regex: "\\bconst\\s+(?<name>[a-zA-Z_$][\\w$]*)\\s*=\\s*(?<init>[^;\\n]+)",
-    arguments: ["name", "value"].join(","),
-  },
-  {
-    title: "if / else",
-    description:
-      "Standard JavaScript conditional branching. Evaluates a condition and executes the first block if true, the optional else block if false. Used extensively in AE expressions to create conditional animations — for example, returning a different value before vs. after a certain time, or switching between two states based on a slider control value. AE's JS engine requires standard JS syntax; the old ExtendScript shorthand is not supported.",
-    regex: "\\bif\\s*\\((?<condition>[^)]+)\\)\\s*\\{",
-    arguments: ["condition"].join(","),
-  },
-  {
-    title: "for",
-    description:
-      "Standard JavaScript for-loop. Executes a block of code a fixed number of times. In AE expressions, for loops are used to build cumulative sums, iterate over arrays of layer values, generate procedural patterns, or compute recursive-style calculations within a single expression evaluation. Keep loops short to avoid slow expression evaluation.",
-    regex:
-      "\\bfor\\s*\\((?<init>[^;]+);\\s*(?<condition>[^;]+);\\s*(?<update>[^)]+)\\)",
-    arguments: ["init", "condition", "update"].join(","),
-  },
-  {
-    title: "while",
-    description:
-      "Executes a block of code repeatedly as long as a condition is true. Less common in AE expressions than for loops but useful for convergence-based algorithms — for example, binary search over time to find when a value crosses a threshold, or iterative physics simulations. Be careful to always ensure the condition can become false to avoid infinite loops that freeze AE.",
-    regex: "\\bwhile\\s*\\((?<condition>[^)]+)\\)",
-    arguments: ["condition"].join(","),
-  },
-  {
-    title: "return",
-    description:
-      "Exits a function and optionally returns a value to the caller. In AE expressions, return is used inside helper functions defined within the expression. Note that the final evaluated value of the expression (not a top-level return) is what AE uses as the property value — return is only meaningful inside a function body.",
-    regex: "\\breturn\\b(?:\\s+(?<value>[^;\\n]+))?",
-    arguments: ["value"].join(","),
-  },
-  {
-    title: "function",
-    description:
-      "Declares a reusable named function within the expression. AE's JS engine fully supports function declarations and expressions. Defining helper functions inside a single AE expression is a common pattern for keeping complex logic readable — for example, a lerp() helper, a clamp utility, or a custom easing function called multiple times.",
-    regex:
-      "\\bfunction\\s+(?<name>[a-zA-Z_$][\\w$]*)\\s*\\((?<params>[^)]*)\\)\\s*\\{",
-    arguments: ["name", "params"].join(","),
-  },
-  {
-    title: "ternary operator",
-    description:
-      "A compact inline conditional: condition ? valueIfTrue : valueIfFalse. Returns one of two values depending on whether the condition is truthy. Extremely common in AE expressions for simple switches — e.g. time > 1 ? 100 : 0 sets opacity to 100 after 1 second. More concise than a full if/else block for single-value conditionals.",
-    regex:
-      "(?<condition>[^?\\n]+)\\?\\s*(?<ifTrue>[^:\\n]+):\\s*(?<ifFalse>[^;\\n]+)",
-    arguments: ["condition", "ifTrue", "ifFalse"].join(","),
-  },
-  {
-    title: "typeof",
-    description:
-      "Returns a string describing the type of a value: 'number', 'string', 'boolean', 'object', 'undefined', or 'function'. Used in defensive AE expressions to check whether a variable or property exists before using it, avoiding errors when an effect control or layer may not always be present.",
-    regex: "\\btypeof\\s+(?<value>[\\w$.\\[\\]]+)",
-    arguments: ["value"].join(","),
-  },
-  {
-    title: "try / catch",
-    description:
-      "Wraps code that might throw an error and catches any exception in the catch block. Useful in AE expressions that reference layer properties or markers that may not exist in all compositions — wrapping the risky access in try/catch prevents the entire expression from erroring out and allows a fallback value to be returned instead.",
-    regex: "\\btry\\s*\\{[^}]*\\}\\s*catch\\s*\\((?<error>[^)]+)\\)",
-    arguments: ["error"].join(","),
-  },
 
   // ─────────────────────────────────────────────
   // ARRAY METHODS
@@ -612,14 +533,6 @@ const jsBuiltins: Omit<NativeExpressionModel, "id">[] = [
       "Expands an iterable (array or string) into individual elements using the ... prefix. Available in AE's V8 JS engine. Useful for passing array elements as individual arguments — for example, Math.max(...myArray) to find the maximum in an array, or [...arr1, ...arr2] to concatenate arrays without .concat().",
     regex: "\\.\\.\\.(?<iterable>[\\w$.\\[\\]]+)",
     arguments: ["iterable"].join(","),
-  },
-  {
-    title: "destructuring assignment",
-    description:
-      "Extracts values from arrays or properties from objects into distinct variables in a single statement. Available in AE's V8 JS engine. Particularly clean for unpacking AE position arrays: const [x, y] = thisLayer.position; or for pulling named fields from a parsed JSON data object in a readable way.",
-    regex:
-      "(?:const|let|var)\\s+(?<pattern>\\[[^\\]]+\\]|\\{[^}]+\\})\\s*=\\s*(?<source>[^;\\n]+)",
-    arguments: ["pattern", "source"].join(","),
   },
 ];
 

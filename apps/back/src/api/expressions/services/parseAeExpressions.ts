@@ -24,6 +24,48 @@ const NOISE_TOKENS = new Set([
   "[]",
 ]);
 
+/** JS/TS keywords that should never appear as generic variable tokens. */
+const JS_KEYWORDS = new Set([
+  "const",
+  "let",
+  "var",
+  "function",
+  "if",
+  "else",
+  "for",
+  "while",
+  "do",
+  "return",
+  "switch",
+  "case",
+  "break",
+  "continue",
+  "new",
+  "typeof",
+  "instanceof",
+  "try",
+  "catch",
+  "finally",
+  "throw",
+  "class",
+  "extends",
+  "import",
+  "export",
+  "default",
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "this",
+  "of",
+  "in",
+  "void",
+  "delete",
+  "yield",
+  "await",
+  "async",
+]);
+
 /** Build a ~40-char context window centred on the match. */
 function buildLookingGlass(
   text: string,
@@ -131,6 +173,12 @@ export function parseAeExpression(
   const allTokens: ExpressionToken[] = [];
   const occupied = new RangeSet();
 
+  // Mark comment ranges as occupied so neither pass tokenizes inside them.
+  const commentRe = /\/\/[^\n]*|\/\*[\s\S]*?\*\//g;
+  for (const m of text.matchAll(commentRe)) {
+    occupied.add(m.index!, m.index! + m[0].length);
+  }
+
   // Single monotonic counter — every token AND every CallArgument gets a
   // unique id drawn from this sequence. No two objects in the output share
   // the same id.
@@ -234,6 +282,27 @@ export function parseAeExpression(
 
     if (NOISE_TOKENS.has(title) || /^\d+$/.test(title)) continue;
 
+    // Emit keywords as their own token with kind "keyword"
+    if (JS_KEYWORDS.has(title)) {
+      const identEnd = index + title.length;
+      if (occupied.overlaps(index, identEnd)) continue;
+      occupied.add(index, identEnd);
+      const { line, column } = indexToPosition(text, index);
+      allTokens.push({
+        id: nextId(),
+        label: title,
+        fullMatch: title,
+        title,
+        isNative: false,
+        kind: "keyword",
+        lookingGlass: buildLookingGlass(text, index, title.length),
+        index,
+        line,
+        column,
+      });
+      continue;
+    }
+
     // Check if the identifier itself is already claimed.
     const identEnd = index + title.length;
     if (occupied.overlaps(index, identEnd)) continue;
@@ -301,6 +370,7 @@ export function parseAeExpression(
       methods: allTokens.filter((t) => t.kind === "method"),
       properties: allTokens.filter((t) => t.kind === "property"),
       variables: allTokens.filter((t) => t.kind === "variable"),
+      keywords: allTokens.filter((t) => t.kind === "keyword"),
       unknown: allTokens.filter((t) => t.kind === "unknown"),
     },
   };
