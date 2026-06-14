@@ -38,6 +38,7 @@ const ExpressionList = ({
               className="place-self-end self-start block"
               shortcut={collapsed ? undefined : { keys: ["ctrl", "S"] }}
               onClick={() => setCollapsed((v) => !v)}
+              tooltip={{content: "Filters"}}
             />
             <AnimatePresence initial={false}>
               {!collapsed && (

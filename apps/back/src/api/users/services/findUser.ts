@@ -27,15 +27,18 @@ const findUser = async (
       .where(alias, value)
       .getOne();
   } else {
-    user = await UserRepository.findOneBy(
-      id
+    user = await UserRepository.findOne({
+      where: id
         ? { id: Number(id) }
         : username
           ? { username }
           : email
             ? { email }
             : {},
-    );
+      loadRelationIds: {
+        relations: ["saves"],
+      },
+    });
   }
 
   if (!user) {

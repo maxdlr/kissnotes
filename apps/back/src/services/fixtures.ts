@@ -10,6 +10,7 @@ import nativeExpressionContent from "../ressources/native-expressions";
 import { EntityManager } from "typeorm";
 import { parseAeExpression } from "@/api/expressions/services/parseAeExpressions";
 import { CodeModel } from "@kissnotes/types";
+import { SaveEntity } from "@/entities/SaveEntity";
 
 const randomElement = (array: any[]) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -197,6 +198,7 @@ const makeUsers = async (
 export const loadFixtures = async () => {
   return await ExpressionRepository.manager.transaction(async (manager) => {
     await manager.deleteAll(NativeExpressionEntity);
+    await manager.deleteAll(SaveEntity);
     await manager.deleteAll(ExpressionEntity);
     await manager.deleteAll(LayerEntity);
     await manager.deleteAll(PropertyEntity);
@@ -219,7 +221,9 @@ export const loadFixtures = async () => {
     const codes: CodeModel[] = Array.from({ length: 50 }).map(() => {
       const raw = randomElement(expressionCodes);
       return {
-        lines: raw.split("\n").map((content, i) => ({ number: i + 1, content })),
+        lines: raw
+          .split("\n")
+          .map((content: string, i: number) => ({ number: i + 1, content })),
       };
     });
 
@@ -238,7 +242,7 @@ export const loadFixtures = async () => {
         layer,
         property,
         code: codes[i],
-        symbols: parseAeExpression(codes[i], nativeExpressions),
+        symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
         createdAt: faker.date.past(),
       })),
     );

@@ -2,6 +2,16 @@ import type { ElementType } from "react";
 import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { KissClickEvent } from "@/types/form.types";
 import type { VariantDirection } from "./Button";
+import { TooltipProps } from "../Tooltip/interfaces";
+
+export type VariantType =
+  | "fill"
+  | "outline"
+  | "outline-accent"
+  | "ghost"
+  | "ghost-secondary"
+  | "fill-accent"
+  | "ghost-reveal";
 
 export interface ButtonProps {
   id?: string;
@@ -9,14 +19,7 @@ export interface ButtonProps {
   href?: string;
   className?: string;
   labelClassName?: string;
-  variant?:
-    | "fill"
-    | "outline"
-    | "outline-accent"
-    | "ghost"
-    | "ghost-secondary"
-    | "fill-accent"
-    | "ghost-reveal";
+  variant?: VariantType;
   onClick?: (e?: KissClickEvent) => void;
   type?: "button" | "reset" | "submit";
   Icon?: ElementType;
@@ -30,4 +33,7 @@ export interface ButtonProps {
   danger?: boolean;
   bare?: boolean;
   iconPosition?: "left" | "right";
+  tooltip?: TooltipProps;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
 }

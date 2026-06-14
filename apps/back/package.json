@@ -9,6 +9,8 @@
 		"start": "node dist/index.js",
 		"dev": "ts-node-dev --respawn --transpile-only --require tsconfig-paths/register index.ts",
 		"build": "tsc && tsc-alias && npm run copy:assets",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"typecheck": "tsc --noEmit --incremental",
 		"tsc": "tsc --noEmit",
 		"lint": "eslint .",
@@ -43,8 +45,9 @@
 		"globals": "^16.5.0",
 		"ts-node-dev": "^2.0.0",
 		"tsc-alias": "^1.8.10",
+		"typescript": "^5.5.4",
 		"typescript-eslint": "^8.46.4",
-		"typescript": "^5.5.4"
+		"vitest": "^3.2.6"
 	},
 	"_moduleAliases": {
 		"@": "dist/src/"

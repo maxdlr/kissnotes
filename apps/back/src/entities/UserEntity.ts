@@ -5,6 +5,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
 import SocialLinkEntity from "./SocialEntity";
+import SaveEntity from "./SaveEntity";
 
 @Entity({ name: "users" })
 export default class UserEntity extends AbstractEntity implements UserModel {
@@ -28,6 +29,9 @@ export default class UserEntity extends AbstractEntity implements UserModel {
 
   @OneToMany(() => SocialLinkEntity, (social) => social.user, { eager: true })
   socials!: SocialLinkEntity[];
+
+  @OneToMany(() => SaveEntity, (save) => save.user)
+  saves!: SaveEntity[];
 
   set password(value: string) {
     this._password = bcrypt.hashSync(value, 10);

@@ -45,15 +45,9 @@ const AddExpressionPage = () => {
     layerName: "",
     propertyGroup: undefined,
     propertyName: "",
-    codeBlock: `const something = simthingelse();
-let var = something.somethingElse();
-function otherthing(some) {
-  for (let i = 0; i <= var; i++) {
-    dostuff()
-  }
-}
-
-[y, x]`,
+    codeBlock: `const some = time * 1
+wiggle()
+linear()`,
     author: { id: user?.id },
     symbols: undefined,
   });
@@ -149,8 +143,6 @@ function otherthing(some) {
     !!formData.codeBlock.length &&
     !!formData.author?.id;
 
-  console.log({ canSubmit, formData });
-
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
       <h1 className="text-4xl flex justify-center items-baseline gap-4 pb-8 font-extrabold">
@@ -184,6 +176,7 @@ function otherthing(some) {
               className="w-full"
               variant="outline-accent"
               disabled={!canSubmit}
+              tooltip={{ content: "Save as draft and carry on later" }}
             />
           </div>
           <FormInput
@@ -243,7 +236,7 @@ function otherthing(some) {
           />
         </FormWrapper.Layout>
 
-        <FormWrapper.Layout className="col-span-2">
+        <FormWrapper.Layout className="col-span-2 space-y-8">
           <FormInput
             type="code"
             name="codeBlock"
@@ -252,8 +245,7 @@ function otherthing(some) {
             value={formData?.codeBlock}
             placeholder="Your code... "
           />
-          {/* TODO: tokens don't update */}
-          <div className="max-md:hidden pt-4 sm:pt-8">
+          <div className="max-md:hidden pt-4 sm:pt-8 border border-accent p-2 sm:p-6 rounded-3xl">
             <ExpressionDetailsContent
               expression={tempExpressionMemo as ExpressionModel}
             />

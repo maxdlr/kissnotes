@@ -2,39 +2,57 @@ import Button from "@/components/Button";
 import KissCodeBlock from "@/components/KissCodeBlock";
 import LayerMockup from "@/components/LayerMockup";
 import Pill from "@/components/Pill";
+import Tooltip from "@/components/Tooltip";
 import UserHandle from "@/components/UserHandle";
 import useExpressions from "@/hooks/useExpressions";
 import {
   EyeIcon,
-  QuestionMarkCircleIcon,
+  BookmarkIcon as OutlineBookmark,
   ShareIcon,
 } from "@heroicons/react/24/outline";
-import { ExpressionModel } from "@kissnotes/types";
+import { BookmarkIcon as SolidBookmark } from "@heroicons/react/24/solid";
+import {
+  ExpressionModel,
+  ExpressionToken,
+  Id,
+  UserModel,
+} from "@kissnotes/types";
 import { useState } from "react";
 
 export interface ExpressionDetailsContentProps {
   expression: ExpressionModel;
+  onSave?: () => void;
+  user?: UserModel;
 }
 
 const ExpressionDetailsContent = ({
   expression,
+  onSave,
+  user,
 }: ExpressionDetailsContentProps) => {
-  const { tokens } = useExpressions(expression || []);
+  const { getTokens } = useExpressions(expression || []);
 
-  // const tokens = getTokens(["variables"]);
+  const tokens = getTokens(["properties", "methods", "functions"]);
   const [highlightedTokens, setHighlightedTokens] = useState<string[]>([]);
+  const [hoveredToken, setHoveredToken] = useState<ExpressionToken>();
 
   const handleHighlightToken = (token: string) => {
     if (highlightedTokens.includes(token)) {
       setHighlightedTokens((prev) => prev.filter((t) => t !== token));
-      return;
-    }
-    if (token) {
+    } else {
       setHighlightedTokens((prev) => [...prev, token]);
     }
   };
 
-  console.log({ expression });
+  const handleHoverStart = (token: ExpressionToken) => {
+    setHoveredToken(token);
+  };
+
+  const handleHoverEnd = () => {
+    setHoveredToken(undefined);
+  };
+
+  console.log({ views: expression.views });
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
@@ -45,19 +63,21 @@ const ExpressionDetailsContent = ({
           {expression.author && (
             <UserHandle username={expression.author.username} />
           )}
-          {(!!expression.views || !!expression.shares) && (
-            <span className="text-secondary">•</span>
-          )}
-          {!!expression.views && (
-            <Button variant="ghost" Icon={EyeIcon} label={expression.views} />
-          )}
-          {!!expression.shares && (
-            <Button
-              variant="ghost"
-              Icon={ShareIcon}
-              label={expression.shares}
-            />
-          )}
+          <span className="text-secondary">•</span>
+          <Button variant="ghost" Icon={EyeIcon} label={expression.views} />
+          <Button variant="ghost" Icon={ShareIcon} label={expression.shares} />
+          <Button
+            variant="ghost"
+            Icon={
+              !user
+                ? OutlineBookmark
+                : (user.saves as Id[]).includes(expression.id) //TODO: saveId vs expressionId
+                  ? SolidBookmark
+                  : OutlineBookmark
+            }
+            label={String(expression.saves)}
+            onClick={onSave}
+          />
         </div>
       )}
 
@@ -78,23 +98,26 @@ const ExpressionDetailsContent = ({
           <div className="flex flex-wrap justify-start items-center gap-2">
             <div className="flex gap-2">
               <h3 className="text-lg font-semibold text-accent">Tokens</h3>
-              <Button variant="ghost" Icon={QuestionMarkCircleIcon} size="sm" />
+              <Tooltip content="Tokens" />
             </div>
             {!!tokens.length && <span className="text-secondary px-2">•</span>}
             {tokens.map((t) => (
               <Button
+                onHoverStart={() => handleHoverStart(t)}
+                onHoverEnd={handleHoverEnd}
+                tooltip={{ content: t.description || "", showDelay: 500 }}
                 key={t.id}
                 variant="ghost"
                 label={
                   <Pill
-                    label={t.title}
-                    className={`hover:text-white hover:border-emphasis/80 ${highlightedTokens.includes(t.label) ? "border-emphasis text-emphasis" : ""}`}
+                    label={t.label}
+                    className={`hover:text-white hover:border-emphasis/80 ${highlightedTokens.includes(t.title) ? "border-emphasis text-emphasis" : ""}`}
                   />
                 }
                 className={`text-secondary! ${
-                  highlightedTokens.includes(t.label) ? "bg-accent" : ""
+                  highlightedTokens.includes(t.title) ? "bg-accent" : ""
                 }`}
-                onClick={() => handleHighlightToken(t.label)}
+                onClick={() => handleHighlightToken(t.title)}
               />
             ))}
           </div>
@@ -106,6 +129,7 @@ const ExpressionDetailsContent = ({
         enableLineCopy
         expression={expression}
         highlightedTokens={highlightedTokens}
+        highlightedLines={hoveredToken?.line}
         className="col-span-1 md:col-span-full"
       />
 

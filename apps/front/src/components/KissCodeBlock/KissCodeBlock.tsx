@@ -3,108 +3,63 @@
 import { ClipboardIcon as ClipboardIconOutline } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import type { ExpressionModel } from "@kissnotes/types";
-import { type ReactElement, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { CodeBlock } from "react-code-block";
 import Button from "@/components/Button";
-import Loading from "@/components/Loading";
 import KissLineContent from "./components/KissLineContent";
 
 interface CodeBlockProps {
   expression: ExpressionModel;
   className?: string;
-  highlightedTokens: string[];
+  highlightedTokens?: string[];
+  highlightedLines?: number | number[];
   enableCopy?: boolean;
   enableLineCopy?: boolean;
 }
+
+type HighlightMode = "tokens" | "lines" | "none";
+
 const KissCodeBlock = ({
   expression,
-  className,
-  highlightedTokens,
+  className = "",
+  highlightedTokens = [],
+  highlightedLines,
   enableCopy = false,
   enableLineCopy = false,
 }: CodeBlockProps) => {
   const { code, property } = expression;
-  const [tokens, setTokens] = useState<string[]>(highlightedTokens || []);
   const text = code?.lines.map((l) => l.content).join("\n") || "";
-  const [loading, setLoading] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    setCopied((v) => !v);
-    setTimeout(() => setCopied((v) => !v), 1000);
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
   };
 
-  const lineMatches: string[] = [];
-
-  const tokenHighlightedCode: ReactElement = (
-    <CodeBlock.Code>
-      <KissLineContent interactive={enableLineCopy}>
-        <CodeBlock.Token>
-          {({ isTokenHighlighted, children }) => (
-            <span
-              className={
-                isTokenHighlighted
-                  ? "bg-emphasis/20 text-emphasis rounded-md px-1 py-0.5"
-                  : ""
-              }
-            >
-              {children}
-            </span>
-          )}
-        </CodeBlock.Token>
-      </KissLineContent>
-    </CodeBlock.Code>
+  const lines = useMemo(
+    () =>
+      highlightedLines == null
+        ? []
+        : Array.isArray(highlightedLines)
+          ? highlightedLines
+          : [highlightedLines],
+    [highlightedLines],
   );
 
-  const lineHighlightedCode: ReactElement = (
-    <CodeBlock.Code>
-      {({ isLineHighlighted }) => (
-        <KissLineContent
-          interactive={enableLineCopy}
-          className={isLineHighlighted ? "bg-violet-500/30" : "opacity-60"}
-          lineNumberClassName={
-            isLineHighlighted ? "text-gray-300" : "text-gray-500"
-          }
-        >
-          <CodeBlock.Token />
-        </KissLineContent>
-      )}
-    </CodeBlock.Code>
-  );
-
-  const normalCode: ReactElement = (
-    <CodeBlock.Code>
-      <KissLineContent interactive={enableLineCopy}>
-        <CodeBlock.Token />
-      </KissLineContent>
-    </CodeBlock.Code>
-  );
-
-  const [codeBlock, setCodeBlock] = useState<ReactElement | undefined>(
-    normalCode,
-  );
-
-  useEffect(() => {
-    if (!highlightedTokens?.length) {
-      setCodeBlock(normalCode);
-      setLoading(false);
-      return;
-    }
-
-    if (highlightedTokens?.length) {
-      setTokens(highlightedTokens);
-      setCodeBlock(tokenHighlightedCode);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(false);
-  }, [highlightedTokens, tokenHighlightedCode, normalCode]);
-
-  if (loading) return <Loading />;
+  const mode: HighlightMode = useMemo(() => {
+    if (highlightedTokens.length > 0) return "tokens";
+    if (lines.length > 0) return "lines";
+    return "none";
+  }, [highlightedTokens, lines]);
 
   return (
-    <CodeBlock code={text} language="js" words={tokens} lines={lineMatches}>
+    <CodeBlock
+      code={text}
+      language="js"
+      words={mode === "tokens" ? highlightedTokens : []}
+      lines={mode === "lines" ? lines : []}
+    >
       <div
         className={`relative bg-code rounded-2xl overflow-hidden p-8 space-y-8 ${className}`}
       >
@@ -128,7 +83,43 @@ const KissCodeBlock = ({
             )}
           </div>
         </div>
-        <div className="overflow-x-auto w-full relative">{codeBlock}</div>
+        <div className="overflow-x-auto w-full relative">
+          <CodeBlock.Code>
+            {({ isLineHighlighted }) => (
+              <KissLineContent
+                interactive={enableLineCopy}
+                className={
+                  mode === "lines"
+                    ? isLineHighlighted
+                      ? "bg-accent/30 rounded-2xl"
+                      : "opacity-90"
+                    : ""
+                }
+                lineNumberClassName={
+                  mode === "lines"
+                    ? isLineHighlighted
+                      ? "text-gray-300"
+                      : "text-gray-500"
+                    : ""
+                }
+              >
+                <CodeBlock.Token>
+                  {({ isTokenHighlighted, children }) => (
+                    <span
+                      className={
+                        mode === "tokens" && isTokenHighlighted
+                          ? "bg-emphasis/20 text-emphasis rounded-md px-1 py-0.5"
+                          : ""
+                      }
+                    >
+                      {children}
+                    </span>
+                  )}
+                </CodeBlock.Token>
+              </KissLineContent>
+            )}
+          </CodeBlock.Code>
+        </div>
       </div>
     </CodeBlock>
   );

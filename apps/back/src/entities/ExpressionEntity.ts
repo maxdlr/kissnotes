@@ -3,11 +3,12 @@ import type {
   ExpressionModel,
   ExpressionSymbol,
 } from "@kissnotes/types";
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import LayerEntity from "./LayerEntity";
 import PropertyEntity from "./PropertyEntity";
 import UserEntity from "./UserEntity";
+import SaveEntity from "./SaveEntity";
 
 @Entity({ name: "expressions" })
 export default class ExpressionEntity
@@ -47,4 +48,16 @@ export default class ExpressionEntity
 
   @Column({ type: "json" })
   symbols?: ExpressionSymbol;
+
+  @Column({ nullable: false, default: 1 })
+  views!: number;
+
+  @Column({ nullable: false, default: 0 })
+  shares!: number;
+
+  @Column({ nullable: false, default: false })
+  published!: boolean;
+
+  @OneToMany(() => SaveEntity, (save) => save.expression)
+  saves!: SaveEntity[];
 }

@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 import Shortcut from "@/components/ShortCut";
 import type { KissClickEvent } from "@/types/form.types";
-import type { ButtonProps } from "./interfaces";
+import type { ButtonProps, VariantType } from "./interfaces";
+import Tooltip from "../Tooltip";
 
 type VariantSet = {
   initial: object;
@@ -167,6 +168,7 @@ const Button = ({
   Icon,
   HoverIcon,
   shortcut,
+  tooltip,
   size = "md",
   animDirection,
   hoverUp = false,
@@ -175,6 +177,8 @@ const Button = ({
   danger = false,
   labelClassName = "",
   iconPosition = "left",
+  onHoverStart,
+  onHoverEnd,
 }: ButtonProps) => {
   const router = useRouter();
 
@@ -213,13 +217,14 @@ const Button = ({
 
   const disabledClass = `${disabled ? "cursor-not-allowed! opacity-50!" : ""} ${loading ? "cursor-wait! opacity-75! border-emphasis!" : ""}`;
 
-  const variantStyles = {
+  const variantStyles: Record<VariantType, string> = {
     "fill-accent": "border border-accent bg-accent/20",
     fill: "bg-secondary/20 border border-secondary",
     outline: "border border-secondary",
     "outline-accent": "border border-accent",
     ghost: "p-0!",
     "ghost-reveal": "px-2!",
+    "ghost-secondary": "",
   };
 
   const safeId =
@@ -283,8 +288,10 @@ const Button = ({
 
   const ButtonEl = href ? MotionLink : motion.button;
 
-  return (
+  const ButtonRender = (
     <ButtonEl
+      onHoverEnd={onHoverEnd}
+      onHoverStart={onHoverStart}
       initial={motionProps.initial}
       animate={animateWithResting}
       exit={motionProps.exit}
@@ -310,6 +317,12 @@ const Button = ({
     >
       {content}
     </ButtonEl>
+  );
+
+  return tooltip && !disabled ? (
+    <Tooltip {...tooltip}>{ButtonRender}</Tooltip>
+  ) : (
+    ButtonRender
   );
 };
 

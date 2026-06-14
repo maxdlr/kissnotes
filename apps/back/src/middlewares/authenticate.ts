@@ -41,12 +41,14 @@ const authenticate = async (
     return next(Unauthorized());
   }
 
-  const { id, username, email } = user;
-  req.user = {
-    id,
-    username,
-    email,
-  };
+  req.user = user;
+
+  // const { id, username, email } = user;
+  // req.user = {
+  //   id,
+  //   username,
+  //   email,
+  // };
 
   return next();
 };

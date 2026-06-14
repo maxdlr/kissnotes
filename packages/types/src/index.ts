@@ -3,6 +3,7 @@ export type TokenKind =
   | "method"
   | "property"
   | "variable"
+  | "keyword"
   | "unknown";
 
 export interface CallArgument {
@@ -55,6 +56,7 @@ export interface ExpressionSymbol {
     methods: ExpressionToken[];
     properties: ExpressionToken[];
     variables: ExpressionToken[];
+    keywords: ExpressionToken[];
     unknown: ExpressionToken[];
   };
 }
@@ -103,6 +105,15 @@ export interface ExpressionModel extends Model {
   author: UserModel;
   code: CodeModel;
   symbols?: ExpressionSymbol;
+  views?: number;
+  shares?: number;
+  published?: boolean;
+  saves?: number | SaveModel[];
+}
+
+export interface SaveModel extends Model {
+  user: UserModel;
+  expression: ExpressionModel;
 }
 
 export interface AuthId {
@@ -139,10 +150,11 @@ export interface SocialLinkModel {
 export interface UserModel extends Model {
   email: string;
   username: string;
-  password: string;
+  // password: string;
   description?: string;
   expressions: ExpressionModel[];
   socials: SocialLinkModel[];
+  saves?: Id[] | SaveModel[];
 }
 
 export interface LayerModel extends Model {
