@@ -8,11 +8,17 @@ import useAxios from "@/hooks/useAxios";
 import useDebounce from "@/hooks/useDebounce";
 import type { KissChangeEvent } from "@/types/form.types";
 import { toCodeModel } from "@/utils/codeUtils";
+import { asTitle } from "@/utils/stringUtils";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import {
   ExpressionModel,
   ExpressionSymbol,
   KissDeepPartial,
+  LayerEnums,
+  LayerModel,
+  LayerTypeEnum,
+  PropertyGroupEnum,
+  PropertyModel,
   UserModel,
 } from "@kissnotes/types";
 import { useEffect, useMemo, useState } from "react";
@@ -20,10 +26,10 @@ import { useEffect, useMemo, useState } from "react";
 type AddExpressionFormData = {
   title: string;
   description: string;
-  layerType?: { name: string; value: string };
-  layerName: string;
-  propertyGroup?: { name: string; value: string };
-  propertyName: string;
+  layer?: LayerModel;
+  // layerName: string;
+  property?: PropertyModel;
+  // propertyName: string;
   codeBlock: string;
   author?: UserModel;
   symbols?: ExpressionSymbol;
@@ -38,17 +44,16 @@ const AddExpressionPage = () => {
   );
 
   const [generatedSymbols, setGeneratedSymbols] = useState<ExpressionSymbol>();
+
   const [formData, setFormData] = useState<AddExpressionFormData>({
-    title: "",
-    description: "",
-    layerType: undefined,
-    layerName: "",
-    propertyGroup: undefined,
-    propertyName: "",
+    title: "My new expression",
+    description: "The description",
+    layer: { name: "the solid", type: LayerTypeEnum.Solid },
+    property: { name: "position", group: PropertyGroupEnum.Transform },
     codeBlock: `const some = time * 1
 wiggle()
 linear()`,
-    author: { id: user?.id },
+    author: undefined,
     symbols: undefined,
   });
 
@@ -70,13 +75,26 @@ linear()`,
 
   const handleOnChange = (e: KissChangeEvent<unknown>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => {
-      const updated = {
-        ...prev,
-        [name]: value,
-      };
-      return updated;
+      if (name.includes(".")) {
+        const [parent, child] = name.split(".");
+        return {
+          ...prev,
+          [parent]: {
+            ...(prev[parent as keyof AddExpressionFormData] as object),
+            [child]: value,
+          },
+        };
+      }
+      return { ...prev, [name]: value };
     });
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        author: user,
+      }));
+    }
   };
 
   const handleOnSubmit = async (publish: boolean = true) => {
@@ -97,17 +115,14 @@ linear()`,
     console.log(data);
   };
 
-  const layerTypeOptions = [
-    { name: "solid", value: "Solid" },
-    { name: "shape-layer", value: "Shape layer" },
-    { name: "null", value: "Null" },
-    { name: "text", value: "Text layer" },
-    { name: "adjustment-layer", value: "Adjustment layer" },
-    { name: "precomp", value: "Pre-comp" },
-    { name: "any", value: "Any layer" },
-  ];
-
-  const propertyGroupOptions = [{ name: "transform", value: "Transform" }];
+  const layerTypeOptions = Object.values(LayerEnums).map((l) => ({
+    name: l.name,
+    type: l.type,
+  }));
+  const propertyGroupOptions = Object.values(PropertyGroupEnum).map((p) => ({
+    name: p,
+    group: p,
+  }));
 
   const separator = (
     <div className="h-px w-full sm:hidden md:block bg-accent/20" />
@@ -117,31 +132,28 @@ linear()`,
     const temp = {
       title: formData.title,
       description: formData.description,
-      layer: {
-        type: formData.layerType?.name,
-        name: formData.layerName,
-      },
-      property: {
-        group: formData.propertyGroup?.name,
-        name: formData.propertyName,
-      },
-      author: {
-        username: user?.username,
-      },
+      layer: formData.layer,
+      property: formData.property,
+      author: user,
       symbols: generatedSymbols,
       code: toCodeModel(formData.codeBlock),
+      saves: 0,
+      views: 0,
+      shares: 0,
     };
     return temp;
   }, [formData, generatedSymbols, user]);
 
   const canSubmit: boolean =
     !!formData.title &&
-    !!formData.layerType &&
-    !!formData.layerName &&
-    !!formData.propertyGroup &&
-    !!formData.propertyName &&
+    !!formData.layer?.name &&
+    !!formData.layer.type &&
+    !!formData.property?.name &&
+    !!formData.property.group &&
     !!formData.codeBlock.length &&
     !!formData.author?.id;
+
+  console.log({ formData });
 
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
@@ -190,38 +202,52 @@ linear()`,
 
           <FormWrapper.Layout className="col-span-2 md:col-span-1 shrink-0 flex flex-col gap-4 sm:gap-6 items-start justify-start">
             {separator}
-            <FormInput<{ name: string; value: string }>
-              name="layerType"
+            <FormInput<LayerModel>
+              name="layer.type"
               type="dropdown"
               label="Type of the layer"
               options={layerTypeOptions}
-              onChange={handleOnChange}
-              value={formData.layerType}
-              property="value"
+              onChange={(e) =>
+                handleOnChange({
+                  target: {
+                    name: "layer.type",
+                    value: (e.target.value as LayerModel).type,
+                  },
+                })
+              }
+              value={layerTypeOptions.find((o) => o.type === formData.layer?.type)}
+              property="type"
             />
             <FormInput
-              name="layerName"
+              name="layer.name"
               onChange={handleOnChange}
-              value={formData?.layerName}
+              value={formData?.layer?.name}
               placeholder="Name of the layer"
             />
           </FormWrapper.Layout>
 
           <FormWrapper.Layout className="col-span-2 md:col-span-1 shrink-0 flex flex-col gap-4 sm:gap-6 items-start justify-start">
             {separator}
-            <FormInput<{ name: string; value: string }>
-              name="propertyGroup"
+            <FormInput<PropertyModel>
+              name="property.group"
               type="dropdown"
               label="Group of the property"
               options={propertyGroupOptions}
-              onChange={handleOnChange}
-              value={formData.propertyGroup}
-              property="name"
+              onChange={(e) =>
+                handleOnChange({
+                  target: {
+                    name: "property.group",
+                    value: (e.target.value as PropertyModel).group,
+                  },
+                })
+              }
+              value={propertyGroupOptions.find((o) => o.group === formData.property?.group)}
+              property="group"
             />
             <FormInput
-              name="propertyName"
+              name="property.name"
               onChange={handleOnChange}
-              value={formData?.propertyName}
+              value={formData?.property?.name}
               placeholder="Name of the property"
             />
           </FormWrapper.Layout>

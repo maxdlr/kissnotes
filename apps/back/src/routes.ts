@@ -1,6 +1,5 @@
 import { Router } from "express";
 import expressionRoutes from "./api/expressions/routes/index";
-import layerRoutes from "./api/layers/routes/index";
 import nativeExpressionRoutes from "./api/native-expressions/routes/index";
 import userRoutes from "./api/users/routes/index";
 import socialLinkRoutes from "./api/socials/routes/index";
@@ -24,6 +23,5 @@ router.use("/expressions", expressionRoutes);
 router.use("/native-expressions", nativeExpressionRoutes);
 router.use("/users", userRoutes);
 router.use("/social-links", socialLinkRoutes);
-router.use("/layers", layerRoutes);
 
 export default router;

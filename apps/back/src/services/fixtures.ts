@@ -1,7 +1,5 @@
 import ExpressionEntity from "@/entities/ExpressionEntity";
-import LayerEntity from "@/entities/LayerEntity";
 import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
-import PropertyEntity from "@/entities/PropertyEntity";
 import UserEntity from "@/entities/UserEntity";
 import ExpressionRepository from "@/repositories/ExpressionRepository";
 import jsBuiltins from "@/ressources/js-builtins";
@@ -10,7 +8,7 @@ import nativeExpressionContent from "../ressources/native-expressions";
 import { EntityManager } from "typeorm";
 import { parseAeExpression } from "@/api/expressions/services/parseAeExpressions";
 import { CodeModel } from "@kissnotes/types";
-import { SaveEntity } from "@/entities/SaveEntity";
+import SaveEntity from "@/entities/SaveEntity";
 
 const randomElement = (array: any[]) => {
   return array[Math.floor(Math.random() * array.length)];
@@ -200,8 +198,6 @@ export const loadFixtures = async () => {
     await manager.deleteAll(NativeExpressionEntity);
     await manager.deleteAll(SaveEntity);
     await manager.deleteAll(ExpressionEntity);
-    await manager.deleteAll(LayerEntity);
-    await manager.deleteAll(PropertyEntity);
     await manager.deleteAll(UserEntity);
 
     const nativeExpressions = await manager.save(NativeExpressionEntity, [
@@ -209,14 +205,8 @@ export const loadFixtures = async () => {
       ...jsBuiltins,
     ]);
 
-    const layer = await manager.save(LayerEntity, {
-      name: "my solid",
-      type: "solid",
-    });
-    const property = await manager.save(PropertyEntity, {
-      name: "position",
-      group: "transform",
-    });
+    const layer = { name: "my solid", type: "solid" };
+    const property = { name: "position", group: "transform" };
 
     const codes: CodeModel[] = Array.from({ length: 50 }).map(() => {
       const raw = randomElement(expressionCodes);

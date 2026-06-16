@@ -1,3 +1,5 @@
+import { LayerTypeEnum, SocialType } from "./enums";
+
 export type TokenKind =
   | "function"
   | "method"
@@ -122,25 +124,6 @@ export interface AuthId {
   token: string;
 }
 
-export enum SocialType {
-  X = "x",
-  Instagram = "instagram",
-  Facebook = "facebook",
-  Linkedin = "linkedin",
-  Discord = "discord",
-  Dribbble = "dribbble",
-  Behance = "behance",
-  Signal = "signal",
-  Snap = "snap",
-  Telegram = "telegram",
-  Tiktok = "tiktok",
-  Pinterest = "pinterest",
-  Reddit = "reddit",
-  Twitch = "twitch",
-  Youtube = "youtube",
-  Github = "github",
-}
-
 export interface SocialLinkModel {
   name: SocialType;
   url: string;
@@ -157,12 +140,12 @@ export interface UserModel extends Model {
   saves?: Id[] | SaveModel[];
 }
 
-export interface LayerModel extends Model {
-  type: string;
+export interface LayerModel {
+  type: LayerTypeEnum;
   name: string;
 }
 
-export interface PropertyModel extends Model {
+export interface PropertyModel {
   group: string;
   name: string;
 }
@@ -201,3 +184,7 @@ export interface KissResponseError {
 export type KissDeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? KissDeepPartial<T[P]> : T[P];
 };
+
+// --------------------------------------------------
+
+export * from "./enums";

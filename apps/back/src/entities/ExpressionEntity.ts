@@ -2,11 +2,11 @@ import type {
   CodeModel,
   ExpressionModel,
   ExpressionSymbol,
+  LayerModel,
+  PropertyModel,
 } from "@kissnotes/types";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
-import LayerEntity from "./LayerEntity";
-import PropertyEntity from "./PropertyEntity";
 import UserEntity from "./UserEntity";
 import SaveEntity from "./SaveEntity";
 
@@ -30,21 +30,11 @@ export default class ExpressionEntity
   @Column({ type: "json" })
   code!: CodeModel;
 
-  @ManyToOne(() => LayerEntity, (layer: PropertyEntity) => layer.expressions, {
-    nullable: false,
-    eager: true,
-  })
-  layer!: LayerEntity;
+  @Column({ type: "json" })
+  layer!: LayerModel;
 
-  @ManyToOne(
-    () => PropertyEntity,
-    (property: PropertyEntity) => property.expressions,
-    {
-      nullable: false,
-      eager: true,
-    },
-  )
-  property!: PropertyEntity;
+  @Column({ type: "json" })
+  property!: PropertyModel;
 
   @Column({ type: "json" })
   symbols?: ExpressionSymbol;
