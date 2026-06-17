@@ -63,7 +63,6 @@ const Modal = ({
 
   const handleClose = useCallback(
     (e?: KissClickEvent) => {
-      console.log("close");
       e?.stopPropagation();
       if (isPersistent) return;
       setIsOpen(false);
@@ -75,12 +74,10 @@ const Modal = ({
   const handleExitComplete = useCallback(() => {
     if (!document) return;
     document.body.style.cssText = "";
-    console.log("complete");
   }, []);
 
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent) => {
-      console.log("overlay close");
       if (!closeOnOverlay) return;
       if (e.target === e.currentTarget) handleClose();
     },

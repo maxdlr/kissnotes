@@ -3,10 +3,6 @@ import { useEffect, useState } from "react";
 const useHover = (ref: React.RefObject<HTMLElement | null>) => {
   const [isHovering, setIsHovering] = useState(false);
 
-  // useEffect(() => {
-  //   console.log(isHovering);
-  // }, [isHovering]);
-
   useEffect(() => {
     if (!ref) {
       return;

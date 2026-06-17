@@ -33,7 +33,6 @@ export const UserProvider = ({ children, handle }: UserProviderProps) => {
   const { addToast } = useToasts();
 
   useEffect(() => {
-    console.log({ user, error });
     if (error) {
       addToast({
         type: "error",

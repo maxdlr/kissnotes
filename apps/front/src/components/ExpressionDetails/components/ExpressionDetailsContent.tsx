@@ -52,9 +52,6 @@ const ExpressionDetailsContent = ({
     setHoveredToken(undefined);
   };
 
-  console.log({ views: expression.views });
-  console.log(user?.saves);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       {(!!expression.author?.username ||
