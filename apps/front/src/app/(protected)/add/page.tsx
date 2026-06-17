@@ -98,8 +98,7 @@ linear()`,
   };
 
   const handleOnSubmit = async (publish: boolean = true) => {
-    console.log(formData);
-    const { data, error } = await postExpression({
+    const { error } = await postExpression({
       expression: {
         ...formData,
         code: toCodeModel(formData.codeBlock),
@@ -111,8 +110,6 @@ linear()`,
       console.error(error);
       return;
     }
-
-    console.log(data);
   };
 
   const layerTypeOptions = Object.values(LayerEnums).map((l) => ({
@@ -152,8 +149,6 @@ linear()`,
     !!formData.property.group &&
     !!formData.codeBlock.length &&
     !!formData.author?.id;
-
-  console.log({ formData });
 
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
@@ -215,7 +210,9 @@ linear()`,
                   },
                 })
               }
-              value={layerTypeOptions.find((o) => o.type === formData.layer?.type)}
+              value={layerTypeOptions.find(
+                (o) => o.type === formData.layer?.type,
+              )}
               property="type"
             />
             <FormInput
@@ -241,7 +238,9 @@ linear()`,
                   },
                 })
               }
-              value={propertyGroupOptions.find((o) => o.group === formData.property?.group)}
+              value={propertyGroupOptions.find(
+                (o) => o.group === formData.property?.group,
+              )}
               property="group"
             />
             <FormInput
