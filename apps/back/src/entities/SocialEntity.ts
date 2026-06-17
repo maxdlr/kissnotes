@@ -17,12 +17,6 @@ export default class SocialLinkEntity
   @IsUrl({}, {
     message: "It doesn't look like a valid Url",
   } as ValidationOptions)
-  // @IsNotEmpty({
-  //   message: ({ object, property }) => {
-  //     console.log("Validation error for object:", object, property);
-  //     return "Required";
-  //   },
-  // } as ValidationOptions)
   url!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.socials, {
