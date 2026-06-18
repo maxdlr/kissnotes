@@ -8,16 +8,16 @@ import registerGlobals from "@/services/registerGlobals";
 registerGlobals();
 
 import routes from "@/routes";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import express, { NextFunction, Request, Response } from "express";
 import setCors from "@/services/cors";
 import { AppDataSource } from "@/services/database/datasource";
+import { loadFixtures } from "@/services/fixtures";
 import { requestLogger } from "@/services/requestLogger";
 import serviceErrorHandler from "@/services/serviceErrorHandlers";
 import wrapRoutesHandlers from "@/services/wrapRoutesHandlers";
 import printStartupInfo from "@/utils/printStartupInfo";
-import { loadFixtures } from "@/services/fixtures";
+import cookieParser from "cookie-parser";
+import express from "express";
+import parseQuery from "@/middlewares/parseQuery";
 
 /**
  * ======================
@@ -55,27 +55,11 @@ app.use(express.urlencoded({ extended: true }));
 
 /**
  * ======================
- * BodyParser
+ * QueryParser
  * ======================
  */
-const customBodyParser = (req: Request, res: Response, next: NextFunction) => {
-  const url = req.originalUrl;
-  let limit = "250kb"; // default limit
 
-  // set custom limit based on URL
-  if (url.includes("/signed-liquidation/") || url.includes("/liquidations/")) {
-    limit = "25mb";
-  }
-
-  if (url.includes("/dsns")) {
-    limit = "25mb";
-  }
-
-  // use body-parser with custom limit
-  bodyParser.json({ limit })(req, res, next);
-};
-
-app.use(customBodyParser);
+app.use(parseQuery);
 
 /**
  * ======================

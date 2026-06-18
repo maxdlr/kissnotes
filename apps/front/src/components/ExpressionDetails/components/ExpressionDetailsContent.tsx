@@ -4,6 +4,7 @@ import LayerMockup from "@/components/LayerMockup";
 import Pill from "@/components/Pill";
 import Tooltip from "@/components/Tooltip";
 import UserHandle from "@/components/UserHandle";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import useExpressions from "@/hooks/useExpressions";
 import {
   EyeIcon,
@@ -17,7 +18,7 @@ import {
   Id,
   UserModel,
 } from "@kissnotes/types";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export interface ExpressionDetailsContentProps {
   expression: ExpressionModel;
@@ -35,6 +36,7 @@ const ExpressionDetailsContent = ({
   const tokens = getTokens(["properties", "methods", "functions"]);
   const [highlightedTokens, setHighlightedTokens] = useState<string[]>([]);
   const [hoveredToken, setHoveredToken] = useState<ExpressionToken>();
+  const auth = useAuth();
 
   const handleHighlightToken = (token: string) => {
     if (highlightedTokens.includes(token)) {
@@ -52,6 +54,12 @@ const ExpressionDetailsContent = ({
     setHoveredToken(undefined);
   };
 
+  const isSaved = useMemo(() => {
+    return (user?.saves as Id[])?.includes(expression.id);
+  }, [user?.saves, expression.id]);
+
+  console.log({ isSaved, saves: user?.saves, expressionId: expression.id });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       {(!!expression.author?.username ||
@@ -62,19 +70,25 @@ const ExpressionDetailsContent = ({
             <UserHandle username={expression.author.username} />
           )}
           <span className="text-secondary">•</span>
-          <Button variant="ghost" Icon={EyeIcon} label={expression.views} />
           <Button variant="ghost" Icon={ShareIcon} label={expression.shares} />
           <Button
             variant="ghost"
             Icon={
               !user
                 ? OutlineBookmark
-                : (user.saves as Id[]).includes(expression.id) //TODO: saveId vs expressionId
+                : isSaved
                   ? SolidBookmark
                   : OutlineBookmark
             }
             label={String(expression.saves)}
             onClick={onSave}
+            disabled={!auth?.user}
+          />
+          <Button
+            variant="ghost"
+            Icon={EyeIcon}
+            label={expression.views}
+            disabled={true}
           />
         </div>
       )}

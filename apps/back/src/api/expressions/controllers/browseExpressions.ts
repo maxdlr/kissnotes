@@ -1,12 +1,11 @@
-import { NextFunction, Request, Response } from "express";
-import findAllExpressions from "../services/findAllExpressions";
-import ExpressionEntity from "@/entities/ExpressionEntity";
 import { TryCatch } from "@/decorators/TryCatch";
+import ExpressionEntity from "@/entities/ExpressionEntity";
+import { Request, Response } from "express";
+import findAllExpressions from "../services/findAllExpressions";
 
 const browseExpressions = async (
   req: Request,
   res: Response,
-  _next: NextFunction,
 ): Promise<Response<ExpressionEntity[]>> => {
   const expressions = await findAllExpressions(req.query);
 

@@ -22,6 +22,7 @@ const ExpressionList = ({
   startCollapsed = false,
   urlScope = "",
   openModals = false,
+  ActionSlot,
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -38,7 +39,7 @@ const ExpressionList = ({
               className="place-self-end self-start block"
               shortcut={collapsed ? undefined : { keys: ["ctrl", "S"] }}
               onClick={() => setCollapsed((v) => !v)}
-              tooltip={{content: "Filters"}}
+              tooltip={{ content: "Filters", showDelay: 4000 }}
             />
             <AnimatePresence initial={false}>
               {!collapsed && (
@@ -61,14 +62,16 @@ const ExpressionList = ({
             </AnimatePresence>
           </div>
           <div className="block lg:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronUpIcon}
-              className="place-self-end self-start block"
-              shortcut={{ keys: ["ctrl", "S"] }}
-              onClick={() => setCollapsed((v) => !v)}
-            />
+            <div className="place-self-start self-start flex items-center justify-between w-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronUpIcon}
+                shortcut={{ keys: ["ctrl", "S"] }}
+                onClick={() => setCollapsed((v) => !v)}
+              />
+              {ActionSlot && <div className="">{ActionSlot}</div>}
+            </div>
             <AnimatePresence initial={false}>
               {!collapsed && (
                 <motion.div

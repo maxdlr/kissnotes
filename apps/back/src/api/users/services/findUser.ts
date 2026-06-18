@@ -45,6 +45,8 @@ const findUser = async (
     throw Missing("Cannot find user");
   }
 
+  user.saves = user.saves?.map((s) => s.expression?.id);
+
   return user;
 };
 

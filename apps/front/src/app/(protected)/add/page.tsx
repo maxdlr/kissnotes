@@ -170,7 +170,7 @@ linear()`,
         <FormWrapper.Layout className="grid grid-cols-2 h-fit md:grid-cols-1 gap-4 sm:gap-6">
           <div className="col-span-full flex flex-row gap-2 sm:gap-4">
             <Button
-              label="Save"
+              label="Publish"
               onClick={() => handleOnSubmit()}
               type="submit"
               className="w-full"

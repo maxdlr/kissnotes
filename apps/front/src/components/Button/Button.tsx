@@ -1,14 +1,14 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: dont care */
 "use client";
 
-import { motion } from "motion/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
 import Shortcut from "@/components/ShortCut";
 import type { KissClickEvent } from "@/types/form.types";
-import type { ButtonProps, VariantType } from "./interfaces";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Tooltip from "../Tooltip";
+import type { ButtonProps, VariantType } from "./interfaces";
 
 type VariantSet = {
   initial: object;
@@ -290,6 +290,7 @@ const Button = ({
 
   const ButtonRender = (
     <ButtonEl
+      key={variant}
       onHoverEnd={onHoverEnd}
       onHoverStart={onHoverStart}
       initial={motionProps.initial}

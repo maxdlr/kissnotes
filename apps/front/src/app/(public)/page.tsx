@@ -1,18 +1,16 @@
 "use client";
+import ExpressionList from "@/app/(public)/_components/ExpressionList";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
+import Hero from "@/components/Hero";
+import useBrowse from "@/hooks/bread/useBrowse";
 import type {
   ExpressionModel,
   ExpressionSymbol,
   UserModel,
 } from "@kissnotes/types";
-import { useEffect, useState } from "react";
-import ExpressionList from "@/app/(public)/_components/ExpressionList";
-import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import Hero from "@/components/Hero";
-import Loading from "@/components/Loading";
-import useBrowse from "@/hooks/bread/useBrowse";
+import { useMemo, useState } from "react";
 
 const ExpressionListPage = () => {
-  const [expressions, setExpressions] = useState<ExpressionModel[]>([]);
   const [filters, setFilters] = useState<SidebarValue>({
     author: null,
     tokens: [],
@@ -27,12 +25,10 @@ const ExpressionListPage = () => {
     search: filters?.search,
   });
 
-  useEffect(() => {
-    if (loading) {
-      return;
-    }
-    setExpressions(data || []);
-  }, [data, loading]);
+  const expressions = useMemo(
+    () => data?.filter((e) => !!e.published) || [],
+    [data],
+  );
 
   return (
     <>

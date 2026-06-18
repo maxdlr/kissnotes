@@ -16,11 +16,15 @@ const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
   });
 
   const { postData: postSave } = useAxios("users/cmd/save-expression");
-  const { user } = useAuth();
+  const { user, refreshMe } = useAuth();
 
   const handleSave = () => {
     if (!user || !expression) return;
-    postSave({ expressionId: expression.id }).then(() => mutate());
+    postSave({ expressionId: expression.id }).then((r) => {
+      if (r.error) return;
+      mutate();
+      refreshMe();
+    });
   };
 
   return expression ? (

@@ -25,7 +25,7 @@ const findAllExpressions = async (
       ? (symbolsFilter as ExpressionSymbol).tokens.map(String)
       : undefined;
 
-  const { search, symbols: _symbols, ...sanitizedWhere } = where;
+  const { search, ...sanitizedWhere } = where;
 
   let result = await ExpressionRepository.findBy(
     sanitizedWhere as FindOptionsWhere<ExpressionEntity>,

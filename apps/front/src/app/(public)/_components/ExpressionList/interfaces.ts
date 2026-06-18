@@ -1,5 +1,6 @@
 import type { ExpressionModel } from "@kissnotes/types";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
+import { ReactNode } from "react";
 
 export interface ExpressionListProps {
   expressions: ExpressionModel[];
@@ -10,4 +11,5 @@ export interface ExpressionListProps {
   loading?: boolean;
   urlScope?: string;
   openModals?: boolean;
+  ActionSlot?: ReactNode;
 }

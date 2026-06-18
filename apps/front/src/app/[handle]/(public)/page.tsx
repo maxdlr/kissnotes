@@ -1,32 +1,31 @@
 "use client";
+import ExpressionList from "@/app/(public)/_components/ExpressionList";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
+import Button from "@/components/Button";
+import UserHero from "@/components/UserHero";
+import useAuth from "@/contexts/AuthContext/useAuth";
+import useUser from "@/contexts/UserContext";
+import useBrowse from "@/hooks/bread/useBrowse";
+import { getHandle, getUsername } from "@/utils/userUtils";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import type {
   ExpressionModel,
   ExpressionSymbol,
   UserModel,
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import ExpressionList from "@/app/(public)/_components/ExpressionList";
-import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import UserHero from "@/components/UserHero";
-import useBrowse from "@/hooks/bread/useBrowse";
-import { getHandle, getUsername } from "@/utils/userUtils";
-import Button from "@/components/Button";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import useAuth from "@/contexts/AuthContext/useAuth";
-import useUser from "@/contexts/UserContext";
+import { useMemo, useState } from "react";
 
 const ProfilePage = () => {
   const { handle } = useParams();
   const { isAuthUser } = useAuth();
+  const [showDrafts, setShowDrafts] = useState(false);
   const [filters, setFilters] = useState<SidebarValue>({
     tokens: [],
     search: "",
   });
 
   const { user } = useUser();
-
-  const [expressions, setExpressions] = useState<ExpressionModel[]>([]);
 
   const { data, loading: expressionLoading } = useBrowse<ExpressionModel[]>(
     "expressions",
@@ -39,7 +38,15 @@ const ProfilePage = () => {
     },
   );
 
-  useEffect(() => setExpressions(data as ExpressionModel[]), [data]);
+  const expressions = useMemo(
+    () => data?.filter((e) => e.published === !showDrafts) || [],
+    [data, showDrafts],
+  );
+
+  const draftCount = useMemo(
+    () => data?.filter((e) => e.published === false)?.length || 0,
+    [data],
+  );
 
   const isAuth = isAuthUser(user) && user?.username === getUsername(handle);
 
@@ -75,6 +82,17 @@ const ProfilePage = () => {
             startCollapsed
             urlScope={`/${getHandle(handle)}`}
             loading={expressionLoading}
+            ActionSlot={
+              isAuth && (
+                <Button
+                  loading={expressionLoading || !draftCount}
+                  label={`Drafts (${draftCount})`}
+                  onClick={() => setShowDrafts((v) => !v)}
+                  variant={showDrafts ? "fill" : "outline-accent"}
+                  size="sm"
+                />
+              )
+            }
           />
         </>
       )}
