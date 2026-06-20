@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import Collapsible from "@/components/Collapsible";
 import { FormDropdownProps } from "../interfaces";
+import { useShortcut } from "@/hooks/useShortcut";
 
 const InputDropdown = <T,>({
   ref,
@@ -17,13 +18,13 @@ const InputDropdown = <T,>({
   value,
   onChange,
   onOpen,
-  required,
   disabled,
   onHover,
   onTap,
   onClose,
 }: FormDropdownProps<T>) => {
   const [zIndex, setZIndex] = useState(0);
+  useShortcut({ keys: ["ESC"], blockers: [!open] }, () => onClose?.());
 
   if (!property) {
     console.error("Dropdown needs property");

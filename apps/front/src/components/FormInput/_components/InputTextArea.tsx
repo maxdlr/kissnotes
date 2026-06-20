@@ -11,7 +11,8 @@ const InputTextArea = ({
   onChange,
   disabled,
   Icon,
-  rows = 10
+  rows = 10,
+  autoFocus = false,
 }: InputTextAreaProps) => {
   if (disabled && !value) {
     return <div className="h-px w-50 bg-accent/30 my-2" />;
@@ -28,6 +29,7 @@ const InputTextArea = ({
         className={`focus:ring-0 placeholder:font-normal focus:outline-none w-full ${className}`}
         value={value}
         onClick={onClick}
+        autoFocus={autoFocus}
         onChange={onChange}
         disabled={disabled}
         onFocus={onFocus}

@@ -6,13 +6,13 @@ const editExpression = async (
   req: Request,
   res: Response,
 ): Promise<Response<ExpressionModel>> => {
-  const { expression } = req.body;
+  const { body } = req;
 
-  if (!expression?.id) {
+  if (!body?.id) {
     throw ApiError("Id missing");
   }
 
-  const updatedExpression = await updateExpression(expression);
+  const updatedExpression = await updateExpression(body);
   return res.status(200).send(updatedExpression);
 };
 

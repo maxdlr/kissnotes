@@ -8,19 +8,17 @@ const addExpression = async (
   { user, body }: Request,
   res: Response,
 ): Promise<Response<ExpressionModel>> => {
-  const expression = body.expression;
-
   if (!user) {
     throw Unauthorized();
   }
 
-  if (!expression) {
+  if (!body) {
     throw ApiError("Expression missing");
   }
 
   const createdExpression: ExpressionEntity = await createExpression(
     user.id,
-    expression,
+    body,
   );
 
   return res.status(200).send(createdExpression);

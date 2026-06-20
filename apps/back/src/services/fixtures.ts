@@ -7,7 +7,12 @@ import { faker } from "@faker-js/faker";
 import nativeExpressionContent from "../ressources/native-expressions";
 import { EntityManager } from "typeorm";
 import { parseAeExpression } from "@/api/expressions/services/parseAeExpressions";
-import { CodeModel } from "@kissnotes/types";
+import {
+  CodeModel,
+  LayerModel,
+  LayerTypeEnum,
+  PropertyModel,
+} from "@kissnotes/types";
 import SaveEntity from "@/entities/SaveEntity";
 
 const randomElement = (array: any[]) => {
@@ -205,8 +210,8 @@ export const loadFixtures = async () => {
       ...jsBuiltins,
     ]);
 
-    const layer = { name: "my solid", type: "solid" };
-    const property = { name: "position", group: "transform" };
+    const layer: LayerModel = { name: "my solid", type: LayerTypeEnum.Solid };
+    const property: PropertyModel = { name: "position", group: "transform" };
 
     const codes: CodeModel[] = Array.from({ length: 50 }).map(() => {
       const raw = randomElement(expressionCodes);
@@ -225,16 +230,21 @@ export const loadFixtures = async () => {
 
     await manager.save(
       ExpressionEntity,
-      Array.from({ length: 50 }).map((_v, i) => ({
-        title: faker.lorem.sentence(),
-        description: faker.lorem.paragraph(20),
-        author: randomElement(users),
-        layer,
-        property,
-        code: codes[i],
-        symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
-        createdAt: faker.date.past(),
-      })),
+      Array.from({ length: 50 }).map(
+        (_v, i): Omit<ExpressionEntity, "id" | "saves"> => ({
+          title: faker.lorem.sentence(),
+          description: faker.lorem.paragraph(20),
+          author: randomElement(users),
+          layer,
+          property,
+          code: codes[i] as CodeModel,
+          symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
+          createdAt: faker.date.past(),
+          published: faker.datatype.boolean(),
+          views: faker.number.int({ min: 0, max: 1000 }),
+          shares: faker.number.int({ min: 0, max: 1000 }),
+        }),
+      ),
     );
 
     console.log("Fixtures loaded");

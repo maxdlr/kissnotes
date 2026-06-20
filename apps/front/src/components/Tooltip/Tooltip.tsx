@@ -53,7 +53,7 @@ const Tooltip = ({
         aria-describedby={visible ? "tooltip-bubble" : undefined}
       >
         {children ?? (
-          <TriggerIcon className={`inline-block ${PIN_SIZES[size]}`} />
+          <TriggerIcon className={`inline-block ${PIN_SIZES[size]} text-accent`} />
         )}
       </span>
       <AnimatePresence>

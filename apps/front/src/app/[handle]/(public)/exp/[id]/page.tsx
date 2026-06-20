@@ -15,7 +15,7 @@ const UserExpressionById = () => {
       onClose={handleClose}
       className="bg-dark lg:w-3/4 xl:w-2/3 2xl:w-1/2 rounded-4xl border"
     >
-      <article>
+      <article className="p-8">
         <ExpressionDetails id={id as Id} />
       </article>
     </Modal>

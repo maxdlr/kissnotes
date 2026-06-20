@@ -2,12 +2,21 @@
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 import Button from "@/components/Button";
+import ToggleButtons from "@/components/Button/ToggleButtons/ToggleButtons";
 import UserHero from "@/components/UserHero";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useUser from "@/contexts/UserContext";
 import useBrowse from "@/hooks/bread/useBrowse";
 import { getHandle, getUsername } from "@/utils/userUtils";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import {
+  DocumentTextIcon as OutlineDocumentTextIcon,
+  PencilSquareIcon as OutlinePencilSquareIcon,
+  PlusIcon as OutlinePlusIcon,
+} from "@heroicons/react/24/outline";
+import {
+  DocumentTextIcon as SolidDocumentTextIcon,
+  PencilSquareIcon as SolidPencilSquareIcon,
+} from "@heroicons/react/24/solid";
 import type {
   ExpressionModel,
   ExpressionSymbol,
@@ -39,12 +48,10 @@ const ProfilePage = () => {
   );
 
   const expressions = useMemo(
-    () => data?.filter((e) => e.published === !showDrafts) || [],
-    [data, showDrafts],
-  );
-
-  const draftCount = useMemo(
-    () => data?.filter((e) => e.published === false)?.length || 0,
+    () => ({
+      published: data?.filter((e) => e.published === true) || [],
+      drafts: data?.filter((e) => e.published === false) || [],
+    }),
     [data],
   );
 
@@ -53,49 +60,50 @@ const ProfilePage = () => {
   return (
     <div className="space-y-8">
       <UserHero />
-      {!expressionLoading && !expressions?.length && isAuth ? (
-        <div className="w-full flex items-center justify-center">
-          <Button
-            label="Add an expression"
-            Icon={PlusIcon}
-            variant="outline"
-            href={`/add`}
-          />
-        </div>
-      ) : (
-        <>
-          {isAuth && (
-            <div className="w-full flex items-center justify-center">
-              <Button
-                label="Add an expression"
-                Icon={PlusIcon}
-                variant="outline-accent"
-                href={`/add`}
+      <>
+        {isAuth && (
+          <div className="w-full flex flex-col gap-4 items-center justify-center">
+            <Button
+              label="Add an expression"
+              Icon={OutlinePlusIcon}
+              variant="outline-accent"
+              href={`/form/new`}
+              size="sm"
+            />
+          </div>
+        )}
+        <ExpressionList
+          expressions={showDrafts ? expressions.drafts : expressions.published}
+          filters={filters}
+          onFilterChange={setFilters}
+          startCollapsed
+          urlScope={`/${getHandle(handle)}`}
+          loading={expressionLoading}
+          ActionSlot={
+            isAuth && (
+              <ToggleButtons
+                value={showDrafts ? "drafts" : "published"}
+                onChange={(v) => setShowDrafts(v === "drafts")}
+                buttons={[
+                  {
+                    value: "published",
+                    label: `Published (${expressions.published.length})`,
+                    Icon: OutlineDocumentTextIcon,
+                    HoverIcon: SolidDocumentTextIcon,
+                  },
+                  {
+                    value: "drafts",
+                    label: `Drafts (${expressions.drafts.length})`,
+                    Icon: OutlinePencilSquareIcon,
+                    HoverIcon: SolidPencilSquareIcon,
+                  },
+                ]}
                 size="sm"
               />
-            </div>
-          )}
-          <ExpressionList
-            expressions={expressions}
-            filters={filters}
-            onFilterChange={setFilters}
-            startCollapsed
-            urlScope={`/${getHandle(handle)}`}
-            loading={expressionLoading}
-            ActionSlot={
-              isAuth && (
-                <Button
-                  loading={expressionLoading || !draftCount}
-                  label={`Drafts (${draftCount})`}
-                  onClick={() => setShowDrafts((v) => !v)}
-                  variant={showDrafts ? "fill" : "outline-accent"}
-                  size="sm"
-                />
-              )
-            }
-          />
-        </>
-      )}
+            )
+          }
+        />
+      </>
     </div>
   );
 };

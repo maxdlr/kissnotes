@@ -7,9 +7,10 @@ export interface ToastData {
   title?: string;
   message?: string;
   type: "info" | "success" | "error";
+  duration?: number;
 }
 
-export interface ToastDataCreate extends Omit<ToastData, "id"> {}
+export type ToastDataCreate = Omit<ToastData, "id">;
 
 export interface ToastsContextValue {
   toasts: ToastData[];

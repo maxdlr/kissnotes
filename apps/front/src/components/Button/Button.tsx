@@ -192,23 +192,23 @@ const Button = ({
   };
 
   const sizeStyles = {
-    md: {
-      text: "text-base",
-      gap: "gap-3",
-      padding: "py-3 px-4",
-      iconSize: "size-6",
-    },
     sm: {
       text: "text-sm",
       gap: "gap-1",
       padding: `${shortcut ? "pe-1! ps-2!" : "px-2"} py-1`,
+      iconSize: "size-4",
+    },
+    md: {
+      text: "text-base",
+      gap: "gap-3",
+      padding: "py-3 px-4",
       iconSize: "size-5",
     },
     lg: {
       text: "text-lg",
       gap: "gap-4",
       padding: "py-4 px-5",
-      iconSize: "size-7",
+      iconSize: "size-6",
     },
   };
 

@@ -7,29 +7,33 @@ import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useExpressions from "@/hooks/useExpressions";
 import {
+  CheckBadgeIcon,
   EyeIcon,
   BookmarkIcon as OutlineBookmark,
+  PencilIcon,
+  PencilSquareIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
 import { BookmarkIcon as SolidBookmark } from "@heroicons/react/24/solid";
-import {
-  ExpressionModel,
-  ExpressionToken,
-  Id,
-  UserModel,
-} from "@kissnotes/types";
+import { ExpressionModel, ExpressionToken, Id } from "@kissnotes/types";
 import { useMemo, useState } from "react";
 
 export interface ExpressionDetailsContentProps {
   expression: ExpressionModel;
   onSave?: () => void;
-  user?: UserModel;
+  onEdit?: () => void;
+  onPublish?: () => void;
+  onUnpublish?: () => void;
+  preview?: boolean;
 }
 
 const ExpressionDetailsContent = ({
   expression,
   onSave,
-  user,
+  onEdit,
+  onPublish,
+  onUnpublish,
+  preview = false,
 }: ExpressionDetailsContentProps) => {
   const { getTokens } = useExpressions(expression || []);
 
@@ -55,10 +59,8 @@ const ExpressionDetailsContent = ({
   };
 
   const isSaved = useMemo(() => {
-    return (user?.saves as Id[])?.includes(expression.id);
-  }, [user?.saves, expression.id]);
-
-  console.log({ isSaved, saves: user?.saves, expressionId: expression.id });
+    return (auth?.user?.saves as Id[])?.includes(expression.id);
+  }, [auth?.user?.saves, expression.id]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
@@ -74,7 +76,7 @@ const ExpressionDetailsContent = ({
           <Button
             variant="ghost"
             Icon={
-              !user
+              !auth?.user
                 ? OutlineBookmark
                 : isSaved
                   ? SolidBookmark
@@ -93,11 +95,51 @@ const ExpressionDetailsContent = ({
         </div>
       )}
 
-      {expression.title && (
-        <h1 className="text-2xl font-bold col-span-1 md:col-span-full">
-          {expression.title}
-        </h1>
-      )}
+      <div className="col-span-1 md:col-span-full flex items-center justify-between gap-4">
+        <div className="flex items-center justify-start gap-4">
+          {expression.title && (
+            <h1 className="text-2xl font-bold">{expression.title}</h1>
+          )}
+          {!expression?.published && !preview && (
+            <Pill label="Draft" className="border-emphasis text-emphasis" />
+          )}
+          {preview && (
+            <Pill label="Preview" className="border-emphasis text-emphasis" />
+          )}
+        </div>
+        {auth?.user && auth?.isAuthUser(expression.author) && (
+          <div className={`flex items-center justify-center gap-4`}>
+            {(onEdit || onPublish) && (
+              <>
+                {onEdit && (
+                  <Button
+                    label="Edit"
+                    Icon={PencilIcon}
+                    variant="outline"
+                    onClick={onEdit}
+                  />
+                )}
+                {!expression?.published && onPublish && (
+                  <Button
+                    label="Publish"
+                    Icon={CheckBadgeIcon}
+                    variant="fill"
+                    onClick={onPublish}
+                  />
+                )}
+              </>
+            )}
+            {expression?.published && onUnpublish && (
+              <Button
+                label="Unpublish"
+                variant="outline"
+                Icon={PencilSquareIcon}
+                onClick={onUnpublish}
+              />
+            )}
+          </div>
+        )}
+      </div>
 
       <LayerMockup
         layer={expression.layer}
@@ -110,7 +152,7 @@ const ExpressionDetailsContent = ({
           <div className="flex flex-wrap justify-start items-center gap-2">
             <div className="flex gap-2">
               <h3 className="text-lg font-semibold text-accent">Tokens</h3>
-              <Tooltip content="Tokens" />
+              <Tooltip content="Highlights from the expression." />
             </div>
             {!!tokens.length && <span className="text-secondary px-2">•</span>}
             {tokens.map((t) => (

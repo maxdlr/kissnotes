@@ -52,9 +52,11 @@ export interface FormInputProps<T> {
   errors?: string[];
   EndChild?: ReactNode;
   StartChild?: ReactNode;
+  autoFocus?: boolean;
 }
 
 export interface InputTextProps<T = string> {
+  autoFocus?: boolean;
   placeholder?: string;
   className?: string;
   value?: string | number | boolean | T;
@@ -72,6 +74,7 @@ export interface InputTextProps<T = string> {
 }
 
 export interface InputTextAreaProps {
+  autoFocus?: boolean;
   placeholder?: string;
   className?: string;
   value?: string;

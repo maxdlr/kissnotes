@@ -19,7 +19,7 @@ export function ToastsList({ duration, className = "" }: ToastsListProps) {
           <Toast
             {...t}
             key={t.id}
-            duration={duration}
+            duration={t.duration ?? duration}
             onDismiss={dismissToast}
           />
         ))}

@@ -16,6 +16,7 @@ import InputToggle from "./_components/InputToggle";
 import type { FormInputProps, InputTextProps } from "./interfaces";
 
 const FormInput = <T = "string",>({
+  autoFocus = false,
   type = "text",
   codeHeight = "200px",
   options = [],
@@ -150,6 +151,7 @@ ${variantStyles[variant]} ${containerClassName}`}
                 : (type as InputTextProps["type"])
             }
             name={name}
+            autoFocus={autoFocus}
             placeholder={placeholder as InputTextProps["placeholder"]}
             className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap ${inputClassName}`}
             value={value as InputTextProps["value"]}
@@ -161,6 +163,7 @@ ${variantStyles[variant]} ${containerClassName}`}
         )}
         {type === "textarea" && (
           <InputTextArea
+            autoFocus={autoFocus}
             className={inputClassName}
             ref={localRef as Ref<HTMLTextAreaElement>}
             placeholder={placeholder as InputTextProps["placeholder"]}

@@ -2,6 +2,7 @@ import type { ElementType } from "react";
 import { useShortcut, type ShortcutDef } from "@/hooks/useShortcut";
 import { motion } from "motion/react";
 import type { ModName } from ".";
+import { ColorClass } from "@/types/style.types";
 
 const mods: Map<ModName, string> = new Map();
 mods.set("cmd", "⌘");
@@ -22,12 +23,23 @@ mods.set("right", "→");
 interface ShortcutProps {
   shortcut: ShortcutDef;
   className?: string;
+  keyClassName?: string;
   pill?: boolean;
   active?: boolean;
   onTrigger?: (e?: KeyboardEvent) => void;
+  bgColor?: ColorClass;
+  fgColor?: ColorClass;
 }
 
-const Shortcut = ({ shortcut, className, pill, onTrigger }: ShortcutProps) => {
+const Shortcut = ({
+  shortcut,
+  className,
+  keyClassName = "",
+  pill,
+  onTrigger,
+  bgColor = "secondary",
+  fgColor = "dark",
+}: ShortcutProps) => {
   const { active } = useShortcut(shortcut, (e) => onTrigger?.(e));
 
   const shortcutKeys = shortcut?.keys?.map((key) => {
@@ -56,20 +68,20 @@ const Shortcut = ({ shortcut, className, pill, onTrigger }: ShortcutProps) => {
           <motion.p
             // biome-ignore lint/suspicious/noArrayIndexKey: This is a static list of keys, so using the index as a key is acceptable.
             key={i}
-            className="text-xs font-extrabold"
+            className={`text-xs font-extrabold ${keyClassName}`}
             initial={{
               backgroundColor: "var(--color-secondary)",
             }}
             animate={{
               backgroundColor: active
                 ? "var(--color-emphasis)"
-                : "var(--color-secondary)",
+                : `var(--color-${bgColor})`,
             }}
           >
             <span
               className={`min-w-6 min-h-6 flex justify-center items-center px-2`}
             >
-              <span className="text-dark">{key}</span>
+              <span style={{ color: `var(--color-${fgColor})` }}>{key}</span>
             </span>
           </motion.p>
         ))}

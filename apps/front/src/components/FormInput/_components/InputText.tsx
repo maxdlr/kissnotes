@@ -12,6 +12,7 @@ const InputText = ({
   onChange,
   disabled,
   Icon,
+  autoFocus = false,
 }: InputTextProps) => {
   if (disabled && !value) {
     return <div className="h-px w-50 bg-accent/30 my-2" />;
@@ -29,6 +30,7 @@ const InputText = ({
         className={`focus:ring-0 placeholder:font-normal focus:outline-none whitespace-nowrap w-full ${className}`}
         value={value}
         onClick={onClick}
+        autoFocus={autoFocus}
         onChange={onChange}
         disabled={disabled}
         onFocus={onFocus}

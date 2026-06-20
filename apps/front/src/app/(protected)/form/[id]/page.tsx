@@ -4,15 +4,21 @@ import ExpressionDetailsContent from "@/components/ExpressionDetails/components/
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
 import useAuth from "@/contexts/AuthContext/useAuth";
+import useToasts from "@/contexts/ToastsContext";
+import useRead from "@/hooks/bread/useRead";
 import useAxios from "@/hooks/useAxios";
 import useDebounce from "@/hooks/useDebounce";
 import type { KissChangeEvent } from "@/types/form.types";
-import { toCodeModel } from "@/utils/codeUtils";
-import { asTitle } from "@/utils/stringUtils";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { toCodeModel, toRawCodeString } from "@/utils/codeUtils";
+import {
+  ArrowRightIcon,
+  CheckBadgeIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
 import {
   ExpressionModel,
   ExpressionSymbol,
+  Id,
   KissDeepPartial,
   LayerEnums,
   LayerModel,
@@ -21,57 +27,105 @@ import {
   PropertyModel,
   UserModel,
 } from "@kissnotes/types";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-type AddExpressionFormData = {
+type ExpressionFormData = {
+  id?: Id;
   title: string;
   description: string;
   layer?: LayerModel;
-  // layerName: string;
   property?: PropertyModel;
-  // propertyName: string;
   codeBlock: string;
   author?: UserModel;
   symbols?: ExpressionSymbol;
 };
 
-const AddExpressionPage = () => {
+const ExpressionFormPage = () => {
   const { user } = useAuth();
+  const { id } = useParams();
+  const { addToast } = useToasts();
+
+  const [generatedSymbols, setGeneratedSymbols] = useState<ExpressionSymbol>();
+  const [formData, setFormData] = useState<ExpressionFormData>({
+    title: "",
+    description: "",
+    layer: { name: "", type: LayerTypeEnum.Solid },
+    property: { name: "", group: PropertyGroupEnum.Transform },
+    codeBlock: "",
+  });
 
   const { postData: postExpression } = useAxios("expressions/add");
+  const { putData: putExpression } = useAxios("expressions/edit");
   const { postData: postSymbols } = useAxios(
     "expressions/cmd/generate-symbols",
   );
+  const { data: expression, mutate } = useRead<ExpressionModel>(
+    "expressions",
+    {
+      id: id as string,
+    },
+    !!id && id !== "new",
+  );
 
-  const [generatedSymbols, setGeneratedSymbols] = useState<ExpressionSymbol>();
+  const successToast = () =>
+    addToast({
+      type: "success",
+      message: "Expression updated successfully",
+      Icon: CheckBadgeIcon,
+      duration: 1000,
+    });
 
-  const [formData, setFormData] = useState<AddExpressionFormData>({
-    title: "My new expression",
-    description: "The description",
-    layer: { name: "the solid", type: LayerTypeEnum.Solid },
-    property: { name: "position", group: PropertyGroupEnum.Transform },
-    codeBlock: `const some = time * 1
-wiggle()
-linear()`,
-    author: undefined,
-    symbols: undefined,
-  });
+  useEffect(() => {
+    if (!expression) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData({
+      id: expression.id,
+      title: expression.title,
+      description: expression.description || "",
+      layer: expression.layer,
+      property: expression.property,
+      codeBlock: toRawCodeString(expression.code),
+      author: expression.author,
+      symbols: expression.symbols,
+    });
+  }, [expression]);
 
   const debouncedCode = useDebounce(formData.codeBlock);
+  const debouncedFormData = useDebounce(formData, 2000);
 
   useEffect(() => {
     if (!debouncedCode) return;
-    postSymbols<ExpressionSymbol>({
-      code: toCodeModel(debouncedCode),
-    }).then(({ data }) => {
-      if (data) setGeneratedSymbols(data);
-      setFormData((prev) => ({
-        ...prev,
-        symbols: data,
-      }));
-    });
+    postSymbols<ExpressionSymbol>(toCodeModel(debouncedCode)).then(
+      ({ data }) => {
+        if (data) setGeneratedSymbols(data);
+        setFormData((prev) => ({
+          ...prev,
+          symbols: data,
+        }));
+      },
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedCode]);
+
+  useEffect(() => {
+    if (
+      user &&
+      debouncedFormData &&
+      id &&
+      expression?.id &&
+      debouncedFormData?.id
+    ) {
+      putExpression({
+        ...debouncedFormData,
+        code: toCodeModel(debouncedFormData.codeBlock),
+      }).then(() => {
+        successToast();
+        mutate();
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFormData]);
 
   const handleOnChange = (e: KissChangeEvent<unknown>) => {
     const { name, value } = e.target;
@@ -82,7 +136,7 @@ linear()`,
         return {
           ...prev,
           [parent]: {
-            ...(prev[parent as keyof AddExpressionFormData] as object),
+            ...(prev[parent as keyof ExpressionFormData] as object),
             [child]: value,
           },
         };
@@ -98,18 +152,18 @@ linear()`,
   };
 
   const handleOnSubmit = async (publish: boolean = true) => {
-    const { error } = await postExpression({
-      expression: {
-        ...formData,
-        code: toCodeModel(formData.codeBlock),
-        published: publish,
-      },
+    await postExpression({
+      ...formData,
+      code: toCodeModel(formData.codeBlock),
+      published: publish,
+    }).then((r) => {
+      if (r.error) {
+        console.error(r.error);
+        return;
+      }
+      successToast();
+      mutate();
     });
-
-    if (error) {
-      console.error(error);
-      return;
-    }
   };
 
   const layerTypeOptions = Object.values(LayerEnums).map((l) => ({
@@ -134,12 +188,28 @@ linear()`,
       author: user,
       symbols: generatedSymbols,
       code: toCodeModel(formData.codeBlock),
-      saves: 0,
-      views: 0,
-      shares: 0,
+      saves:
+        (Array.isArray(expression?.saves)
+          ? expression?.saves.length
+          : expression?.saves) || 0,
+      views:
+        (Array.isArray(expression?.views)
+          ? expression?.views.length
+          : expression?.views) || 0,
+      shares:
+        (Array.isArray(expression?.shares)
+          ? expression?.shares.length
+          : expression?.shares) || 0,
     };
     return temp;
-  }, [formData, generatedSymbols, user]);
+  }, [
+    formData,
+    generatedSymbols,
+    user,
+    expression?.saves,
+    expression?.views,
+    expression?.shares,
+  ]);
 
   const canSubmit: boolean =
     !!formData.title &&
@@ -152,39 +222,46 @@ linear()`,
 
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
-      <h1 className="text-4xl flex justify-center items-baseline gap-4 pb-8 font-extrabold">
-        Add{" "}
-        {formData.title ? (
-          <>
-            <ArrowRightIcon className="inline size-6" /> {formData.title}
-          </>
-        ) : (
-          "a new expression"
+      <div className="flex justify-center items-center gap-4 pb-8">
+        <h1 className="text-4xl flex justify-center items-baseline gap-4 font-extrabold">
+          {expression?.published ? "Edit" : "Add"}{" "}
+          {formData.title ? (
+            <>
+              <ArrowRightIcon className="inline size-6" /> {formData.title}
+            </>
+          ) : (
+            "a new expression"
+          )}
+        </h1>
+        {expression?.published && (
+          <Button Icon={EyeIcon} href={`/exp/${expression?.id}/m`} size="sm" />
         )}
-      </h1>
+      </div>
       <FormWrapper
         className=""
         fieldsetClassName="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8"
         animated
       >
         <FormWrapper.Layout className="grid grid-cols-2 h-fit md:grid-cols-1 gap-4 sm:gap-6">
-          <div className="col-span-full flex flex-row gap-2 sm:gap-4">
+          <div className="col-span-full flex flex-row gap-2 sm:gap-4 justify-center items-center">
             <Button
-              label="Publish"
+              label={`${expression?.published ? "Update" : "Publish"}`}
               onClick={() => handleOnSubmit()}
               type="submit"
               className="w-full"
               disabled={!canSubmit}
             />
-            <Button
-              label="Save draft"
-              onClick={() => handleOnSubmit(false)}
-              type="submit"
-              className="w-full"
-              variant="outline-accent"
-              disabled={!canSubmit}
-              tooltip={{ content: "Save as draft and carry on later" }}
-            />
+            {expression?.published && (
+              <Button
+                label="Unpublish"
+                onClick={() => handleOnSubmit(false)}
+                type="submit"
+                className="w-full"
+                variant="outline-accent"
+                disabled={!canSubmit}
+                tooltip={{ content: "Save as draft and carry on later" }}
+              />
+            )}
           </div>
           <FormInput
             name="title"
@@ -269,10 +346,12 @@ linear()`,
             onChange={handleOnChange}
             value={formData?.codeBlock}
             placeholder="Your code... "
+            codeHeight={`${toCodeModel(formData.codeBlock).lines.length * 26 + 24}px`}
           />
-          <div className="max-md:hidden pt-4 sm:pt-8 border border-accent p-2 sm:p-6 rounded-3xl">
+          <div className="max-md:hidden pt-4 sm:pt-8 border border-dashed border-emphasis bg-dark p-2 sm:p-6 rounded-3xl">
             <ExpressionDetailsContent
               expression={tempExpressionMemo as ExpressionModel}
+              preview
             />
           </div>
         </FormWrapper.Layout>
@@ -280,4 +359,4 @@ linear()`,
     </div>
   );
 };
-export default AddExpressionPage;
+export default ExpressionFormPage;
