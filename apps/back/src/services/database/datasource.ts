@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 
 export const AppDataSource = new DataSource({
   type: "mariadb",
-  host: "localhost",
+  host: process.env.DB_HOST || "localhost",
   port: Number(process.env.DB_PORT),
   username: "root",
   password: "root",

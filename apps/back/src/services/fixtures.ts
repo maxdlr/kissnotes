@@ -170,32 +170,45 @@ var wobble = Math.sin(time * 2 + i) * 20;
 ];`,
 ];
 
-const makeUsers = async (
-  manager: EntityManager,
-  count?: number,
-): Promise<UserEntity | UserEntity[]> => {
+const makeMaxdlrUser = async (manager: EntityManager): Promise<UserEntity> => {
   const password = "password";
   const description = faker.lorem.paragraph(2);
-
-  if (count) {
-    return await Promise.all(
-      Array.from({ length: count }).map(async (_) => {
-        const author = new UserEntity();
-        author.username = faker.internet.username();
-        author.email = `${faker.person.firstName()}@${faker.commerce.productName()}.com`;
-        author.password = password;
-        author.description = description;
-        return await manager.save(UserEntity, author);
-      }),
-    );
-  }
-
   const author = new UserEntity();
   author.username = "maxdlr";
   author.email = "contact@maxdlr.com";
   author.password = password;
   author.description = description;
   return await manager.save(UserEntity, author);
+};
+
+const makeAugustaUser = async (manager: EntityManager): Promise<UserEntity> => {
+  const password = "password";
+  const description = faker.lorem.paragraph(2);
+  const author = new UserEntity();
+  author.username = "augusta";
+  author.email = "contact@augusta.com";
+  author.password = password;
+  author.description = description;
+  return await manager.save(UserEntity, author);
+};
+
+const makeUsers = async (
+  manager: EntityManager,
+  count: number,
+): Promise<UserEntity | UserEntity[]> => {
+  const password = "password";
+  const description = faker.lorem.paragraph(2);
+
+  return await Promise.all(
+    Array.from({ length: count }).map(async (_) => {
+      const author = new UserEntity();
+      author.username = faker.internet.username();
+      author.email = `${faker.person.firstName()}@${faker.commerce.productName()}.com`;
+      author.password = password;
+      author.description = description;
+      return await manager.save(UserEntity, author);
+    }),
+  );
 };
 
 export const loadFixtures = async () => {
@@ -224,7 +237,8 @@ export const loadFixtures = async () => {
 
     const users = [
       ...((await makeUsers(manager, 100)) as UserEntity[]),
-      await makeUsers(manager),
+      await makeMaxdlrUser(manager),
+      await makeAugustaUser(manager),
     ] as UserEntity[];
     // await makeUsers(manager);
 

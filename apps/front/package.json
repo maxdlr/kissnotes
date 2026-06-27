@@ -11,8 +11,14 @@
     "format": "eslint . --fix"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.5",
     "@heroicons/react": "^2.2.0",
     "@kissnotes/types": "*",
+    "@uiw/codemirror-extensions-events": "^4.25.10",
+    "@uiw/codemirror-extensions-hyper-link": "^4.25.10",
+    "@uiw/codemirror-theme-tokyo-night": "^4.25.10",
+    "@uiw/codemirror-themes": "^4.25.10",
+    "@uiw/react-codemirror": "^4.25.10",
     "axios": "^1.8.4",
     "motion": "^12.35.2",
     "next": "16.1.6",
@@ -33,6 +39,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.1.6",
+    "lightningcss": "^1.31.1",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "@faker-js/faker": "^9.9.0"

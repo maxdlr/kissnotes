@@ -17,8 +17,8 @@ const LogIn = () => {
   const { user, logIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    username: "maxdlr",
-    password: "password",
+    username: "",
+    password: "",
   });
 
   const router = useRouter();

@@ -22,6 +22,15 @@ endef
 MARIADB = $(call EXEC, mariadb -u root -p"root" --show-warnings -vvv -t)
 
 
+prod: ## Launch production environment via Docker
+	docker compose -f docker-compose.prod.yml up --build --remove-orphans --force-recreate -d
+
+prod-down: ## Stop production environment
+	docker compose -f docker-compose.prod.yml down
+
+prod-logs: ## Show production logs
+	docker compose -f docker-compose.prod.yml logs -f
+
 pt: ## Run Posting with the project request collection
 	posting --collection ./request-collection
 

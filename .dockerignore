@@ -1,0 +1,9 @@
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+apps/back/dist
+apps/front/.next
+.git
+.env
+.env*
+certs
