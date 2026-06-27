@@ -43,10 +43,6 @@ const ExpressionListSidebar = ({
           <FormInput
             name="search"
             onChange={handleOnChange}
-            shortcut={{
-              keys: value?.search ? ["ESC"] : ["cmd", "F"],
-              preventDefault: true,
-            }}
             inputClassName="py-1 ps-1.5"
           />
         )}

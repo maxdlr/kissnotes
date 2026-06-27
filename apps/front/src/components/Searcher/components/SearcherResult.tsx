@@ -19,7 +19,7 @@ const SearchResult = ({
   focused = false,
   onClick,
 }: {
-  ref?: RefObject<HTMLButtonElement | null>;
+  ref?: RefObject<HTMLDivElement | null>;
   expression: ExpressionModel;
   searchPrompt?: string;
   focused?: boolean;
@@ -58,7 +58,7 @@ const SearchResult = ({
   ]);
 
   return (
-    <motion.button
+    <motion.div
       ref={ref}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
@@ -79,7 +79,7 @@ const SearchResult = ({
       )}
 
       {focused && (
-        <div className="absolute top-8 right-8 -translate-y-1/2 translate-x-1/2 flex flex-col">
+        <div className="absolute top-8 right-8 z-50 -translate-y-1/2 translate-x-1/2 flex flex-col">
           <div className="bg-dark flex items-center justify-center size-8 leading-none border border-emphasis text-emphasis rounded-md">
             ↩
           </div>
@@ -178,7 +178,7 @@ const SearchResult = ({
             ),
           )}
       </Collapsible>
-    </motion.button>
+    </motion.div>
   );
 };
 export default SearchResult;

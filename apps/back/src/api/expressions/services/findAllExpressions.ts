@@ -29,7 +29,8 @@ const findAllExpressions = async (
       ? (symbolsFilter as ExpressionSymbol).tokens.map(String)
       : undefined;
 
-  const { search, maxResults, ...sanitizedWhere } = where;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { search, maxResults, symbols, ...sanitizedWhere } = where;
   const take: number = maxResults ? Number(maxResults) : 50;
 
   if (search) {

@@ -77,7 +77,7 @@ const FormSelect = <T,>({
   const [max, setMax] = useState(10);
   const formSelectRef = useRef<HTMLDivElement | null>(null);
   const [collapsed, setCollapsed] = useState(true);
-  const { ref, focus, unfocus, isFocused } = useFocus();
+  const { ref, focus, unfocus, isFocused } = useFocus<HTMLInputElement>();
 
   useOnClickOutside<HTMLDivElement>(formSelectRef, () => {
     unfocus();
@@ -191,7 +191,7 @@ const FormSelect = <T,>({
       <div
         onClick={handleFocus}
         ref={formSelectRef}
-        className={`relative border ${isFocused ? "border-secondary" : "hover:border-secondary/50 cursor-pointer border-accent"} rounded-4xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} ${className}`}
+        className={`relative border ${isFocused ? "border-secondary" : "hover:border-secondary/50 cursor-pointer border-accent"} rounded-3xl grid grid-flow-row items-start h-fit ${!collapsed && localOptions.length ? "min-h-36" : ""} ${className}`}
       >
         <div className="p-5">
           {/* HEADER */}

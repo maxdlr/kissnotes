@@ -28,7 +28,7 @@ const Searcher = ({
   placeholder = "Search anything",
 }: SearcherProps) => {
   const router = useRouter();
-  const ref = useRef<HTMLButtonElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const {
@@ -123,7 +123,7 @@ const Searcher = ({
   return (
     <Modal ref={modalRef} className="bg-dark p-8 pt-4 pb-0 max-w-2xl">
       <div className="space-y-4 sm:space-y-8">
-        <div className="w-full sticky top-0 z-50 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
+        <div className="w-full sticky top-8 z-50 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
           <FormInput
             ref={inputRef}
             autoFocus

@@ -8,13 +8,15 @@ const filterByTokens = (
   collection: ExpressionEntity[],
   tokenTitles: string[],
 ): ExpressionEntity[] => {
-  return collection.filter((expression) =>
+  const result = collection.filter((expression) =>
     tokenTitles.every((title) =>
       expression.symbols?.tokens.some((t) =>
-        typeof t === 'string' ? title === t : title === t.title,
+        typeof t === "string" ? title === t : title === t.title,
       ),
     ),
   );
+
+  return result;
 };
 
 export default filterByTokens;
