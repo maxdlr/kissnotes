@@ -5,27 +5,10 @@ import MasonryGrid from "@/components/MasonryGrid";
 import useExpressions from "@/hooks/useExpressions";
 import type { KissChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
-import type {
-  ExpressionModel,
-  ExpressionToken,
-  UserModel,
-} from "@kissnotes/types";
-
-export type SidebarValue =
-  | {
-      tokens?: ExpressionToken[];
-      author?: UserModel | null;
-      search?: string;
-    }
-  | undefined;
-
-interface ExpressListSideBarProps {
-  className?: string;
-  expressions: ExpressionModel[];
-  onChange: (filters: SidebarValue) => void;
-  value: SidebarValue;
-  collapsed?: boolean;
-}
+import type { ExpressionToken, UserModel } from "@kissnotes/types";
+import { useMemo } from "react";
+import { SidebarValue } from ".";
+import { ExpressListSideBarProps } from "./interfaces";
 
 const ExpressionListSidebar = ({
   className,
@@ -34,10 +17,17 @@ const ExpressionListSidebar = ({
   value,
 }: ExpressListSideBarProps) => {
   const { getTokens } = useExpressions(expressions);
-  const tokens = getTokens(["functions", "methods", "properties"]);
-  const authors = arrayUnique(
-    expressions.map((e) => e.author),
-    "username",
+  const tokens = useMemo(
+    () => getTokens(["functions", "methods", "properties"]),
+    [getTokens],
+  );
+  const authors = useMemo(
+    () =>
+      arrayUnique(
+        expressions.map((e) => e.author),
+        "username",
+      ),
+    [expressions],
   );
 
   const handleOnChange = ({
@@ -67,7 +57,7 @@ const ExpressionListSidebar = ({
             options={tokens}
             onChange={handleOnChange}
             value={value?.tokens || []}
-            property="label"
+            property="title"
             tooltip="Filter expressions that contain specific tokens, such as functions, methods, or properties."
           />
         )}

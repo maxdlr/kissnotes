@@ -1,6 +1,6 @@
 "use client";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
-import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
 import Hero from "@/components/Hero";
 import ToggleButtons from "@/components/ToggleButtons";
 import useAuth from "@/contexts/AuthContext/useAuth";
@@ -15,7 +15,7 @@ import type {
   ExpressionSymbol,
   UserModel,
 } from "@kissnotes/types";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
@@ -36,10 +36,7 @@ const ExpressionListPage = () => {
     published: true,
   });
 
-  const expressions = useMemo(
-    () => data?.filter((e) => !!e.published) || [],
-    [data],
-  );
+  const expressions = data || [];
 
   return (
     <>

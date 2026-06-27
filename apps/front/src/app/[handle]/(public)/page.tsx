@@ -1,6 +1,6 @@
 "use client";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
-import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
 import Button from "@/components/Button";
 import ToggleButtons from "@/components/ToggleButtons";
 import UserHero from "@/components/UserHero";

@@ -104,7 +104,6 @@ const ExpressionList = ({
                       expressions={expressions || []}
                       value={filters}
                       onChange={onFilterChange}
-                      collapsed={false}
                       className="pt-4"
                     />
                   </motion.div>
