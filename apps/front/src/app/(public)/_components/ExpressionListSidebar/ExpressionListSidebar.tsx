@@ -7,8 +7,7 @@ import type { KissChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
 import type { ExpressionToken, UserModel } from "@kissnotes/types";
 import { useMemo } from "react";
-import { SidebarValue } from ".";
-import { ExpressListSideBarProps } from "./interfaces";
+import { ExpressListSideBarProps, SidebarValue } from "./interfaces";
 
 const ExpressionListSidebar = ({
   className,

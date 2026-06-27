@@ -59,7 +59,7 @@ export interface InputTextProps<T = string> {
   autoFocus?: boolean;
   placeholder?: string;
   className?: string;
-  value?: string | number | boolean | T;
+  value?: string | number | T;
   variant?: "fill" | "outline" | "ghost";
   onClick?: (e?: KissClickEvent) => void;
   Icon?: ElementType;

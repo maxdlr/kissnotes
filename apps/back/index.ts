@@ -18,8 +18,6 @@ import printStartupInfo from "@/utils/printStartupInfo";
 import cookieParser from "cookie-parser";
 import express from "express";
 import parseQuery from "@/middlewares/parseQuery";
-import https from "https";
-import fs from "fs";
 
 /**
  * ======================
@@ -101,16 +99,4 @@ AppDataSource.initialize()
  * Listener!
  * ======================
  */
-import path from "path";
-
-const certDir = path.resolve(__dirname, "../../certs");
-
-https
-  .createServer(
-    {
-      key: fs.readFileSync(path.join(certDir, "localhost-key.pem")),
-      cert: fs.readFileSync(path.join(certDir, "localhost.pem")),
-    },
-    app,
-  )
-  .listen(port, () => printStartupInfo(port, true));
+app.listen(port, () => printStartupInfo(port, true));

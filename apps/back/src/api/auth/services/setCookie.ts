@@ -13,7 +13,7 @@ const setCookie = (
     httpOnly: true,
     maxAge,
     signed: true,
-    secure: true,
+    secure: isProd,
   };
   res.cookie(cookieName, data, params);
 };

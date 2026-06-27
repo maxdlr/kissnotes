@@ -2,12 +2,18 @@ import UserEntity from "@/entities/UserEntity";
 import UserRepository from "@/repositories/UserRepository";
 import validateCrudPayload from "@/services/validateCrudPayload";
 import PasswordCheck from "@/utils/PasswordCheck";
-import { UserModel } from "@kissnotes/types";
 import { validate } from "class-validator";
 import findUser from "./findUser";
 
+type CreateUserInput = {
+  email: string;
+  username: string;
+  password: string;
+  description?: string;
+};
+
 const createUser = async (
-  user: Pick<UserModel, "email" | "username" | "password" | "description">,
+  user: CreateUserInput,
 ): Promise<UserEntity> => {
   const existingUser = await findUser({ username: user.username }).catch(
     () => {},

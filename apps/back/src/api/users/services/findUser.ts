@@ -1,4 +1,5 @@
 import UserEntity from "@/entities/UserEntity";
+import SaveEntity from "@/entities/SaveEntity";
 import UserRepository from "@/repositories/UserRepository";
 import { UserModel } from "@kissnotes/types";
 
@@ -45,7 +46,7 @@ const findUser = async (
     throw Missing("Cannot find user");
   }
 
-  user.saves = user.saves?.map((s) => s.expression?.id);
+  user.saves = user.saves?.map((s) => s.expression?.id) as unknown as SaveEntity[];
 
   return user;
 };

@@ -8,7 +8,7 @@ export interface ToastProps {
   /** Optional title for the toast. */
   title?: string;
   /** Main message/content of the toast. */
-  message: string;
+  message?: string;
   /** Optional duration (in milliseconds) for which the toast is displayed before dismissal. */
   duration?: number;
   /**

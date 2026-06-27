@@ -13,6 +13,7 @@ import {
 import type {
   ExpressionModel,
   ExpressionSymbol,
+  ExpressionToken,
   UserModel,
 } from "@kissnotes/types";
 import { useState } from "react";
@@ -30,7 +31,7 @@ const ExpressionListPage = () => {
   const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: filters?.author?.id as number } as UserModel,
     symbols: {
-      tokens: [...(filters?.tokens || []).map((t) => t.title)],
+      tokens: [...(filters?.tokens || []).map((t: ExpressionToken) => t.title)],
     } as ExpressionSymbol,
     search: debouncedSearch,
     published: true,

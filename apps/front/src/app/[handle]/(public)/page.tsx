@@ -21,6 +21,7 @@ import {
 import type {
   ExpressionModel,
   ExpressionSymbol,
+  ExpressionToken,
   UserModel,
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
@@ -44,7 +45,7 @@ const ProfilePage = () => {
     {
       author: user?.id ? ({ id: user.id as string } as UserModel) : undefined,
       symbols: {
-        tokens: [...(filters?.tokens || []).map((t) => t.title)],
+        tokens: [...(filters?.tokens || []).map((t: ExpressionToken) => t.title)],
       } as ExpressionSymbol,
       search: debouncedSearch,
     },

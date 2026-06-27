@@ -1,4 +1,3 @@
-import SocialLinkRepository from "@/repositories/SocialsRepository";
 import { Id, SocialLinkModel } from "@kissnotes/types";
 import findSocialLink from "./findSocialLink";
 import createSocialLink from "./createSocialLink";

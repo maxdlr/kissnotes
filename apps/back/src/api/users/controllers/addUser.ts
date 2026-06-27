@@ -1,5 +1,4 @@
 import UserEntity from "@/entities/UserEntity";
-import { UserModel } from "@kissnotes/types";
 import { Request, Response } from "express";
 import createUser from "../services/createUser";
 import { TryCatch } from "@/decorators/TryCatch";
@@ -8,7 +7,7 @@ const addUser = async (
   req: Request,
   res: Response,
 ): Promise<Response<UserEntity>> => {
-  const user: UserModel = req.body.user;
+  const user = req.body.user;
   if (!user) {
     throw ApiError("User missing");
   }

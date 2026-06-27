@@ -7,7 +7,7 @@ import type {
   UserModel,
 } from "@kissnotes/types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
 import useAxios from "@/hooks/useAxios";
@@ -169,4 +169,10 @@ const SignUpPage = () => {
     </>
   );
 };
-export default SignUpPage;
+export default function SignUpPageWrapper() {
+  return (
+    <Suspense>
+      <SignUpPage />
+    </Suspense>
+  );
+}

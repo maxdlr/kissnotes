@@ -10,13 +10,13 @@ interface AuthContextProps {
   logIn: (credentials: {
     username: string;
     password: string;
-  }) => Promise<string | undefined>;
+  }) => Promise<void>;
   signUp: (credentials: {
     email: string;
     username: string;
     password: string;
-  }) => Promise<KissResponseError>;
-  logOut: () => Promise<string | undefined>;
+  }) => Promise<KissResponseError | undefined>;
+  logOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);

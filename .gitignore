@@ -7,4 +7,4 @@
 .env*
 *.tsbuildinfo
 apps/**/dist
-certs/
+packages/**/dist

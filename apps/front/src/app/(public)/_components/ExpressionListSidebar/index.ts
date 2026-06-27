@@ -1,2 +1,2 @@
 export { default } from "./ExpressionListSidebar";
-export type { SidebarValue } from "./ExpressionListSidebar";
+export type { SidebarValue } from "./interfaces";
