@@ -10,9 +10,10 @@ export type BrowseFilters<T extends Model[]> = Partial<
 
 const useBrowse = <T extends Model[]>(
   model: string,
-  params?: BrowseFilters<T> & { search?: string },
+  params?: BrowseFilters<T> & { search?: string; maxResults?: number },
 ) => {
   const [loading, setLoading] = useState<boolean>(true);
+
   const filteredParams = params
     ? (Object.fromEntries(
         Object.entries(params).filter(([, v]) => v != null),
@@ -22,7 +23,7 @@ const useBrowse = <T extends Model[]>(
   const { data, error, mutate } = useSWR<KRes<T>>(
     {
       url: `/${model}/browse`,
-      params: filteredParams,
+      params: { maxResults: 50, ...filteredParams },
     },
     {
       onSuccess: () => setLoading(false),
@@ -32,6 +33,7 @@ const useBrowse = <T extends Model[]>(
       retryCount: 3,
       revalidateOnMount: true,
       loadingTimeout: 5000,
+      keepPreviousData: true,
     } as SWRConfiguration<KRes<T>>,
   );
 

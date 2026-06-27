@@ -181,7 +181,7 @@ const makeUsers = async (
     return await Promise.all(
       Array.from({ length: count }).map(async (_) => {
         const author = new UserEntity();
-        author.username = faker.person.firstName();
+        author.username = faker.internet.username();
         author.email = `${faker.person.firstName()}@${faker.commerce.productName()}.com`;
         author.password = password;
         author.description = description;
@@ -213,7 +213,7 @@ export const loadFixtures = async () => {
     const layer: LayerModel = { name: "my solid", type: LayerTypeEnum.Solid };
     const property: PropertyModel = { name: "position", group: "transform" };
 
-    const codes: CodeModel[] = Array.from({ length: 50 }).map(() => {
+    const codes: CodeModel[] = Array.from({ length: 500 }).map(() => {
       const raw = randomElement(expressionCodes);
       return {
         lines: raw
@@ -223,14 +223,14 @@ export const loadFixtures = async () => {
     });
 
     const users = [
-      ...((await makeUsers(manager, 10)) as UserEntity[]),
+      ...((await makeUsers(manager, 100)) as UserEntity[]),
       await makeUsers(manager),
     ] as UserEntity[];
     // await makeUsers(manager);
 
     await manager.save(
       ExpressionEntity,
-      Array.from({ length: 50 }).map(
+      Array.from({ length: 500 }).map(
         (_v, i): Omit<ExpressionEntity, "id" | "saves"> => ({
           title: faker.lorem.sentence(),
           description: faker.lorem.paragraph(20),

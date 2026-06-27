@@ -9,6 +9,7 @@ interface KissLineContentProps {
   lineNumberClassName?: string;
   className?: string;
   interactive?: boolean;
+  condensed?: boolean;
 }
 
 const KissLineContent = ({
@@ -17,6 +18,7 @@ const KissLineContent = ({
   lineContentClassName,
   lineNumberClassName,
   interactive = false,
+  condensed = false,
 }: KissLineContentProps) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
@@ -32,7 +34,7 @@ const KissLineContent = ({
     >
       <div className={`flex items-center w-full ${className}`}>
         <div
-          className={`group-hover:text-white select-none sticky left-0 bg-code pe-4 py-2 h-full w-fit z-10 ${lineNumberClassName}`}
+          className={`group-hover:text-white select-none sticky left-0 bg-code ${condensed ? "pe-2 py-0" : "pe-4 py-2"} h-full w-fit z-10 ${lineNumberClassName}`}
         >
           <CodeBlock.LineNumber />
         </div>
@@ -43,7 +45,7 @@ group-active:bg-emphasis/20
 group-hover:border-emphasis/50 
 group-active:border-emphasis/80 
 group-hover:border 
-px-2 py-1 rounded-md flex-1 whitespace-pre text-sm ${lineContentClassName}`}
+ ${condensed ? "px-1 py-1" : "px-2 py-1"} rounded-md flex-1 whitespace-pre text-sm ${lineContentClassName}`}
         >
           <CodeBlock.LineContent className="flex items-center gap-2">
             <div>{children}</div>

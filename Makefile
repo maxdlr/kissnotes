@@ -93,11 +93,4 @@ help: ## This menu
 	@echo
 	@echo "Available targets:"
 	@echo
-	@echo "---------- $(PRIMARY_COLOR)App commands$(END_COLOR)"
-	@awk -F ':|##' '/^app-.*?:.*?##/ && !/##hidden/ {printf "$(SUCCESS_COLOR)%-30s$(END_COLOR) %s\n", $$1, $$NF}' $(MAKEFILE_LIST) | sort
-	@echo
-	@echo "---------- $(PRIMARY_COLOR)Backend commands$(END_COLOR)"
-	@awk -F ':|##' '/^back-.*?:.*?##/ && !/##hidden/ {printf "$(SUCCESS_COLOR)%-30s$(END_COLOR) %s\n", $$1, $$NF}' $(MAKEFILE_LIST) | sort
-	@echo
-	@echo "---------- $(PRIMARY_COLOR)Frontend commands$(END_COLOR)"
-	@awk -F ':|##' '/^front-.*?:.*?##/ && !/##hidden/ {printf "$(SUCCESS_COLOR)%-30s$(END_COLOR) %s\n", $$1, $$NF}' $(MAKEFILE_LIST) | sort
+	@awk -F ':|##' '/^[a-zA-Z_-]+:.*?##/ && !/##hidden/ {printf "  %-20s %s\n", $$1, $$NF}' $(MAKEFILE_LIST) | sort

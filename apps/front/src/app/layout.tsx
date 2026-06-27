@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";
+import { SearcherProvider } from "@/components/Searcher/hooks/SearcherProvider";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
@@ -22,14 +23,16 @@ export default function RootLayout({
         className={`${gilroy.className} antialiased bg-background text-foreground`}
       >
         <Providers>
-          <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
-            <Header />
-            {children}
-          </main>
-          <div id="modal-full" />
-          <div id="modal" />
-          <div id="tooltip" />
-          <div id="dropdown" />
+          <SearcherProvider>
+            <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
+              <Header />
+              {children}
+            </main>
+            <div id="modal-full" />
+            <div id="modal" />
+            <div id="tooltip" />
+            <div id="dropdown" />
+          </SearcherProvider>
         </Providers>
       </body>
     </html>

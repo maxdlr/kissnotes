@@ -41,8 +41,8 @@ const Layout = ({
 const FormWrapper = ({
   children,
   title,
-  className,
-  fieldsetClassName,
+  className = "",
+  fieldsetClassName = "",
   animated = false,
   animHeight = distance,
   errors,
@@ -157,6 +157,7 @@ const FormWrapper = ({
   };
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <FormTag
       variants={containerVariants}
       initial="hidden"

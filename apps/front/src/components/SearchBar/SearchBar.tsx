@@ -6,7 +6,7 @@ import type { ShortcutDef } from "@/hooks/useShortcut";
 import type { KissChangeEvent } from "@/types/form.types";
 import FormInput from "@/components/FormInput";
 import Searcher from "@/components/Searcher";
-import useSearcher from "@/components/Searcher/hooks/useSearcher";
+import useSearcher from "../Searcher/hooks/SearcherProvider";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -32,12 +32,19 @@ const SearchBar = ({
   name = "search",
   Icon,
 }: SearchBarProps) => {
-  const { isOpen, setIsOpen, searchPrompt, setSearchPrompt } = useSearcher();
+  const { isOpen, setIsOpen, prompt, setPrompt } = useSearcher();
   const ref = useRef<HTMLInputElement | null>(null);
 
   const handleOnChange = (e: KissChangeEvent) => {
-    setSearchPrompt(e.target.value);
+    setPrompt(e.target.value);
     onChange?.(e);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setPrompt("");
+    console.log({prompt});
+    
   };
 
   return (
@@ -47,7 +54,7 @@ const SearchBar = ({
         name={name}
         inputClassName={`${inputClassName} ${modalSearcher ? "cursor-pointer" : ""}`}
         placeholder={placeholder}
-        value={searchPrompt}
+        value={prompt}
         onChange={handleOnChange}
         variant={variant}
         onClick={modalSearcher ? () => setIsOpen(true) : undefined}
@@ -55,7 +62,7 @@ const SearchBar = ({
         shortcut={modalSearcher ? shortcut : undefined}
         containerClassName={`rounded-full`}
       />
-      {isOpen && modalSearcher && <Searcher onClose={() => setIsOpen(false)} />}
+      {isOpen && modalSearcher && <Searcher onClose={handleClose} />}
     </div>
   );
 };

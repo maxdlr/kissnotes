@@ -1,7 +1,6 @@
 import Button from "@/components/Button";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/userUtils";
-import { useRouter } from "next/navigation";
 
 interface UserHandleProps {
   username?: string;
@@ -10,7 +9,6 @@ interface UserHandleProps {
 const UserHandle = ({ username, className }: UserHandleProps) => {
   const { user } = useAuth();
   const localUsername = username || user?.username;
-  const router = useRouter();
 
   if (!localUsername) {
     return null;
@@ -18,7 +16,7 @@ const UserHandle = ({ username, className }: UserHandleProps) => {
 
   return (
     <Button
-      onClick={() => router.push(getProfileHref(localUsername))}
+      href={getProfileHref(localUsername)}
       label={`@${localUsername}`}
       variant="ghost"
       className={className}

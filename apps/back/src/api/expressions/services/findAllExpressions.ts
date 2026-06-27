@@ -2,18 +2,22 @@ import ExpressionEntity from "@/entities/ExpressionEntity";
 import ExpressionRepository from "@/repositories/ExpressionRepository";
 import { ExpressionSymbol } from "@kissnotes/types";
 import { FindOptionsWhere } from "typeorm";
-import filterBySearch from "./filterBySearch";
 import filterByTokens from "./filterByTokens";
 
 interface ExtendedWhere extends FindOptionsWhere<ExpressionEntity> {
   search?: string;
+  maxResults?: number | string;
 }
 
 const findAllExpressions = async (
   where?: ExtendedWhere,
 ): Promise<ExpressionEntity[]> => {
   if (!where) {
-    return ExpressionRepository.find();
+    console.log(
+      "findAllExpressions called with no where clause, returning all expressions",
+    );
+
+    return ExpressionRepository.find({});
   }
 
   const symbolsFilter = where.symbols;
@@ -25,18 +29,46 @@ const findAllExpressions = async (
       ? (symbolsFilter as ExpressionSymbol).tokens.map(String)
       : undefined;
 
-  const { search, ...sanitizedWhere } = where;
+  const { search, maxResults, ...sanitizedWhere } = where;
+  const take: number = maxResults ? Number(maxResults) : 50;
 
-  let result = await ExpressionRepository.findBy(
-    sanitizedWhere as FindOptionsWhere<ExpressionEntity>,
-  );
+  if (search) {
+    const baseWhere = sanitizedWhere as FindOptionsWhere<ExpressionEntity>;
+    const qb = ExpressionRepository.createQueryBuilder("expression")
+      .leftJoinAndSelect("expression.author", "author")
+      .where(baseWhere);
+
+    const searchWords = search.split(/\s+/).filter(Boolean);
+    searchWords.forEach((searchWord, i) => {
+      const param = `search${i}`;
+      qb.andWhere(
+        `(
+expression.title LIKE :${param} 
+OR expression.description LIKE :${param} 
+OR CAST(expression.code AS CHAR) LIKE :${param} 
+OR author.username LIKE :${param}
+)`,
+        { [param]: `%${searchWord}%` },
+      );
+    });
+
+    let result = await qb.take(take).getMany();
+
+    if (tokenTitles) {
+      result = filterByTokens(result, tokenTitles);
+    }
+
+    return result;
+  }
+
+  let result = await ExpressionRepository.find({
+    where: sanitizedWhere as FindOptionsWhere<ExpressionEntity>,
+    ...(take && !tokenTitles ? { take } : {}),
+  });
 
   if (tokenTitles) {
     result = filterByTokens(result, tokenTitles);
-  }
-
-  if (search) {
-    result = filterBySearch(result, search);
+    if (take) result = result.slice(0, take);
   }
 
   return result;

@@ -1,15 +1,15 @@
 "use client";
+import FormInput from "@/components/FormInput";
+import FormSelect from "@/components/FormSelect";
+import MasonryGrid from "@/components/MasonryGrid";
+import useExpressions from "@/hooks/useExpressions";
+import type { KissChangeEvent } from "@/types/form.types";
+import { arrayUnique } from "@/utils/arrayUtils";
 import type {
   ExpressionModel,
   ExpressionToken,
   UserModel,
 } from "@kissnotes/types";
-import useExpressions from "@/hooks/useExpressions";
-import type { KissChangeEvent } from "@/types/form.types";
-import { arrayUnique } from "@/utils/arrayUtils";
-import FormSelect from "@/components/FormSelect";
-import MasonryGrid from "@/components/MasonryGrid";
-import SearchBar from "@/components/SearchBar";
 
 export type SidebarValue =
   | {
@@ -50,14 +50,14 @@ const ExpressionListSidebar = ({
     <aside className={`space-y-4 w-full ${className}`}>
       <MasonryGrid>
         {value?.search !== undefined && (
-          <SearchBar
+          <FormInput
+            name="search"
             onChange={handleOnChange}
             shortcut={{
               keys: value?.search ? ["ESC"] : ["cmd", "F"],
               preventDefault: true,
             }}
             inputClassName="py-1 ps-1.5"
-            Icon={null}
           />
         )}
         {value?.tokens !== undefined && (

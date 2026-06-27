@@ -12,4 +12,5 @@ export interface ExpressionListProps {
   urlScope?: string;
   openModals?: boolean;
   ActionSlot?: ReactNode;
+  emptyMsg?: string | ReactNode;
 }

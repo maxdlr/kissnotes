@@ -1,33 +1,42 @@
 interface HighlightableTextProps {
   text: string;
-  highlightedText?: string;
+  highlightedTexts?: string[];
   className?: string;
 }
 
 const HighlightableText = ({
   text,
-  highlightedText,
+  highlightedTexts,
   className,
 }: HighlightableTextProps) => {
-  return highlightedText && text?.includes(highlightedText) ? (
+  const matches = highlightedTexts?.filter(Boolean);
+  if (!matches || matches.length === 0) {
+    return text;
+  }
+
+  const escaped = matches.map((t) =>
+    t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+  const parts = text.split(regex);
+
+  const testRegex = new RegExp(`^(${escaped.join("|")})$`, "i");
+
+  return (
     <>
-      ...
-      {text.split(highlightedText).map((part, i, arr) => (
-        <span key={i}>
-          {part}
-          {i < arr.length - 1 && (
-            <mark
-              className={`bg-emphasis/30 text-emphasis font-bold px-1 rounded-3xl ${className}`}
-            >
-              {highlightedText}
-            </mark>
-          )}
-        </span>
-      ))}
-      ...
+      {parts.map((part, i) =>
+        testRegex.test(part) ? (
+          <mark
+            key={i}
+            className={`bg-emphasis/30 text-emphasis font-bold px-1 rounded-3xl ${className}`}
+          >
+            {part}
+          </mark>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
     </>
-  ) : (
-    text
   );
 };
 export default HighlightableText;

@@ -1,90 +1,72 @@
 import Collapsible from "@/components/Collapsible";
 import KissCodeBlock from "@/components/KissCodeBlock";
 import HighlightableText from "@/components/Loading/HighlightableText/HighlightableText";
+import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
 import useDebounce from "@/hooks/useDebounce";
-import { useShortcut } from "@/hooks/useShortcut";
-import { truncate } from "@/utils/stringUtils";
-import { ArrowDownIcon } from "@heroicons/react/24/outline";
+import { getRelativeTime } from "@/utils/dateUtils";
+import { ArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
-import { ExpressionModel, Id, LineModel } from "@kissnotes/types";
-import { useMemo } from "react";
+import { ExpressionModel, ExpressionToken } from "@kissnotes/types";
+import { AnimatePresence, motion } from "framer-motion";
+import { RefObject, useMemo } from "react";
+import useSearcherMatch from "../helpers/useSearcherMatch";
 
 const SearchResult = ({
+  ref,
   expression,
   searchPrompt,
-  selected = false,
-  onSelect,
+  focused = false,
+  onClick,
 }: {
+  ref?: RefObject<HTMLButtonElement | null>;
   expression: ExpressionModel;
   searchPrompt?: string;
-  selected?: boolean;
-  onSelect?: (id: Id) => void;
+  focused?: boolean;
+  onClick?: () => void;
 }) => {
-  useShortcut({ keys: ["enter"], ignoreInputs: false }, (e) => {
-    e.preventDefault();
-    onSelect?.(expression.id);
-  });
-
-  const localSearchPrompt = useDebounce(searchPrompt, 300);
+  const localSearchPrompt = useDebounce(searchPrompt?.trim(), 300);
+  const { getLineMatches, getDescriptionMatch, getTitleMatch, getKeywords } =
+    useSearcherMatch();
   const result = useMemo((): {
-    hasMatch: boolean;
+    withCodeMatch: boolean;
     expression: ExpressionModel;
   } => {
-    if (!localSearchPrompt) {
-      return { hasMatch: false, expression };
-    }
-
-    const lineMatch: LineModel | undefined = expression.code.lines.find(
-      (line: LineModel) => line.content.includes(localSearchPrompt),
+    const { lines, hasMatch: lineMatch } = getLineMatches(
+      expression,
+      localSearchPrompt,
     );
 
-    const lineNumber = lineMatch ? lineMatch.number : null;
-    const prevLineNumber = lineMatch ? lineMatch.number - 1 : null;
-    const nextLineNumber = lineMatch ? lineMatch.number + 1 : null;
-
-    const lines = lineMatch
-      ? expression.code.lines.filter((line: LineModel) =>
-          [lineNumber, prevLineNumber, nextLineNumber].includes(line.number),
-        )
-      : expression.code.lines.slice(0, 3);
-
-    const descriptionMatch: string | undefined =
-      expression.description?.includes(localSearchPrompt)
-        ? expression.description
-        : undefined;
-
-    const description =
-      descriptionMatch && expression.description
-        ? expression.description?.slice(
-            Math.max(expression.description.indexOf(localSearchPrompt) - 50, 0),
-            Math.min(
-              expression.description.indexOf(localSearchPrompt) + 50,
-              expression.description.length,
-            ),
-          )
-        : expression.description
-          ? truncate(expression.description, 100)
-          : undefined;
-
     return {
-      hasMatch: !!lineMatch,
+      withCodeMatch: !!lineMatch,
       expression: {
         ...expression,
-        description,
-        code: {
-          lines,
-        },
+        title: getTitleMatch(expression.title, localSearchPrompt),
+        description: getDescriptionMatch(
+          expression.description,
+          localSearchPrompt,
+        ),
+        code: { lines },
       },
     };
-  }, [expression, localSearchPrompt]);
+  }, [
+    expression,
+    getDescriptionMatch,
+    getLineMatches,
+    getTitleMatch,
+    localSearchPrompt,
+  ]);
 
   return (
-    <div
-      className={`relative border ${selected ? "border-emphasis" : "border-accent"} rounded-3xl py-4 px-6 space-y-6`}
+    <motion.button
+      ref={ref}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      className={`relative border ${focused ? "border-emphasis" : "border-accent"} rounded-3xl py-3 px-6 space-y-1 hover:bg-accent/20 cursor-pointer block w-full text-start`}
+      onClick={onClick}
     >
-      {selected && (
-        <div className="absolute left-0 top-8 z-50 -translate-x-1/2 flex flex-col gap-2">
+      {focused && (
+        <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2">
           {[ArrowUpIcon, ArrowDownIcon].map((Icon, index) => (
             <div
               key={index}
@@ -95,37 +77,108 @@ const SearchResult = ({
           ))}
         </div>
       )}
-      <div className="flex items-center justify-between">
-        <p className="font-bold">
-          <HighlightableText
-            text={result.expression.title || ""}
-            highlightedText={localSearchPrompt}
+
+      {focused && (
+        <div className="absolute top-8 right-8 -translate-y-1/2 translate-x-1/2 flex flex-col">
+          <div className="bg-dark flex items-center justify-center size-8 leading-none border border-emphasis text-emphasis rounded-md">
+            ↩
+          </div>
+        </div>
+      )}
+
+      <div className="flex justify-start items-center gap-2">
+        {localSearchPrompt &&
+        getKeywords(localSearchPrompt).some(
+          (k) =>
+            k.length >= result.expression.author.username.length / 1.5 &&
+            result.expression.author.username
+              .toLowerCase()
+              .includes(k.toLowerCase()),
+        ) ? (
+          <UserHandle
+            username={expression.author.username}
+            className="text-emphasis!"
           />
-        </p>
-        <UserHandle username={expression.author.username} />
+        ) : (
+          <UserHandle username={expression.author.username} />
+        )}
+        <span className="text-sm text-accent">
+          {getRelativeTime(result.expression.createdAt)}
+        </span>
+        <div className="flex gap-2 items-center justify-center">
+          <EyeIcon className="size-4 text-accent" />
+          <span className="text-sm text-accent">{result.expression.views}</span>
+        </div>
       </div>
-      <div>
-        <p>
-          <HighlightableText
-            text={result.expression.description || ""}
-            highlightedText={localSearchPrompt}
-          />
-        </p>
-      </div>
+
+      <p className="font-bold">
+        <HighlightableText
+          text={result.expression.title || ""}
+          highlightedTexts={getKeywords(localSearchPrompt)}
+        />
+      </p>
+
+      <p>
+        <HighlightableText
+          text={result.expression.description || ""}
+          highlightedTexts={getKeywords(localSearchPrompt)}
+        />
+      </p>
+
+      <AnimatePresence mode="wait">
+        {((!getKeywords(localSearchPrompt).length &&
+          result.expression.code.lines.length > 0) ||
+          (result.withCodeMatch &&
+            !!getKeywords(localSearchPrompt).length)) && (
+          <motion.div
+            key="code-content"
+            initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+            exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+            className="grid w-full overflow-y-hidden"
+          >
+            <div className="min-h-0 overflow-x-auto">
+              <KissCodeBlock
+                condensed
+                expression={result.expression}
+                highlightedTokens={getKeywords(localSearchPrompt) || []}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Collapsible
         collapsed={
           !(
-            (!searchPrompt && result.expression.code.lines.length > 0) ||
-            (result.hasMatch && !!searchPrompt)
+            focused ||
+            (!!localSearchPrompt &&
+              (result.expression.symbols?.tokens as ExpressionToken[]).some(
+                (t: ExpressionToken) => t.label.includes(localSearchPrompt),
+              ))
           )
         }
+        className="flex justify-start items-center gap-2"
       >
-        <KissCodeBlock
-          expression={result.expression}
-          highlightedTokens={[searchPrompt || ""]}
-        />
+        {(result.expression.symbols?.tokens as ExpressionToken[])
+          .slice(0, 5)
+          .map((t: ExpressionToken, i: number) =>
+            localSearchPrompt &&
+            getKeywords(localSearchPrompt).some((k) =>
+              t.label.toLowerCase().includes(k.toLowerCase()),
+            ) ? (
+              <Pill
+                key={`${i}-${t.id}-highlighted`}
+                label={t.label}
+                isCode
+                className="text-emphasis border-emphasis bg-emphasis/10"
+              />
+            ) : (
+              <Pill key={`${i}-${t.id}`} label={t.label} isCode />
+            ),
+          )}
       </Collapsible>
-    </div>
+    </motion.button>
   );
 };
 export default SearchResult;

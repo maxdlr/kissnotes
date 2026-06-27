@@ -23,6 +23,7 @@ const ExpressionList = ({
   urlScope = "",
   openModals = false,
   ActionSlot,
+  emptyMsg = "No expressions yet",
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -43,7 +44,11 @@ const ExpressionList = ({
                   variant="ghost"
                   size={collapsed ? "md" : "sm"}
                   Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronLeftIcon}
-                  shortcut={collapsed ? undefined : { keys: ["ctrl", "S"] }}
+                  shortcut={
+                    collapsed
+                      ? undefined
+                      : { keys: ["ctrl", "S"], ignoreInputs: false }
+                  }
                   onClick={() => setCollapsed((v) => !v)}
                   tooltip={{ content: "Filters", showDelay: 4000 }}
                 />
@@ -78,7 +83,7 @@ const ExpressionList = ({
                     variant="ghost"
                     size="sm"
                     Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronUpIcon}
-                    shortcut={{ keys: ["ctrl", "S"] }}
+                    shortcut={{ keys: ["ctrl", "S"], ignoreInputs: false }}
                     onClick={() => setCollapsed((v) => !v)}
                   />
                 )}
@@ -114,9 +119,7 @@ const ExpressionList = ({
         ) : (
           <>
             {!expressions?.length && (
-              <div className="w-fit mx-auto">
-                <span>No expressions yet</span>
-              </div>
+              <div className="w-fit mx-auto">{emptyMsg}</div>
             )}
             {expressions?.length > 0 && (
               <div className="max-lg:pt-4 lg:ps-4 w-full">

@@ -10,11 +10,13 @@ import {
   useMemo,
   useRef,
   useState,
+  RefObject,
 } from "react";
 import Button from "@/components/Button";
 import ClientPortal from "@/components/ClientPortal";
 import type { KissClickEvent } from "@/types/form.types";
 import { getNextZIndex } from "@/utils/zIndexManager";
+import useSearcher from "../Searcher/hooks/SearcherProvider";
 
 type ModalProps = {
   className?: string;
@@ -26,6 +28,7 @@ type ModalProps = {
   isFullHeight?: boolean;
   isCentered?: boolean;
   HeaderChild?: ReactNode;
+  ref?: RefObject<HTMLDivElement> | null;
 };
 
 const overlayVariants = {
@@ -34,6 +37,7 @@ const overlayVariants = {
 };
 
 const Modal = ({
+  ref,
   className = "",
   onClose,
   children,
@@ -45,6 +49,7 @@ const Modal = ({
   HeaderChild,
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(true);
+  const { previewing } = useSearcher();
 
   const nextZIndex = useMemo(() => getNextZIndex(), []);
   const minZIndex = nextZIndex > 50 ? nextZIndex : 50;
@@ -85,6 +90,7 @@ const Modal = ({
   );
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const localContentRef = ref || contentRef;
 
   const modalVariants = {
     hidden: { opacity: 0, y: 200 },
@@ -141,7 +147,10 @@ const Modal = ({
                     {HeaderChild}
                     {onClose && (
                       <Button
-                        shortcut={{ keys: ["ESC"] }}
+                        shortcut={{
+                          keys: ["ESC"],
+                          blockers: [!isOpen, !!previewing],
+                        }}
                         variant="ghost"
                         Icon={XMarkIcon}
                         onClick={handleClose}

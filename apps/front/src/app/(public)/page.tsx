@@ -1,10 +1,11 @@
 "use client";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
-import ToggleButtons from "@/components/Button/ToggleButtons/ToggleButtons";
 import Hero from "@/components/Hero";
+import ToggleButtons from "@/components/ToggleButtons";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useBrowse from "@/hooks/bread/useBrowse";
+import useDebounce from "@/hooks/useDebounce";
 import {
   GlobeEuropeAfricaIcon,
   HandRaisedIcon,
@@ -24,12 +25,15 @@ const ExpressionListPage = () => {
     search: "",
   });
 
+  const debouncedSearch = useDebounce(filters?.search, 400);
+
   const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
     author: { id: filters?.author?.id as number } as UserModel,
     symbols: {
       tokens: [...(filters?.tokens || []).map((t) => t.title)],
     } as ExpressionSymbol,
-    search: filters?.search,
+    search: debouncedSearch,
+    published: true,
   });
 
   const expressions = useMemo(

@@ -15,6 +15,7 @@ interface CodeBlockProps {
   highlightedLines?: number | number[];
   enableCopy?: boolean;
   enableLineCopy?: boolean;
+  condensed?: boolean;
 }
 
 type HighlightMode = "tokens" | "lines" | "none";
@@ -26,6 +27,7 @@ const KissCodeBlock = ({
   highlightedLines,
   enableCopy = false,
   enableLineCopy = false,
+  condensed = false,
 }: CodeBlockProps) => {
   const { code, property } = expression;
   const text = code?.lines.map((l) => l.content).join("\n") || "";
@@ -61,32 +63,35 @@ const KissCodeBlock = ({
       lines={mode === "lines" ? lines : []}
     >
       <div
-        className={`relative bg-code rounded-2xl overflow-hidden p-8 space-y-8 ${className}`}
+        className={`relative bg-code rounded-2xl overflow-hidden ${condensed ? "py-2 px-4" : "p-8"} space-y-8 ${className}`}
       >
-        <div className="sticky w-full">
-          <div
-            className={`flex ${property ? "justify-between" : "justify-end"} items-start`}
-          >
-            {property && (
-              <p className="text-sm text-accent leading-tight">
-                {`${property?.group || ""}${property?.name ? `.${property.name}` : ""}`}
-              </p>
-            )}
-            {enableCopy && (
-              <Button
-                Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}
-                size="sm"
-                shortcut={{ keys: ["cmd", "C"] }}
-                variant="ghost"
-                onClick={handleCopy}
-              />
-            )}
+        {!condensed && (
+          <div className="sticky w-full">
+            <div
+              className={`flex ${property ? "justify-between" : "justify-end"} items-start`}
+            >
+              {property && (
+                <p className="text-sm text-accent leading-tight">
+                  {`${property?.group || ""}${property?.name ? `.${property.name}` : ""}`}
+                </p>
+              )}
+              {enableCopy && (
+                <Button
+                  Icon={copied ? CheckBadgeIcon : ClipboardIconOutline}
+                  size="sm"
+                  shortcut={{ keys: ["cmd", "C"] }}
+                  variant="ghost"
+                  onClick={handleCopy}
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="overflow-x-auto w-full relative">
           <CodeBlock.Code>
             {({ isLineHighlighted }) => (
               <KissLineContent
+                condensed={condensed}
                 interactive={enableLineCopy}
                 className={
                   mode === "lines"

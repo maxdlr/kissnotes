@@ -2,11 +2,12 @@
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar/ExpressionListSidebar";
 import Button from "@/components/Button";
-import ToggleButtons from "@/components/Button/ToggleButtons/ToggleButtons";
+import ToggleButtons from "@/components/ToggleButtons";
 import UserHero from "@/components/UserHero";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useUser from "@/contexts/UserContext";
 import useBrowse from "@/hooks/bread/useBrowse";
+import useDebounce from "@/hooks/useDebounce";
 import { getHandle, getUsername } from "@/utils/userUtils";
 import {
   DocumentTextIcon as OutlineDocumentTextIcon,
@@ -36,6 +37,8 @@ const ProfilePage = () => {
 
   const { user } = useUser();
 
+  const debouncedSearch = useDebounce(filters?.search, 400);
+
   const { data, loading: expressionLoading } = useBrowse<ExpressionModel[]>(
     "expressions",
     {
@@ -43,7 +46,7 @@ const ProfilePage = () => {
       symbols: {
         tokens: [...(filters?.tokens || []).map((t) => t.title)],
       } as ExpressionSymbol,
-      search: filters?.search,
+      search: debouncedSearch,
     },
   );
 

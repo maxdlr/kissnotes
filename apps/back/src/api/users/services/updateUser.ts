@@ -14,9 +14,11 @@ const updateUser = async (
     throw ApiError("User doesn't exist");
   });
 
+  const { saves, ...editables } = user;
+
   const updatedUser: UserEntity = UserRepository.merge(
     foundUser,
-    user as UserEntity,
+    editables as UserEntity,
   );
 
   await validateCrudPayload(updatedUser);
