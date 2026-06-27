@@ -14,6 +14,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    networks:
+      - internal
 
   back:
     container_name: ${APP_NAME}-back-prod
@@ -36,6 +38,9 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       COOKIE_SECRET: ${COOKIE_SECRET}
+    networks:
+      - internal
+      - shared_proxy_network
 
   front:
     container_name: ${APP_NAME}-front-prod
@@ -54,8 +59,6 @@ services:
     container_name: ${APP_NAME}-nginx
     image: nginx:alpine
     restart: always
-    # ports:
-    #   - "86:80"
     expose:
       - "80"
     volumes:
@@ -63,10 +66,13 @@ services:
     depends_on:
       - front
       - back
+    networks:
+      - shared_proxy_network
 
 volumes:
   db-data:
 
 networks:
+  internal:
   shared_proxy_network:
     external: true
