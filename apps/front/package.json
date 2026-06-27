@@ -4,7 +4,7 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "next dev -p $FRONT_PORT",
+    "dev": "next dev -p $FRONT_PORT --experimental-https --experimental-https-key ../../certs/localhost-key.pem --experimental-https-cert ../../certs/localhost.pem",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

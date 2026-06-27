@@ -18,6 +18,8 @@ import printStartupInfo from "@/utils/printStartupInfo";
 import cookieParser from "cookie-parser";
 import express from "express";
 import parseQuery from "@/middlewares/parseQuery";
+import https from "https";
+import fs from "fs";
 
 /**
  * ======================
@@ -99,27 +101,16 @@ AppDataSource.initialize()
  * Listener!
  * ======================
  */
-// if (process.env.NODE_ENV === 'development') {
-//   if (!process.env.SSL_CRT_FOLDER) {
-//     console.error('You need to provide a SSL_CRT_FOLDER');
-//     exit(1);
-//   }
-//
-//   const options = {
-//     key: fs.readFileSync(__dirname + '/certs/localhost-key.pem'),
-//     cert: fs.readFileSync(__dirname + '/certs/localhost.pem'),
-//     ca: fs.readFileSync(process.env.SSL_CRT_FOLDER + '/rootCA.pem'),
-//   };
-//
-//
-//   https.createServer(options, app).listen(port, () => {
-//     printStartupInfo(port, true);
-//   });
-// } else {
-//   app.listen(port, () => {
-//     printStartupInfo(port, false);
-//   });
-// }
-//
+import path from "path";
 
-app.listen(port, () => printStartupInfo(port, true));
+const certDir = path.resolve(__dirname, "../../certs");
+
+https
+  .createServer(
+    {
+      key: fs.readFileSync(path.join(certDir, "localhost-key.pem")),
+      cert: fs.readFileSync(path.join(certDir, "localhost.pem")),
+    },
+    app,
+  )
+  .listen(port, () => printStartupInfo(port, true));

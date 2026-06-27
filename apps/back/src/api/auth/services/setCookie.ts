@@ -9,11 +9,11 @@ const setCookie = (
   const isProd = process.env.NODE_ENV === "production";
 
   const params: CookieOptions = {
-    sameSite: isProd ? "strict" : "lax", // 👈 lax, not none
+    sameSite: isProd ? "strict" : "lax",
     httpOnly: true,
     maxAge,
     signed: true,
-    secure: isProd,
+    secure: true,
   };
   res.cookie(cookieName, data, params);
 };
