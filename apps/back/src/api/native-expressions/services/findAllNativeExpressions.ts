@@ -4,7 +4,8 @@ import NativeExpressionRepository from "@/repositories/NativeExpressionRepositor
 const findAllNativeExpressions = async (
   where?: any,
 ): Promise<NativeExpressionEntity[]> => {
-  return await NativeExpressionRepository.findBy(where);
+  const { search, maxResults, symbols, ...sanitizedWhere } = where;
+  return await NativeExpressionRepository.findBy(sanitizedWhere);
 };
 
 export default findAllNativeExpressions;
