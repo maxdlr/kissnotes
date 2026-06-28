@@ -32,7 +32,7 @@ services:
       BACK_PORT: 4000
       DB_HOST: db
       DB_PORT: 3306
-      CORS_ORIGIN_URL: http://localhost
+      CORS_ORIGIN_URL: https://kissnotes.maxdlr.com
       EC_KEY: ${EC_KEY}
       EC_SALT: ${EC_SALT}
       JWT_SECRET: ${JWT_SECRET}
@@ -48,7 +48,7 @@ services:
       context: .
       dockerfile: apps/front/Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: http://localhost/api
+        NEXT_PUBLIC_API_URL: https://kissnotes.maxdlr.com/api
     restart: always
     depends_on:
       - back
