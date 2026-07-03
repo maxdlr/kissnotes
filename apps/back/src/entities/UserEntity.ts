@@ -33,6 +33,9 @@ export default class UserEntity extends AbstractEntity implements UserModel {
   @OneToMany(() => SaveEntity, (save) => save.user)
   saves!: SaveEntity[];
 
+  @Column({ nullable: false, default: "user" })
+  type!: "user" | "admin";
+
   set password(value: string) {
     this._password = bcrypt.hashSync(value, 10);
   }

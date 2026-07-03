@@ -4,6 +4,7 @@ export const truncate = (str: string, maxLength: number): string => {
 };
 
 export const asTitle = (str: string): string => {
+  if (!str || str.length === 0) return "";
   const capitalized = str.at(0)?.toUpperCase();
   const rest = str.slice(1, str.length);
 

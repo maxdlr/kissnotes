@@ -38,6 +38,9 @@ const Header = () => {
         modalSearcher
         className="w-full"
       />
+      {user?.type === "admin" && (
+        <Button label="admin" href="/admin" variant="ghost" />
+      )}
       {loading ? (
         <div className="w-24">
           <Loading count={8} minSize={1} maxSize={20} />

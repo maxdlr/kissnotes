@@ -1,8 +1,10 @@
 "use client";
 import Button from "@/components/Button";
 import ExpressionDetailsContent from "@/components/ExpressionDetails/components/ExpressionDetailsContent";
+import ExpressionForm from "@/components/ExpressionForm";
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
+import Tabs from "@/components/Tabs";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
 import useRead from "@/hooks/bread/useRead";
@@ -10,6 +12,7 @@ import useAxios from "@/hooks/useAxios";
 import useDebounce from "@/hooks/useDebounce";
 import type { KissChangeEvent } from "@/types/form.types";
 import { toCodeModel, toRawCodeString } from "@/utils/codeUtils";
+import { PencilIcon } from "@heroicons/react/16/solid";
 import {
   ArrowRightIcon,
   CheckBadgeIcon,
@@ -29,17 +32,6 @@ import {
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-
-type ExpressionFormData = {
-  id?: Id;
-  title: string;
-  description: string;
-  layer?: LayerModel;
-  property?: PropertyModel;
-  codeBlock: string;
-  author?: UserModel;
-  symbols?: ExpressionSymbol;
-};
 
 const ExpressionFormPage = () => {
   const { user } = useAuth();
@@ -166,19 +158,6 @@ const ExpressionFormPage = () => {
     });
   };
 
-  const layerTypeOptions = Object.values(LayerEnums).map((l) => ({
-    name: l.name,
-    type: l.type,
-  }));
-  const propertyGroupOptions = Object.values(PropertyGroupEnum).map((p) => ({
-    name: p,
-    group: p,
-  }));
-
-  const separator = (
-    <div className="h-px w-full sm:hidden md:block bg-accent/20" />
-  );
-
   const tempExpressionMemo = useMemo((): KissDeepPartial<ExpressionModel> => {
     const temp = {
       title: formData.title,
@@ -211,15 +190,6 @@ const ExpressionFormPage = () => {
     expression?.shares,
   ]);
 
-  const canSubmit: boolean =
-    !!formData.title &&
-    !!formData.layer?.name &&
-    !!formData.layer.type &&
-    !!formData.property?.name &&
-    !!formData.property.group &&
-    !!formData.codeBlock.length &&
-    !!formData.author?.id;
-
   return (
     <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
       <div className="flex justify-center items-center gap-4 pb-8">
@@ -237,124 +207,26 @@ const ExpressionFormPage = () => {
           <Button Icon={EyeIcon} href={`/exp/${expression?.id}/m`} size="sm" />
         )}
       </div>
-      <FormWrapper
-        fieldsetClassName="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8"
-        animated
-      >
-        <FormWrapper.Layout className="grid grid-cols-2 h-fit md:grid-cols-1 gap-4 sm:gap-6">
-          <div className="col-span-full flex flex-row gap-2 sm:gap-4 justify-center items-center">
-            <Button
-              label={`${expression?.published ? "Update" : "Publish"}`}
-              onClick={() => handleOnSubmit()}
-              type="submit"
-              className="w-full"
-              disabled={!canSubmit}
-            />
-            {expression?.published && (
-              <Button
-                label="Unpublish"
-                onClick={() => handleOnSubmit(false)}
-                type="submit"
-                className="w-full"
-                variant="outline-accent"
-                disabled={!canSubmit}
-                tooltip={{ content: "Save as draft and carry on later" }}
-              />
-            )}
-          </div>
-          <FormInput
-            name="title"
-            label="Title"
-            onChange={handleOnChange}
-            value={formData?.title}
-            placeholder="My new expression"
-            className="col-span-full"
-          />
 
-          <FormWrapper.Layout className="col-span-2 md:col-span-1 shrink-0 flex flex-col gap-4 sm:gap-6 items-start justify-start">
-            {separator}
-            <FormInput<LayerModel>
-              name="layer.type"
-              type="dropdown"
-              label="Type of the layer"
-              options={layerTypeOptions}
-              onChange={(e) =>
-                handleOnChange({
-                  target: {
-                    name: "layer.type",
-                    value: (e.target.value as LayerModel).type,
-                  },
-                })
-              }
-              value={layerTypeOptions.find(
-                (o) => o.type === formData.layer?.type,
-              )}
-              property="type"
-            />
-            <FormInput
-              name="layer.name"
-              onChange={handleOnChange}
-              value={formData?.layer?.name}
-              placeholder="Name of the layer"
-            />
-          </FormWrapper.Layout>
-
-          <FormWrapper.Layout className="col-span-2 md:col-span-1 shrink-0 flex flex-col gap-4 sm:gap-6 items-start justify-start">
-            {separator}
-            <FormInput<PropertyModel>
-              name="property.group"
-              type="dropdown"
-              label="Group of the property"
-              options={propertyGroupOptions}
-              onChange={(e) =>
-                handleOnChange({
-                  target: {
-                    name: "property.group",
-                    value: (e.target.value as PropertyModel).group,
-                  },
-                })
-              }
-              value={propertyGroupOptions.find(
-                (o) => o.group === formData.property?.group,
-              )}
-              property="group"
-            />
-            <FormInput
-              name="property.name"
-              onChange={handleOnChange}
-              value={formData?.property?.name}
-              placeholder="Name of the property"
-            />
-          </FormWrapper.Layout>
-          <FormInput
-            type="textarea"
-            name="description"
-            label="Description"
-            onChange={handleOnChange}
-            value={formData?.description}
-            placeholder="Describe the expression in a few words..."
-            className="col-span-full"
+      <Tabs.Container defaultTab="form">
+        <Tabs.Tab label="Form" value="form" Icon={PencilIcon}>
+          <ExpressionForm
+            published={!!expression?.published}
+            formData={formData}
+            handleOnSubmit={handleOnSubmit}
+            handleOnChange={handleOnChange}
           />
-        </FormWrapper.Layout>
+        </Tabs.Tab>
 
-        <FormWrapper.Layout className="col-span-2 space-y-8">
-          <FormInput
-            type="code"
-            name="codeBlock"
-            label="Expression"
-            onChange={handleOnChange}
-            value={formData?.codeBlock}
-            placeholder="Your code... "
-            codeHeight={`${toCodeModel(formData.codeBlock).lines.length * 26 + 24}px`}
-          />
-          <div className="max-md:hidden pt-4 sm:pt-8 border border-dashed border-emphasis bg-dark p-2 sm:p-6 rounded-3xl">
+        <Tabs.Tab label="Preview" value="preview" Icon={EyeIcon}>
+          <div className="pt-4 sm:pt-8 border border-dashed border-emphasis bg-dark p-2 sm:p-6 rounded-3xl">
             <ExpressionDetailsContent
               expression={tempExpressionMemo as ExpressionModel}
               preview
             />
           </div>
-        </FormWrapper.Layout>
-      </FormWrapper>
+        </Tabs.Tab>
+      </Tabs.Container>
     </div>
   );
 };

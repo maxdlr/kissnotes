@@ -1,78 +1,162 @@
 "use client";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
+import Button from "@/components/Button";
 import Hero from "@/components/Hero";
 import ToggleButtons from "@/components/ToggleButtons";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useDebounce from "@/hooks/useDebounce";
+import { asTitle } from "@/utils/stringUtils";
+import { getProfileHref } from "@/utils/userUtils";
+import { BookmarkIcon, HeartIcon } from "@heroicons/react/16/solid";
 import {
+  ArrowUpLeftIcon,
+  CodeBracketIcon,
   GlobeEuropeAfricaIcon,
-  HandRaisedIcon,
 } from "@heroicons/react/24/outline";
 import type {
   ExpressionModel,
   ExpressionSymbol,
   ExpressionToken,
+  NativeExpressionModel,
   UserModel,
 } from "@kissnotes/types";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ElementType, useMemo, useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
+  const router = useRouter();
+  const params = new URLSearchParams(
+    typeof window !== "undefined" ? window.location.search : "",
+  );
+  const listParam = params.get("list") || "all";
+  const [listMode, setListMode] = useState<
+    "saved" | "native" | "all" | "mine" | string
+  >(listParam);
   const [filters, setFilters] = useState<SidebarValue>({
     author: null,
     tokens: [],
     search: "",
+    saved: false,
+    native: false,
   });
 
   const debouncedSearch = useDebounce(filters?.search, 400);
 
-  const { data, loading } = useBrowse<ExpressionModel[]>("expressions", {
+  const { data, loading: userLoading } = useBrowse<
+    ExpressionModel[] | NativeExpressionModel[]
+  >(listMode === "native" ? "native-expressions" : "expressions", {
     author: { id: filters?.author?.id as number } as UserModel,
     symbols: {
       tokens: [...(filters?.tokens || []).map((t: ExpressionToken) => t.title)],
     } as ExpressionSymbol,
     search: debouncedSearch,
-    published: true,
+    ...(listMode === "native" ? {} : { published: true }),
+    saves:
+      listMode === "saved" ? { user: { id: auth?.user?.id as number } } : null,
   });
 
-  const expressions = data || [];
+  const expressions =
+    listMode === "native" && data
+      ? data
+          .filter((ne) => !!(ne as NativeExpressionModel).example)
+          .map((ne) => {
+            return {
+              id: (ne as NativeExpressionModel).id,
+              title: asTitle((ne as NativeExpressionModel).title),
+              description: (ne as NativeExpressionModel).description,
+              code: (ne as NativeExpressionModel).example,
+            };
+          })
+          .flat()
+      : data || [];
+
+  const handleModes = (value: string) => {
+    setListMode(value);
+    setFilters({
+      ...filters,
+      author: value === "mine" ? auth.user : null,
+      saved: value === "saved",
+      native: value === "native",
+    });
+    router.push(`?list=${value}`);
+  };
+
+  const modeButtons: {
+    value: string;
+    label: string;
+    Icon: ElementType;
+  }[] = useMemo(
+    () =>
+      [
+        {
+          value: "all",
+          label: "All",
+          Icon: GlobeEuropeAfricaIcon,
+        },
+        auth?.user && {
+          value: "mine",
+          label: "Mine",
+          Icon: HeartIcon,
+        },
+        auth?.user && {
+          value: "saved",
+          label: "Saved",
+          Icon: BookmarkIcon,
+        },
+        {
+          value: "native",
+          label: "Native",
+          Icon: CodeBracketIcon,
+        },
+      ].filter(Boolean),
+    [auth?.user],
+  );
 
   return (
     <>
       <Hero />
       <ExpressionList
-        loading={loading}
+        native={listMode === "native"}
+        loading={userLoading}
         expressions={expressions}
         filters={filters}
         onFilterChange={setFilters}
         startCollapsed={true}
         openModals
         ActionSlot={
-          auth?.user && (
-            <ToggleButtons
-              value={filters?.author ? "mine" : "all"}
-              onChange={(v) =>
-                setFilters({
-                  ...filters,
-                  author: v === "mine" ? auth.user : null,
-                })
-              }
-              buttons={[
-                {
-                  value: "all",
-                  label: "All",
-                  Icon: GlobeEuropeAfricaIcon,
-                },
-                {
-                  value: "mine",
-                  label: "Mine",
-                  Icon: HandRaisedIcon,
-                },
-              ]}
-              size="sm"
-            />
+          <ToggleButtons
+            value={listMode}
+            onChange={handleModes}
+            buttons={modeButtons}
+            size="sm"
+          />
+        }
+        emptyMsg={
+          listMode === "saved" ? (
+            <div className="flex flex-col items-center justify-center gap-4">
+              <p>You haven&apos;t saved any expression yet.</p>
+              <Button
+                label="Browse expressions"
+                onClick={() => setFilters({ ...filters, saved: false })}
+                Icon={ArrowUpLeftIcon}
+              />
+            </div>
+          ) : (
+            listMode === "mine" && (
+              <div className="flex flex-col items-center justify-center gap-4">
+                <p>No published expression yet.</p>
+                {auth?.user && (
+                  <Button
+                    label="See my drafts"
+                    href={`${getProfileHref(auth?.user?.username)}?list=drafts`}
+                    Icon={ArrowUpLeftIcon}
+                  />
+                )}
+              </div>
+            )
           )
         }
       />

@@ -173,23 +173,24 @@ var wobble = Math.sin(time * 2 + i) * 20;
 const makeMaxdlrUser = async (manager: EntityManager): Promise<UserEntity> => {
   const password = "password";
   const description = faker.lorem.paragraph(2);
-  const author = new UserEntity();
-  author.username = "maxdlr";
-  author.email = "contact@maxdlr.com";
-  author.password = password;
-  author.description = description;
-  return await manager.save(UserEntity, author);
+  const user = new UserEntity();
+  user.username = "maxdlr";
+  user.email = "contact@maxdlr.com";
+  user.password = password;
+  user.description = description;
+  user.type = "admin";
+  return await manager.save(UserEntity, user);
 };
 
 const makeAugustaUser = async (manager: EntityManager): Promise<UserEntity> => {
   const password = "password";
   const description = faker.lorem.paragraph(2);
-  const author = new UserEntity();
-  author.username = "augusta";
-  author.email = "contact@augusta.com";
-  author.password = password;
-  author.description = description;
-  return await manager.save(UserEntity, author);
+  const user = new UserEntity();
+  user.username = "augusta";
+  user.email = "contact@augusta.com";
+  user.password = password;
+  user.description = description;
+  return await manager.save(UserEntity, user);
 };
 
 const makeUsers = async (
@@ -203,7 +204,7 @@ const makeUsers = async (
     Array.from({ length: count }).map(async (_) => {
       const author = new UserEntity();
       author.username = faker.internet.username();
-      author.email = `${faker.person.firstName()}@${faker.commerce.productName()}.com`;
+      author.email = faker.internet.email();
       author.password = password;
       author.description = description;
       return await manager.save(UserEntity, author);
@@ -212,6 +213,8 @@ const makeUsers = async (
 };
 
 export const loadFixtures = async () => {
+  const count = 50;
+
   return await ExpressionRepository.manager.transaction(async (manager) => {
     await manager.deleteAll(NativeExpressionEntity);
     await manager.deleteAll(SaveEntity);
@@ -226,7 +229,7 @@ export const loadFixtures = async () => {
     const layer: LayerModel = { name: "my solid", type: LayerTypeEnum.Solid };
     const property: PropertyModel = { name: "position", group: "transform" };
 
-    const codes: CodeModel[] = Array.from({ length: 500 }).map(() => {
+    const codes: CodeModel[] = Array.from({ length: count }).map(() => {
       const raw = randomElement(expressionCodes);
       return {
         lines: raw
@@ -236,18 +239,16 @@ export const loadFixtures = async () => {
     });
 
     const users = [
-      ...((await makeUsers(manager, 100)) as UserEntity[]),
+      ...((await makeUsers(manager, count / 2)) as UserEntity[]),
       await makeMaxdlrUser(manager),
-      await makeAugustaUser(manager),
     ] as UserEntity[];
-    // await makeUsers(manager);
 
     await manager.save(
       ExpressionEntity,
-      Array.from({ length: 500 }).map(
+      Array.from({ length: count }).map(
         (_v, i): Omit<ExpressionEntity, "id" | "saves"> => ({
           title: faker.lorem.sentence(),
-          description: faker.lorem.paragraph(20),
+          description: faker.lorem.paragraph(3),
           author: randomElement(users),
           layer,
           property,

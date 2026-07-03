@@ -18,12 +18,14 @@ const SearchResult = ({
   searchPrompt,
   focused = false,
   onClick,
+  native = false,
 }: {
   ref?: RefObject<HTMLDivElement | null>;
   expression: ExpressionModel;
   searchPrompt?: string;
   focused?: boolean;
   onClick?: () => void;
+  native?: boolean;
 }) => {
   const localSearchPrompt = useDebounce(searchPrompt?.trim(), 300);
   const { getLineMatches, getDescriptionMatch, getTitleMatch, getKeywords } =
@@ -62,11 +64,11 @@ const SearchResult = ({
       ref={ref}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={`relative border ${focused ? "border-emphasis" : "border-accent"} rounded-3xl py-3 px-6 space-y-1 hover:bg-accent/20 cursor-pointer block w-full text-start`}
+      className={`relative border ${native ? "border-native" : "border-accent"} ${focused ? "outline-1 outline-offset-8 outline-dashed outline-emphasis" : ""} rounded-3xl py-3 px-6 space-y-1 hover:bg-accent/20 cursor-pointer block w-full text-start`}
       onClick={onClick}
     >
       {focused && (
-        <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2">
+        <div className="absolute -left-1 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2">
           {[ArrowUpIcon, ArrowDownIcon].map((Icon, index) => (
             <div
               key={index}
@@ -88,7 +90,7 @@ const SearchResult = ({
 
       <div className="flex justify-start items-center gap-2">
         {localSearchPrompt &&
-        getKeywords(localSearchPrompt).some(
+        getKeywords(localSearchPrompt)?.some(
           (k) =>
             k.length >= result.expression.author.username.length / 1.5 &&
             result.expression.author.username
@@ -153,14 +155,14 @@ const SearchResult = ({
           !(
             focused ||
             (!!localSearchPrompt &&
-              (result.expression.symbols?.tokens as ExpressionToken[]).some(
+              (result.expression.symbols?.tokens as ExpressionToken[])?.some(
                 (t: ExpressionToken) => t.label.includes(localSearchPrompt),
               ))
           )
         }
         className="flex justify-start items-center gap-2"
       >
-        {(result.expression.symbols?.tokens as ExpressionToken[])
+        {((result.expression.symbols?.tokens as ExpressionToken[]) || [])
           .slice(0, 5)
           .map((t: ExpressionToken, i: number) =>
             localSearchPrompt &&

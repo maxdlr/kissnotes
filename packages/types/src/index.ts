@@ -131,6 +131,8 @@ export interface SocialLinkModel {
   user: UserModel;
 }
 
+export type UserType = "user" | "admin";
+
 export interface UserModel extends Model {
   email: string;
   username: string;
@@ -139,6 +141,7 @@ export interface UserModel extends Model {
   expressions: ExpressionModel[];
   socials: SocialLinkModel[];
   saves?: Id[] | SaveModel[];
+  type: "user" | "admin";
 }
 
 export interface LayerModel {

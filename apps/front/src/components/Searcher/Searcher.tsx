@@ -8,15 +8,17 @@ import {
   ArrowsPointingOutIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { ExpressionModel } from "@kissnotes/types";
+import type { ExpressionModel } from "@kissnotes/types";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Button from "../Button";
 import ExpressionDetails from "../ExpressionDetails";
 import FormInput from "../FormInput";
 import SearchResult from "./components/SearcherResult";
 import useSearcher from "./hooks/SearcherProvider";
+
+type SearchResultModel = ExpressionModel & { native: boolean; score: number };
 
 interface SearcherProps {
   onClose?: (e?: KissClickEvent) => void;
@@ -43,6 +45,13 @@ const Searcher = ({
 
   const debouncedSearch = useDebounce(prompt, 300);
 
+  const { data: results } = useBrowse<SearchResultModel[]>("search", {
+    search: debouncedSearch || "",
+    maxResults: 30,
+  });
+
+  const searchResults = results || [];
+
   useShortcut({ keys: ["up"], ignoreInputs: false }, (e) => {
     e.preventDefault();
     setSelectedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
@@ -51,17 +60,9 @@ const Searcher = ({
   useShortcut({ keys: ["down"], ignoreInputs: false }, (e) => {
     e.preventDefault();
     setSelectedIndex((prevIndex) =>
-      Math.min(prevIndex + 1, results.length - 1),
+      Math.min(prevIndex + 1, searchResults.length - 1),
     );
   });
-
-  const { data: expressions } = useBrowse<ExpressionModel[]>("expressions", {
-    ...(debouncedSearch ? { search: debouncedSearch } : {}),
-    maxResults: 20,
-    published: true,
-  });
-
-  const results = useMemo(() => expressions || [], [expressions]);
 
   const handleSearch = (e: KissChangeEvent) => {
     setPrompt(e?.target?.value);
@@ -72,7 +73,7 @@ const Searcher = ({
     (e) => {
       e.preventDefault();
       if (previewing) return;
-      setPreviewing(results.at(selectedIndex)?.id);
+      setPreviewing(searchResults.at(selectedIndex)?.id);
       inputRef.current?.focus();
     },
   );
@@ -189,14 +190,15 @@ const Searcher = ({
         </div>
         <div className="space-y-4">
           {!previewing ? (
-            results.length > 0 ? (
-              results.map((result, index) => {
+            searchResults.length > 0 ? (
+              searchResults.map((result, index) => {
                 return (
                   <div
-                    key={result.id}
+                    key={`${result.id}-${index}`}
                     ref={index === selectedIndex ? scrollCenterRef : undefined}
                   >
                     <SearchResult
+                      native={result.native}
                       ref={ref}
                       expression={result}
                       searchPrompt={prompt}

@@ -3,7 +3,10 @@ import UserRepository from "@/repositories/UserRepository";
 
 const findAllUsers = async (where?: any): Promise<UserEntity[]> => {
   const { search, maxResults, ...sanitizedWhere } = where || {};
-  const users = await UserRepository.findBy(sanitizedWhere);
+  const users = await UserRepository.find({
+    where: sanitizedWhere,
+    loadRelationIds: { relations: ["saves"] },
+  });
   return users;
 };
 

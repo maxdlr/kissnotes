@@ -37,7 +37,7 @@ const findUser = async (
             ? { email }
             : {},
       loadRelationIds: {
-        relations: ["saves"],
+        relations: ["saves", "expressions"],
       },
     });
   }
@@ -46,7 +46,9 @@ const findUser = async (
     throw Missing("Cannot find user");
   }
 
-  user.saves = user.saves?.map((s) => s.expression?.id) as unknown as SaveEntity[];
+  user.saves = user.saves?.map(
+    (s) => s.expression?.id,
+  ) as unknown as SaveEntity[];
 
   return user;
 };

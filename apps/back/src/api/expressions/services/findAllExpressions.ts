@@ -65,6 +65,7 @@ OR author.username LIKE :${param}
   let result = await ExpressionRepository.find({
     where: sanitizedWhere as FindOptionsWhere<ExpressionEntity>,
     ...(take && !tokenTitles ? { take } : {}),
+    loadRelationIds: { relations: ["saves"] },
   });
 
   if (tokenTitles) {

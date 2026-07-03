@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ElementType, ReactNode } from "react";
 
 export type TabsProps = {
   defaultTab: string;
@@ -9,4 +9,5 @@ export type TabProps = {
   label: string;
   value: string;
   children: ReactNode;
+  Icon?: ElementType
 };

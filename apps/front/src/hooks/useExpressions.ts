@@ -1,10 +1,10 @@
+import { arrayUnique } from "@/utils/arrayUtils";
 import type {
   ExpressionModel,
   ExpressionSymbol,
   ExpressionToken,
 } from "@kissnotes/types";
-import { arrayUnique } from "@/utils/arrayUtils";
-import { useMemo, useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 const useExpressions = (expressions?: ExpressionModel[] | ExpressionModel) => {
   const getTokens = useCallback(
