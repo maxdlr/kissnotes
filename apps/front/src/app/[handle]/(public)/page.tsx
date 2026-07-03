@@ -24,13 +24,16 @@ import type {
   ExpressionToken,
   UserModel,
 } from "@kissnotes/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 const ProfilePage = () => {
   const { handle } = useParams();
   const { isAuthUser } = useAuth();
-  const [showDrafts, setShowDrafts] = useState(false);
+  const searchParams = useSearchParams();
+  const list = searchParams.get("list") || "published";
+  const [showDrafts, setShowDrafts] = useState(list === "drafts");
+  const router = useRouter();
   const [filters, setFilters] = useState<SidebarValue>({
     tokens: [],
     search: "",
@@ -45,7 +48,9 @@ const ProfilePage = () => {
     {
       author: user?.id ? ({ id: user.id as string } as UserModel) : undefined,
       symbols: {
-        tokens: [...(filters?.tokens || []).map((t: ExpressionToken) => t.title)],
+        tokens: [
+          ...(filters?.tokens || []).map((t: ExpressionToken) => t.title),
+        ],
       } as ExpressionSymbol,
       search: debouncedSearch,
     },
@@ -60,6 +65,11 @@ const ProfilePage = () => {
   );
 
   const isAuth = isAuthUser(user) && user?.username === getUsername(handle);
+
+  const handleShowDrafts = (value: string) => {
+    setShowDrafts(value === "drafts");
+    router.push(`?list=${value}`);
+  };
 
   return (
     <div className="space-y-8">
@@ -87,7 +97,7 @@ const ProfilePage = () => {
             isAuth && (
               <ToggleButtons
                 value={showDrafts ? "drafts" : "published"}
-                onChange={(v) => setShowDrafts(v === "drafts")}
+                onChange={handleShowDrafts}
                 buttons={[
                   {
                     value: "published",

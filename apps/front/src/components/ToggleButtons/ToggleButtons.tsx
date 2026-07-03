@@ -6,7 +6,7 @@ import { ElementType, useId } from "react";
 export interface ToggleButton {
   value: string;
   label?: string;
-  Icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Icon?: ElementType;
   HoverIcon?: ElementType;
   shortcut?: ShortcutDef;
   className?: string;
@@ -45,7 +45,6 @@ const ToggleButtons = ({
     >
       {buttons.map((button) => {
         const selected = button.value === value;
-
         return (
           <motion.button
             key={button.value}

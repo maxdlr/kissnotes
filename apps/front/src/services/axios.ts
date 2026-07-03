@@ -77,7 +77,6 @@ instance.interceptors.response.use(
         flushRefreshSubscribers();
         return instance(originalRequest);
       } catch (refreshError) {
-        console.log("catching refresh error", { refreshError });
         refreshSubscribers = [];
         return Promise.reject(refreshError);
       } finally {

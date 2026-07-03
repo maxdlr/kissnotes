@@ -15,6 +15,7 @@ interface ExpressionCardProps {
   className?: string;
   highlightedTokens: string[];
   onClick?: () => void;
+  native?: boolean;
 }
 
 const ExpressionCard = ({
@@ -22,6 +23,7 @@ const ExpressionCard = ({
   className,
   highlightedTokens = [],
   onClick,
+  native,
 }: ExpressionCardProps) => {
   const { getTokens } = useExpressions(expression);
 
@@ -34,14 +36,16 @@ const ExpressionCard = ({
         exit={{ opacity: 0, y: -20 }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className={`block hover:bg-accent/10 border border-secondary hover:border-primary rounded-3xl! p-4! sm:p-8! cursor-pointer ${className}`}
+        className={`block hover:bg-accent/10 border ${native ? "border-native" : "border-secondary"} hover:border-primary rounded-3xl! p-4! sm:p-8! cursor-pointer ${className}`}
       >
         {!expression ? (
           <Loading />
         ) : (
           <div className="grid grid-flow-row-dense gap-2 sm:gap-4">
             <div className="text-sm font-bold flex justify-between items-center text-accent">
-              <UserHandle username={expression.author.username} />
+              {expression.author?.username && (
+                <UserHandle username={expression.author.username} />
+              )}
               <p>{getRelativeTime(expression.createdAt)}</p>
             </div>
             <div className="text-lg font-bold">

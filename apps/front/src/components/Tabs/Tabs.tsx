@@ -25,7 +25,7 @@ const Container = ({ defaultTab, children }: TabsProps) => {
 
   return (
     <TabsContext.Provider value={{ active, setActive }}>
-      <div className="flex justify-center gap-2 mb-4 border-b">
+      <div className="flex justify-center gap-2 mb-8 border-b">
         {localChildren.map((child) => (
           <div key={child.props.value}>
             <Button
@@ -34,6 +34,7 @@ const Container = ({ defaultTab, children }: TabsProps) => {
               data-active={active === child.props.value}
               variant="ghost-secondary"
               className={active === child.props.value ? "" : "text-accent!"}
+              Icon={child.props.Icon}
             />
           </div>
         ))}

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import expressionRoutes from "./api/expressions/routes/index";
 import nativeExpressionRoutes from "./api/native-expressions/routes/index";
+import searchRoutes from "./api/search/routes/index";
 import userRoutes from "./api/users/routes/index";
 import socialLinkRoutes from "./api/socials/routes/index";
 import getMe from "./api/auth/controllers/getMe";
@@ -21,6 +22,7 @@ router.get("/me", authenticate, getMe);
 
 router.use("/expressions", expressionRoutes);
 router.use("/native-expressions", nativeExpressionRoutes);
+router.use("/search", searchRoutes);
 router.use("/users", userRoutes);
 router.use("/social-links", socialLinkRoutes);
 

@@ -1,4 +1,4 @@
-import { NativeExpressionModel } from "@kissnotes/types";
+import { CodeModel, NativeExpressionModel } from "@kissnotes/types";
 import { Column, Entity } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 
@@ -18,4 +18,7 @@ export default class NativeExpressionEntity
 
   @Column({ nullable: false })
   arguments!: string;
+
+  @Column({ type: "json", nullable: true })
+  example?: CodeModel;
 }
