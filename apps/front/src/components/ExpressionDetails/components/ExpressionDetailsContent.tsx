@@ -100,10 +100,10 @@ const ExpressionDetailsContent = ({
           {expression.title && (
             <h1 className="text-2xl font-bold">{expression.title}</h1>
           )}
-          {!expression?.published && !preview && (
+          {!expression?.published && !Boolean(!preview) && (
             <Pill label="Draft" className="border-emphasis text-emphasis" />
           )}
-          {preview && (
+          {!!preview && (
             <Pill label="Preview" className="border-emphasis text-emphasis" />
           )}
         </div>

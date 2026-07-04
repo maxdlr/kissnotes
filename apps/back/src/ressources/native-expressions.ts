@@ -35,7 +35,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])wiggle\\(\\s*(?:(?<frequency>[^,]+?)(?:,\\s*(?<amplitude>[^,)]+?))?(?:,\\s*(?<octaves>[^,)]+?))?(?:,\\s*(?<amp_mult>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?)?\\s*\\)",
     arguments: "frequency,amplitude,octaves,amp_mult,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const frequency = 3;" },
         { number: 2, content: "const amplitude = 50;" },
@@ -49,7 +49,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Sets the frame rate at which the rest of the expression evaluates, creating a step/hold effect.",
     regex: "(?<![\\w.])posterizeTime\\(\\s*(?<framesPerSecond>[^)]*?)\\s*\\)",
     arguments: "framesPerSecond",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const framesPerSecond = 12;" },
         { number: 2, content: "posterizeTime(framesPerSecond);" },
@@ -63,7 +63,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Retrieves a composition from the project by name. Returns a Comp object.",
     regex: "(?<![\\w.])comp\\(\\s*(?<name>[^)]*?)\\s*\\)",
     arguments: "name",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const name = \"Precomp 1\";" },
         { number: 2, content: "comp(name).layer(1).transform.position;" },
@@ -76,7 +76,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Retrieves a footage item from the Project panel by filename.",
     regex: "(?<![\\w.])footage\\(\\s*(?<name>[^)]*?)\\s*\\)",
     arguments: "name",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const name = \"data.json\";" },
         { number: 2, content: "footage(name).sourceData;" },
@@ -90,7 +90,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])random\\(\\s*(?:(?<minValOrArray>[^,)]+?)(?:,\\s*(?<maxValOrArray>[^)]*?))?)?\\s*\\)",
     arguments: "minValOrArray,maxValOrArray",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const minVal = 20;" },
         { number: 2, content: "const maxVal = 80;" },
@@ -105,7 +105,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])gaussRandom\\(\\s*(?:(?<minValOrArray>[^,)]+?)(?:,\\s*(?<maxValOrArray>[^)]*?))?)?\\s*\\)",
     arguments: "minValOrArray,maxValOrArray",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const minVal = 0;" },
         { number: 2, content: "const maxVal = 100;" },
@@ -120,7 +120,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])seedRandom\\(\\s*(?<offset>[^,)]+?)(?:,\\s*(?<timeless>[^)]*?))?\\s*\\)",
     arguments: "offset,timeless",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Random changes every frame (default)" },
         { number: 2, content: "seedRandom(index, false);" },
@@ -137,7 +137,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns a Perlin noise value between -1 and 1. Smooth and continuous.",
     regex: "(?<![\\w.])noise\\(\\s*(?<valOrArray>[^)]*?)\\s*\\)",
     arguments: "valOrArray",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const valOrArray = time * 2;" },
         { number: 2, content: "noise(valOrArray) * 50;" },
@@ -151,7 +151,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])linear\\(\\s*(?:(?<t>[^,]+?)(?:,\\s*(?<tMin>[^,]+?))?(?:,\\s*(?<tMax>[^,)]+?))?(?:,\\s*(?<value1>[^,)]+?))?(?:,\\s*(?<value2>[^)]*?))?)?\\s*\\)",
     arguments: "t,tMin,tMax,value1,value2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const startTime = 0;" },
         { number: 2, content: "const endTime = 2;" },
@@ -168,7 +168,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])ease\\(\\s*(?:(?<t>[^,]+?)(?:,\\s*(?<tMin>[^,]+?))?(?:,\\s*(?<tMax>[^,)]+?))?(?:,\\s*(?<value1>[^,)]+?))?(?:,\\s*(?<value2>[^)]*?))?)?\\s*\\)",
     arguments: "t,tMin,tMax,value1,value2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const startTime = 0;" },
         { number: 2, content: "const endTime = 1;" },
@@ -185,7 +185,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])easeIn\\(\\s*(?:(?<t>[^,]+?)(?:,\\s*(?<tMin>[^,]+?))?(?:,\\s*(?<tMax>[^,)]+?))?(?:,\\s*(?<value1>[^,)]+?))?(?:,\\s*(?<value2>[^)]*?))?)?\\s*\\)",
     arguments: "t,tMin,tMax,value1,value2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const startTime = 0;" },
         { number: 2, content: "const endTime = 1;" },
@@ -202,7 +202,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])easeOut\\(\\s*(?:(?<t>[^,]+?)(?:,\\s*(?<tMin>[^,]+?))?(?:,\\s*(?<tMax>[^,)]+?))?(?:,\\s*(?<value1>[^,)]+?))?(?:,\\s*(?<value2>[^)]*?))?)?\\s*\\)",
     arguments: "t,tMin,tMax,value1,value2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const startTime = 0;" },
         { number: 2, content: "const endTime = 1;" },
@@ -218,7 +218,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Adds two vectors component-by-component.",
     regex: "(?<![\\w.])add\\(\\s*(?<vec1>[^,]+?),\\s*(?<vec2>[^)]*?)\\s*\\)",
     arguments: "vec1,vec2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec1 = [100, 200];" },
         { number: 2, content: "const vec2 = [50, -30];" },
@@ -232,7 +232,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Subtracts vec2 from vec1 component-by-component.",
     regex: "(?<![\\w.])sub\\(\\s*(?<vec1>[^,]+?),\\s*(?<vec2>[^)]*?)\\s*\\)",
     arguments: "vec1,vec2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec1 = [500, 400];" },
         { number: 2, content: "const vec2 = [100, 100];" },
@@ -246,7 +246,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Multiplies every component of a vector by a scalar.",
     regex: "(?<![\\w.])mul\\(\\s*(?<vec>[^,]+?),\\s*(?<amount>[^)]*?)\\s*\\)",
     arguments: "vec,amount",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [100, 200];" },
         { number: 2, content: "const amount = 2;" },
@@ -260,7 +260,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Divides every component of a vector by a scalar.",
     regex: "(?<![\\w.])div\\(\\s*(?<vec>[^,]+?),\\s*(?<amount>[^)]*?)\\s*\\)",
     arguments: "vec,amount",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [200, 400];" },
         { number: 2, content: "const amount = 2;" },
@@ -275,7 +275,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])clamp\\(\\s*(?<value>[^,]+?),\\s*(?<limit1>[^,]+?),\\s*(?<limit2>[^)]*?)\\s*\\)",
     arguments: "value,limit1,limit2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const val = wiggle(2, 100);" },
         { number: 2, content: "const limit1 = 0;" },
@@ -290,7 +290,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the dot product of two vectors.",
     regex: "(?<![\\w.])dot\\(\\s*(?<vec1>[^,]+?),\\s*(?<vec2>[^)]*?)\\s*\\)",
     arguments: "vec1,vec2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec1 = [1, 0];" },
         { number: 2, content: "const vec2 = [0, 1];" },
@@ -304,7 +304,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the cross product of two 3D vectors.",
     regex: "(?<![\\w.])cross\\(\\s*(?<vec1>[^,]+?),\\s*(?<vec2>[^)]*?)\\s*\\)",
     arguments: "vec1,vec2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec1 = [1, 0, 0];" },
         { number: 2, content: "const vec2 = [0, 1, 0];" },
@@ -318,7 +318,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Scales a vector to unit length (magnitude 1).",
     regex: "(?<![\\w.])normalize\\(\\s*(?<vec>[^)]*?)\\s*\\)",
     arguments: "vec",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [3, 4];" },
         { number: 2, content: "normalize(vec);" },
@@ -332,7 +332,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])length\\(\\s*(?<vec_or_point1>[^,)]+?)(?:,\\s*(?<point2>[^)]*?))?\\s*\\)",
     arguments: "vec_or_point1,point2",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point1 = thisLayer.transform.position;" },
         { number: 2, content: "const point2 = thisComp.layer(\"Target\").transform.position;" },
@@ -347,7 +347,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])lookAt\\(\\s*(?<fromPoint>[^,]+?),\\s*(?<atPoint>[^)]*?)\\s*\\)",
     arguments: "fromPoint,atPoint",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const fromPoint = thisLayer.transform.position;" },
         { number: 2, content: "const atPoint = thisComp.layer(\"Target\").transform.position;" },
@@ -362,7 +362,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])timeToFrames\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<fps>[^,)]+?))?(?:,\\s*(?<isDuration>[^)]*?))?)?\\s*\\)",
     arguments: "t,fps,isDuration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const fps = 24;" },
@@ -377,7 +377,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])framesToTime\\(\\s*(?<frames>[^,)]+?)(?:,\\s*(?<fps>[^)]*?))?\\s*\\)",
     arguments: "frames,fps",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const frames = 48;" },
         { number: 2, content: "const fps = 24;" },
@@ -392,7 +392,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])timeToTimecode\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<timecodeBase>[^,)]+?))?(?:,\\s*(?<isDuration>[^)]*?))?)?\\s*\\)",
     arguments: "t,timecodeBase,isDuration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const timecodeBase = 30;" },
@@ -407,7 +407,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])timeToNTSCTimecode\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<ntscDropFrame>[^,)]+?))?(?:,\\s*(?<isDuration>[^)]*?))?)?\\s*\\)",
     arguments: "t,ntscDropFrame,isDuration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const ntscDropFrame = true;" },
@@ -422,7 +422,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])timeToFeetAndFrames\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<fps>[^,)]+?))?(?:,\\s*(?<framesPerFoot>[^,)]+?))?(?:,\\s*(?<isDuration>[^)]*?))?)?\\s*\\)",
     arguments: "t,fps,framesPerFoot,isDuration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const fps = 24;" },
@@ -438,7 +438,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])timeToCurrentFormat\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<fps>[^,)]+?))?(?:,\\s*(?<isDuration>[^,)]+?))?(?:,\\s*(?<ntscDropFrame>[^)]*?))?)?\\s*\\)",
     arguments: "t,fps,isDuration,ntscDropFrame",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "timeToCurrentFormat(t);" },
@@ -451,7 +451,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Converts [R,G,B,A] (0–1) to [H,S,L,A].",
     regex: "(?<![\\w.])rgbToHsl\\(\\s*(?<rgbaArray>[^)]*?)\\s*\\)",
     arguments: "rgbaArray",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const rgbaArray = [1, 0, 0, 1];" },
         { number: 2, content: "rgbToHsl(rgbaArray);" },
@@ -464,7 +464,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Converts [H,S,L,A] (0–1) back to [R,G,B,A].",
     regex: "(?<![\\w.])hslToRgb\\(\\s*(?<hslaArray>[^)]*?)\\s*\\)",
     arguments: "hslaArray",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const hslaArray = [0, 1, 0.5, 1];" },
         { number: 2, content: "hslToRgb(hslaArray);" },
@@ -477,7 +477,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Converts a hex color string to [R,G,B,A] (0–1).",
     regex: "(?<![\\w.])hexToRgb\\(\\s*(?<hexString>[^)]*?)\\s*\\)",
     arguments: "hexString",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const hexString = \"#FF5733\";" },
         { number: 2, content: "hexToRgb(hexString);" },
@@ -490,7 +490,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Converts degrees to radians (×π/180).",
     regex: "(?<![\\w.])degreesToRadians\\(\\s*(?<degrees>[^)]*?)\\s*\\)",
     arguments: "degrees",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const degrees = 90;" },
         { number: 2, content: "degreesToRadians(degrees);" },
@@ -503,7 +503,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Converts radians to degrees (×180/π).",
     regex: "(?<![\\w.])radiansToDegrees\\(\\s*(?<radians>[^)]*?)\\s*\\)",
     arguments: "radians",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const radians = Math.PI;" },
         { number: 2, content: "radiansToDegrees(radians);" },
@@ -517,7 +517,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])createPath\\(\\s*(?<points>[^,]+?),\\s*(?<inTangents>[^,]+?),\\s*(?<outTangents>[^,]+?),\\s*(?<isClosed>[^)]*?)\\s*\\)",
     arguments: "points,inTangents,outTangents,isClosed",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const points = [[0, 0], [100, 0], [100, 100]];" },
         { number: 2, content: "const inTangents = [];" },
@@ -535,7 +535,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Loops keyframes after the last keyframe. The most common loop expression.",
     regex: "(?<![\\w.])loopOut\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<numKeyframes>[^)]*?))?)?\\s*\\)",
     arguments: "type,numKeyframes",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Repeats the keyframe sequence" },
         { number: 2, content: "loopOut(\"cycle\");" },
@@ -554,7 +554,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Loops keyframes before the first keyframe.",
     regex: "(?<![\\w.])loopIn\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<numKeyframes>[^)]*?))?)?\\s*\\)",
     arguments: "type,numKeyframes",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Repeats the keyframe sequence before first key" },
         { number: 2, content: "loopIn(\"cycle\");" },
@@ -573,7 +573,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Like loopOut() but uses time duration instead of keyframe count.",
     regex: "(?<![\\w.])loopOutDuration\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<duration>[^)]*?))?)?\\s*\\)",
     arguments: "type,duration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const type = \"cycle\";" },
         { number: 2, content: "const duration = 2;" },
@@ -587,7 +587,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Like loopIn() but uses time duration instead of keyframe count.",
     regex: "(?<![\\w.])loopInDuration\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<duration>[^)]*?))?)?\\s*\\)",
     arguments: "type,duration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const type = \"cycle\";" },
         { number: 2, content: "const duration = 2;" },
@@ -601,7 +601,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the current property's value at an arbitrary time (standalone call).",
     regex: "(?<![\\w.])valueAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time - 0.5;" },
         { number: 2, content: "valueAtTime(t);" },
@@ -614,7 +614,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the rate of change of the current property at time t (standalone call).",
     regex: "(?<![\\w.])velocityAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "velocityAtTime(t);" },
@@ -627,7 +627,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the scalar speed of the current property at time t (standalone call).",
     regex: "(?<![\\w.])speedAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "speedAtTime(t);" },
@@ -641,7 +641,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])smooth\\(\\s*(?:(?<width>[^,)]+?)(?:,\\s*(?<samples>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?)?\\s*\\)",
     arguments: "width,samples,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const width = 0.2;" },
         { number: 2, content: "const samples = 5;" },
@@ -656,7 +656,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])temporalWiggle\\(\\s*(?<frequency>[^,]+?),\\s*(?<amplitude>[^,)]+?)(?:,\\s*(?<octaves>[^,)]+?))?(?:,\\s*(?<amp_mult>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "frequency,amplitude,octaves,amp_mult,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const frequency = 2;" },
         { number: 2, content: "const amplitude = 30;" },
@@ -670,7 +670,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the nearest keyframe to time t (standalone call).",
     regex: "(?<![\\w.])nearestKey\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "nearestKey(t).time;" },
@@ -683,7 +683,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the Key object at the given index (standalone call).",
     regex: "(?<![\\w.])key\\(\\s*(?<indexOrName>[^)]*?)\\s*\\)",
     arguments: "indexOrName",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const indexOrName = 1;" },
         { number: 2, content: "key(indexOrName).value;" },
@@ -696,7 +696,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses an effect on the current layer by name or index (standalone call).",
     regex: "(?<![\\w.])effect\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Gaussian Blur\";" },
         { number: 2, content: "effect(nameOrIndex)(\"Blurriness\");" },
@@ -709,7 +709,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses a shape group/property (standalone call on shape layers).",
     regex: "(?<![\\w.])content\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Rectangle 1\";" },
         { number: 2, content: "content(nameOrIndex).transform.position;" },
@@ -722,7 +722,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses a mask on the current layer (standalone call).",
     regex: "(?<![\\w.])mask\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Mask 1\";" },
         { number: 2, content: "mask(nameOrIndex).maskPath;" },
@@ -736,7 +736,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "(?<![\\w.])sourceRectAtTime\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<includeExtents>[^)]*?))?)?\\s*\\)",
     arguments: "t,includeExtents",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const includeExtents = true;" },
@@ -755,7 +755,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the property's value at any arbitrary time.",
     regex: "\\.valueAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time - 1;" },
         { number: 2, content: "thisProperty.valueAtTime(t);" },
@@ -768,7 +768,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the rate of change of the property at time t.",
     regex: "\\.velocityAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.velocityAtTime(t);" },
@@ -781,7 +781,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the scalar speed of the property at time t.",
     regex: "\\.speedAtTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.speedAtTime(t);" },
@@ -795,7 +795,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.smooth\\(\\s*(?:(?<width>[^,)]+?)(?:,\\s*(?<samples>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?)?\\s*\\)",
     arguments: "width,samples,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const width = 0.1;" },
         { number: 2, content: "const samples = 5;" },
@@ -810,7 +810,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.temporalWiggle\\(\\s*(?<frequency>[^,]+?),\\s*(?<amplitude>[^,)]+?)(?:,\\s*(?<octaves>[^,)]+?))?(?:,\\s*(?<amp_mult>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "frequency,amplitude,octaves,amp_mult,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const frequency = 3;" },
         { number: 2, content: "const amplitude = 20;" },
@@ -825,7 +825,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.loopIn\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<numKeyframes>[^)]*?))?)?\\s*\\)",
     arguments: "type,numKeyframes",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Repeats keyframes before first key" },
         { number: 2, content: "thisProperty.loopIn(\"cycle\");" },
@@ -842,7 +842,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.loopOut\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<numKeyframes>[^)]*?))?)?\\s*\\)",
     arguments: "type,numKeyframes",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Repeats keyframes after last key" },
         { number: 2, content: "thisProperty.loopOut(\"cycle\");" },
@@ -859,7 +859,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.loopInDuration\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<duration>[^)]*?))?)?\\s*\\)",
     arguments: "type,duration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const type = \"cycle\";" },
         { number: 2, content: "const duration = 1.5;" },
@@ -874,7 +874,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.loopOutDuration\\(\\s*(?:(?<type>[^,)]+?)(?:,\\s*(?<duration>[^)]*?))?)?\\s*\\)",
     arguments: "type,duration",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const type = \"cycle\";" },
         { number: 2, content: "const duration = 3;" },
@@ -888,7 +888,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns a Key object for the keyframe at the given index.",
     regex: "\\.key\\(\\s*(?<indexOrName>[^)]*?)\\s*\\)",
     arguments: "indexOrName",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const indexOrName = 1;" },
         { number: 2, content: "thisProperty.key(indexOrName).time;" },
@@ -901,7 +901,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the Key object closest in time to t.",
     regex: "\\.nearestKey\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.nearestKey(t).index;" },
@@ -914,7 +914,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the Key object immediately before time t. (AE 26.0+)",
     regex: "\\.previousKey\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.previousKey(t).value;" },
@@ -927,7 +927,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the Key object immediately after time t. (AE 26.0+)",
     regex: "\\.nextKey\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.nextKey(t).value;" },
@@ -941,7 +941,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.sourceRectAtTime\\(\\s*(?:(?<t>[^,)]+?)(?:,\\s*(?<includeExtents>[^)]*?))?)?\\s*\\)",
     arguments: "t,includeExtents",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "const rect = thisLayer.sourceRectAtTime(t, true);" },
@@ -955,7 +955,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns the source footage time for time-remapped layers.",
     regex: "\\.sourceTime\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisLayer.sourceTime(t);" },
@@ -969,7 +969,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.sampleImage\\(\\s*(?<point>[^,]+?),\\s*(?<radius>[^,)]+?)(?:,\\s*(?<postEffect>[^,)]+?))?(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,radius,postEffect,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [960, 540];" },
         { number: 2, content: "const radius = [5, 5];" },
@@ -983,7 +983,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses an effect on a layer by name or index.",
     regex: "\\.effect\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Fill\";" },
         { number: 2, content: "thisLayer.effect(nameOrIndex)(\"Color\");" },
@@ -996,7 +996,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses a mask on a layer by name or index.",
     regex: "\\.mask\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Mask 1\";" },
         { number: 2, content: "thisLayer.mask(nameOrIndex).maskPath;" },
@@ -1009,7 +1009,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Accesses a shape group/property within a shape layer.",
     regex: "\\.content\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Ellipse 1\";" },
         { number: 2, content: "thisLayer.content(nameOrIndex).transform.scale;" },
@@ -1022,7 +1022,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Retrieves a layer from the composition by name or index.",
     regex: "\\.layer\\(\\s*(?<nameOrIndex>[^)]*?)\\s*\\)",
     arguments: "nameOrIndex",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const nameOrIndex = \"Controller\";" },
         { number: 2, content: "thisComp.layer(nameOrIndex).transform.position;" },
@@ -1035,7 +1035,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a point from layer-local to comp space.",
     regex: "\\.toComp\\(\\s*(?<point>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [0, 0];" },
         { number: 2, content: "thisLayer.toComp(point);" },
@@ -1048,7 +1048,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a point from comp to layer-local space.",
     regex: "\\.fromComp\\(\\s*(?<point>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [960, 540];" },
         { number: 2, content: "thisLayer.fromComp(point);" },
@@ -1061,7 +1061,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a point from layer-local to 3D world space.",
     regex: "\\.toWorld\\(\\s*(?<point>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [0, 0, 0];" },
         { number: 2, content: "thisLayer.toWorld(point);" },
@@ -1074,7 +1074,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a point from 3D world space to layer-local.",
     regex: "\\.fromWorld\\(\\s*(?<point>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [500, 300, 0];" },
         { number: 2, content: "thisLayer.fromWorld(point);" },
@@ -1087,7 +1087,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a direction vector from layer-local to comp space.",
     regex: "\\.toCompVec\\(\\s*(?<vec>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "vec,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [1, 0];" },
         { number: 2, content: "thisLayer.toCompVec(vec);" },
@@ -1100,7 +1100,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a direction vector from comp to layer-local space.",
     regex: "\\.fromCompVec\\(\\s*(?<vec>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "vec,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [0, 1];" },
         { number: 2, content: "thisLayer.fromCompVec(vec);" },
@@ -1113,7 +1113,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a direction vector from layer-local to world space.",
     regex: "\\.toWorldVec\\(\\s*(?<vec>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "vec,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [0, 0, 1];" },
         { number: 2, content: "thisLayer.toWorldVec(vec);" },
@@ -1126,7 +1126,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Transforms a direction vector from world to layer-local space.",
     regex: "\\.fromWorldVec\\(\\s*(?<vec>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "vec,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const vec = [1, 0, 0];" },
         { number: 2, content: "thisLayer.fromWorldVec(vec);" },
@@ -1140,7 +1140,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.fromCompToSurface\\(\\s*(?<point>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "point,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const point = [960, 540];" },
         { number: 2, content: "thisLayer.fromCompToSurface(point);" },
@@ -1153,7 +1153,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Navigates up the property hierarchy by countUp levels.",
     regex: "\\.propertyGroup\\(\\s*(?<countUp>[^)]*?)\\s*\\)",
     arguments: "countUp",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const countUp = 1;" },
         { number: 2, content: "thisProperty.propertyGroup(countUp).name;" },
@@ -1166,7 +1166,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns an array of vertex points from a path.",
     regex: "\\.points\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.points(t);" },
@@ -1179,7 +1179,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns incoming tangent vectors for each path vertex.",
     regex: "\\.inTangents\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.inTangents(t);" },
@@ -1192,7 +1192,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns outgoing tangent vectors for each path vertex.",
     regex: "\\.outTangents\\(\\s*(?<t>[^)]*?)\\s*\\)",
     arguments: "t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const t = time;" },
         { number: 2, content: "thisProperty.outTangents(t);" },
@@ -1205,7 +1205,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Returns true if the path is closed.",
     regex: "\\.isClosed\\(\\s*\\)",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisProperty.isClosed();" },
       ],
@@ -1218,7 +1218,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.pointOnPath\\(\\s*(?<percentage>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "percentage,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const percentage = 0.5;" },
         { number: 2, content: "thisProperty.pointOnPath(percentage);" },
@@ -1232,7 +1232,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.tangentOnPath\\(\\s*(?<percentage>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "percentage,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const percentage = 0.5;" },
         { number: 2, content: "thisProperty.tangentOnPath(percentage);" },
@@ -1246,7 +1246,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     regex:
       "\\.normalOnPath\\(\\s*(?<percentage>[^,)]+?)(?:,\\s*(?<t>[^)]*?))?\\s*\\)",
     arguments: "percentage,t",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "const percentage = 0.75;" },
         { number: 2, content: "thisProperty.normalOnPath(percentage);" },
@@ -1264,7 +1264,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The Transform property group (position, scale, rotation, opacity, anchorPoint).",
     regex: "\\.transform(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Shape\").transform.position;" },
       ],
@@ -1276,7 +1276,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The layer's position [x, y] or [x, y, z].",
     regex: "\\.position(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Follow another layer's X, keep own Y" },
         { number: 2, content: "const target = thisComp.layer(\"Controller\");" },
@@ -1290,7 +1290,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The layer's anchor point (pivot).",
     regex: "\\.anchorPoint(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.anchorPoint;" },
       ],
@@ -1302,7 +1302,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The layer's scale [x%, y%] or [x%, y%, z%].",
     regex: "\\.scale(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Target\").transform.scale;" },
       ],
@@ -1314,7 +1314,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The layer's rotation in degrees.",
     regex: "\\.rotation(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.rotation + time * 45;" },
       ],
@@ -1326,7 +1326,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The layer's opacity (0–100).",
     regex: "\\.opacity(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.opacity / 100;" },
       ],
@@ -1337,7 +1337,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "X-axis rotation in degrees (3D layers).",
     regex: "\\.xRotation(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.xRotation;" },
       ],
@@ -1348,7 +1348,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Y-axis rotation in degrees (3D layers).",
     regex: "\\.yRotation(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.yRotation;" },
       ],
@@ -1359,7 +1359,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Z-axis rotation in degrees (3D layers).",
     regex: "\\.zRotation(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.zRotation;" },
       ],
@@ -1371,7 +1371,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "3D orientation [x, y, z] degrees.",
     regex: "\\.orientation(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.orientation;" },
       ],
@@ -1383,7 +1383,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Camera/light point of interest in 3D space.",
     regex: "\\.pointOfInterest(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.pointOfInterest;" },
       ],
@@ -1395,7 +1395,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The source text content of a text layer.",
     regex: "\\.text\\.sourceText(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Title\").text.sourceText;" },
       ],
@@ -1406,7 +1406,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Camera zoom (focal length) in pixels.",
     regex: "\\.zoom(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.zoom;" },
       ],
@@ -1417,7 +1417,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Whether DOF is enabled on the camera.",
     regex: "\\.depthOfField(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.depthOfField;" },
       ],
@@ -1428,7 +1428,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Camera focus distance in pixels.",
     regex: "\\.focusDistance(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.focusDistance;" },
       ],
@@ -1439,7 +1439,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Camera aperture in pixels.",
     regex: "\\.aperture(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.aperture;" },
       ],
@@ -1450,7 +1450,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Camera blur level percentage.",
     regex: "\\.blurLevel(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.blurLevel;" },
       ],
@@ -1461,7 +1461,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Light intensity (0–100+).",
     regex: "\\.intensity(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Spot Light\").intensity;" },
       ],
@@ -1472,7 +1472,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Light color [R, G, B, A] (0–1).",
     regex: "\\.color(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Point Light\").color;" },
       ],
@@ -1483,7 +1483,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Spot light cone angle in degrees.",
     regex: "\\.coneAngle(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Spot Light\").coneAngle;" },
       ],
@@ -1494,7 +1494,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Spot light cone feather percentage.",
     regex: "\\.coneFeather(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Spot Light\").coneFeather;" },
       ],
@@ -1505,7 +1505,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Shadow darkness (0–100%).",
     regex: "\\.shadowDarkness(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Spot Light\").shadowDarkness;" },
       ],
@@ -1516,7 +1516,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Shadow diffusion/softness.",
     regex: "\\.shadowDiffusion(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Spot Light\").shadowDiffusion;" },
       ],
@@ -1527,7 +1527,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "The path shape of a mask.",
     regex: "\\.maskPath(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.mask(\"Mask 1\").maskPath;" },
       ],
@@ -1538,7 +1538,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Mask feather amount in pixels.",
     regex: "\\.maskFeather(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.mask(\"Mask 1\").maskFeather;" },
       ],
@@ -1549,7 +1549,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Mask opacity (0–100%).",
     regex: "\\.maskOpacity(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.mask(\"Mask 1\").maskOpacity;" },
       ],
@@ -1560,7 +1560,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Mask expansion/contraction in pixels.",
     regex: "\\.maskExpansion(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.mask(\"Mask 1\").maskExpansion;" },
       ],
@@ -1571,7 +1571,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Shape/mask path property.",
     regex: "\\.path(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.content(\"Shape 1\").content(\"Path 1\").path;" },
       ],
@@ -1582,7 +1582,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Parsed JSON data from a JSON footage item.",
     regex: "\\.sourceData(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "footage(\"data.json\").sourceData;" },
       ],
@@ -1593,7 +1593,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "The source Comp or Footage of a layer.",
     regex: "\\.source(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.source.name;" },
       ],
@@ -1604,7 +1604,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "1-based index of the property within its parent group.",
     regex: "\\.propertyIndex(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisProperty.propertyIndex;" },
       ],
@@ -1616,7 +1616,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The camera currently rendering the composition.",
     regex: "\\.activeCamera(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.activeCamera.zoom;" },
       ],
@@ -1628,7 +1628,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Composition or layer marker property.",
     regex: "\\.marker(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.marker.key(1).time;" },
       ],
@@ -1639,7 +1639,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "The name of the layer or property.",
     regex: "\\.name(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.name;" },
       ],
@@ -1650,7 +1650,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Width of the comp or layer in pixels.",
     regex: "\\.width(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.width / 2;" },
       ],
@@ -1661,7 +1661,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Height of the comp or layer in pixels.",
     regex: "\\.height(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.height / 2;" },
       ],
@@ -1672,7 +1672,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Duration of the comp in seconds.",
     regex: "\\.duration(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.duration;" },
       ],
@@ -1683,7 +1683,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Whether the layer is active at the current time.",
     regex: "\\.active(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Target\").active;" },
       ],
@@ -1694,7 +1694,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
     description: "Whether the layer's video switch is on.",
     regex: "\\.enabled(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Background\").enabled;" },
       ],
@@ -1712,7 +1712,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Current composition time in seconds.",
     regex: "(?<![\\w.])time(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Rotates 90 degrees per second" },
         { number: 2, content: "const speed = 90;" },
@@ -1726,7 +1726,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Current value of the property the expression is on.",
     regex: "(?<![\\w.])value(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Add wiggle on top of existing keyframes" },
         { number: 2, content: "value + wiggle(2, 25);" },
@@ -1739,7 +1739,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Reference to the composition containing this expression.",
     regex: "(?<![\\w.])thisComp(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.layer(\"Controller\").transform.position;" },
       ],
@@ -1751,7 +1751,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Reference to the layer this expression is on.",
     regex: "(?<![\\w.])thisLayer(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisLayer.transform.scale;" },
       ],
@@ -1763,7 +1763,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Reference to the property this expression is on.",
     regex: "(?<![\\w.])thisProperty(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisProperty.numKeys;" },
       ],
@@ -1775,7 +1775,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "1-based layer index in the comp stack.",
     regex: "(?<![\\w.])index(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Offset position based on layer stack order" },
         { number: 2, content: "value + [index * 50, 0];" },
@@ -1788,7 +1788,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Number of keyframes on this property.",
     regex: "(?<![\\w.])numKeys(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Get the last keyframe value" },
         { number: 2, content: "key(numKeys).value;" },
@@ -1801,7 +1801,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Total number of layers in the composition.",
     regex: "(?<![\\w.])numLayers(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "thisComp.numLayers;" },
       ],
@@ -1813,7 +1813,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Time (seconds) when the layer becomes visible.",
     regex: "(?<![\\w.])inPoint(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Fade in over 0.5s from layer start" },
         { number: 2, content: "linear(time, inPoint, inPoint + 0.5, 0, 100);" },
@@ -1826,7 +1826,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Time (seconds) when the layer becomes invisible.",
     regex: "(?<![\\w.])outPoint(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Fade out over 0.5s before layer end" },
         { number: 2, content: "linear(time, outPoint - 0.5, outPoint, 100, 0);" },
@@ -1839,7 +1839,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Time where the layer's first frame sits in the timeline.",
     regex: "(?<![\\w.])startTime(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Time since layer started" },
         { number: 2, content: "time - startTime;" },
@@ -1852,7 +1852,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "True if the layer has a parent assigned.",
     regex: "(?<![\\w.])hasParent(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Only use parent position if parented" },
         { number: 2, content: "hasParent ? parent.transform.position : [0, 0];" },
@@ -1865,7 +1865,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "The parent Layer object.",
     regex: "(?<![\\w.])parent(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "parent.transform.rotation;" },
       ],
@@ -1877,7 +1877,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Duration of one frame in seconds (1/fps).",
     regex: "(?<![\\w.])frameDuration(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Delay by 5 frames" },
         { number: 2, content: "const delay = frameDuration * 5;" },
@@ -1891,7 +1891,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Project color depth: 8, 16, or 32 bits.",
     regex: "(?<![\\w.])colorDepth(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "colorDepth;" },
       ],
@@ -1903,7 +1903,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "1-based index of the current character in a text animator.",
     regex: "(?<![\\w.])textIndex(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Stagger animation per character" },
         { number: 2, content: "const delay = textIndex * 0.05;" },
@@ -1917,7 +1917,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Total character count in a text animator.",
     regex: "(?<![\\w.])textTotal(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Normalize character index to 0–1 range" },
         { number: 2, content: "textIndex / textTotal;" },
@@ -1930,7 +1930,7 @@ const nativeExpressions: Omit<NativeExpressionModel, "id">[] = [
       "Current selector value (0–100) in a text animator.",
     regex: "(?<![\\w.])selectorValue(?![\\w(])",
     arguments: "",
-    example: {
+    code: {
       lines: [
         { number: 1, content: "// Use selector to drive opacity" },
         { number: 2, content: "selectorValue;" },

@@ -19,4 +19,4 @@ export const stringInputs = [
 
 export const dateInputs = ["createdAt", "updatedAt", "deletedAt"];
 
-export const codeInputs = ["code", "example"];
+export const codeInputs = ["code"];

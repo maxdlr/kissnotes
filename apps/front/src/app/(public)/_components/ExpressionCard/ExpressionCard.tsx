@@ -11,11 +11,10 @@ import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
 
 interface ExpressionCardProps {
-  expression?: ExpressionModel;
+  expression?: ExpressionModel & { native: boolean; score: number };
   className?: string;
   highlightedTokens: string[];
   onClick?: () => void;
-  native?: boolean;
 }
 
 const ExpressionCard = ({
@@ -23,7 +22,6 @@ const ExpressionCard = ({
   className,
   highlightedTokens = [],
   onClick,
-  native,
 }: ExpressionCardProps) => {
   const { getTokens } = useExpressions(expression);
 
@@ -36,7 +34,7 @@ const ExpressionCard = ({
         exit={{ opacity: 0, y: -20 }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className={`block hover:bg-accent/10 border ${native ? "border-native" : "border-secondary"} hover:border-primary rounded-3xl! p-4! sm:p-8! cursor-pointer ${className}`}
+        className={`block hover:bg-accent/10 border ${expression?.native ? "border-native" : "border-secondary"} hover:border-primary rounded-3xl! p-4! sm:p-8! cursor-pointer ${className}`}
       >
         {!expression ? (
           <Loading />

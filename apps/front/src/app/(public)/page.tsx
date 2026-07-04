@@ -22,16 +22,14 @@ import type {
   NativeExpressionModel,
   UserModel,
 } from "@kissnotes/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ElementType, useMemo, useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
   const router = useRouter();
-  const params = new URLSearchParams(
-    typeof window !== "undefined" ? window.location.search : "",
-  );
-  const listParam = params.get("list") || "all";
+  const searchParams = useSearchParams();
+  const listParam = searchParams.get("list") || "all";
   const [listMode, setListMode] = useState<
     "saved" | "native" | "all" | "mine" | string
   >(listParam);
@@ -47,27 +45,39 @@ const ExpressionListPage = () => {
 
   const { data, loading: userLoading } = useBrowse<
     ExpressionModel[] | NativeExpressionModel[]
-  >(listMode === "native" ? "native-expressions" : "expressions", {
-    author: { id: filters?.author?.id as number } as UserModel,
-    symbols: {
-      tokens: [...(filters?.tokens || []).map((t: ExpressionToken) => t.title)],
-    } as ExpressionSymbol,
-    search: debouncedSearch,
-    ...(listMode === "native" ? {} : { published: true }),
-    saves:
-      listMode === "saved" ? { user: { id: auth?.user?.id as number } } : null,
-  });
+  >(
+    ["mine", "saved"].includes(listMode)
+      ? "expressions"
+      : listMode === "native"
+        ? "native-expressions"
+        : "search",
+    {
+      author: { id: filters?.author?.id as number } as UserModel,
+      symbols: {
+        tokens: [
+          ...(filters?.tokens || []).map((t: ExpressionToken) => t.title),
+        ],
+      } as ExpressionSymbol,
+      search: debouncedSearch,
+      ...(listMode === "native" ? {} : { published: true }),
+      saves:
+        listMode === "saved"
+          ? { user: { id: auth?.user?.id as number } }
+          : null,
+    },
+  );
 
   const expressions =
     listMode === "native" && data
       ? data
-          .filter((ne) => !!(ne as NativeExpressionModel).example)
+          .filter((ne) => !!(ne as NativeExpressionModel).code)
           .map((ne) => {
             return {
               id: (ne as NativeExpressionModel).id,
               title: asTitle((ne as NativeExpressionModel).title),
               description: (ne as NativeExpressionModel).description,
-              code: (ne as NativeExpressionModel).example,
+              code: (ne as NativeExpressionModel).code,
+              native: true,
             };
           })
           .flat()
@@ -136,17 +146,17 @@ const ExpressionListPage = () => {
         }
         emptyMsg={
           listMode === "saved" ? (
-            <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-4 pt-8">
               <p>You haven&apos;t saved any expression yet.</p>
               <Button
                 label="Browse expressions"
-                onClick={() => setFilters({ ...filters, saved: false })}
+                onClick={() => setListMode("all")}
                 Icon={ArrowUpLeftIcon}
               />
             </div>
           ) : (
             listMode === "mine" && (
-              <div className="flex flex-col items-center justify-center gap-4">
+              <div className="flex flex-col items-center justify-center gap-4 pt-8">
                 <p>No published expression yet.</p>
                 {auth?.user && (
                   <Button

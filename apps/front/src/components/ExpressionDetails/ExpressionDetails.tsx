@@ -10,10 +10,13 @@ import ExpressionDetailsContent from "./components/ExpressionDetailsContent";
 
 export interface ExpressionDetailsProps {
   id: Id;
+  native?: boolean;
 }
 
-const ExpressionDetails = ({ id }: ExpressionDetailsProps) => {
-  const { data: expression, mutate } = useRead<ExpressionModel>("expressions", {
+const ExpressionDetails = ({ id, native = false }: ExpressionDetailsProps) => {
+  const { data: expression, mutate } = useRead<
+    ExpressionModel & { native: boolean; score: number }
+  >(native ? "native-expressions" : "expressions", {
     id: id as Id,
   });
 

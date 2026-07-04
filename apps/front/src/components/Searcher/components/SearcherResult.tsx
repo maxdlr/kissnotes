@@ -99,7 +99,7 @@ const SearchResult = ({
         ) ? (
           <UserHandle
             username={expression.author.username}
-            className="text-emphasis!"
+            className={`${native ? "text-native!" : "text-emphasis!"}`}
           />
         ) : (
           <UserHandle username={expression.author.username} />
@@ -129,7 +129,7 @@ const SearchResult = ({
 
       <AnimatePresence mode="wait">
         {((!getKeywords(localSearchPrompt).length &&
-          result.expression.code.lines.length > 0) ||
+          result.expression.code.lines?.length > 0) ||
           (result.withCodeMatch &&
             !!getKeywords(localSearchPrompt).length)) && (
           <motion.div

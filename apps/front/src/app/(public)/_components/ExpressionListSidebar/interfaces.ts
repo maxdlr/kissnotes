@@ -1,9 +1,4 @@
-import {
-  ExpressionToken,
-  UserModel,
-  ExpressionModel,
-  NativeExpressionModel,
-} from "@kissnotes/types";
+import { ExpressionModel, ExpressionToken, UserModel } from "@kissnotes/types";
 
 export type SidebarValue =
   | {
@@ -11,13 +6,12 @@ export type SidebarValue =
       author?: UserModel | null;
       search?: string;
       saved?: boolean;
-      native?: boolean;
     }
   | undefined;
 
 export interface ExpressListSideBarProps {
   className?: string;
-  expressions: (ExpressionModel | NativeExpressionModel)[];
+  expressions: (ExpressionModel & { native: boolean; score: number })[];
   onChange: (filters: SidebarValue) => void;
   value: SidebarValue;
   native?: boolean;

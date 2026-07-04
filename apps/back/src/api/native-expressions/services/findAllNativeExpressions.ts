@@ -24,7 +24,7 @@ const findAllNativeExpressions = async (
         `(
 expression.title LIKE :${param} 
 OR expression.description LIKE :${param} 
-OR CAST(expression.example AS CHAR) LIKE :${param} 
+OR CAST(expression.code AS CHAR) LIKE :${param} 
 )`,
         { [param]: `%${searchWord}%` },
       );

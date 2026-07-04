@@ -20,5 +20,5 @@ export default class NativeExpressionEntity
   arguments!: string;
 
   @Column({ type: "json", nullable: true })
-  example?: CodeModel;
+  code?: CodeModel;
 }

@@ -25,7 +25,6 @@ const ExpressionList = ({
   openModals = false,
   ActionSlot,
   emptyMsg = "No expressions yet",
-  native = false,
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
@@ -70,7 +69,6 @@ const ExpressionList = ({
                       expressions={expressions || []}
                       value={filters}
                       onChange={onFilterChange}
-                      native={native}
                     />
                   </motion.div>
                 )}
@@ -108,7 +106,6 @@ const ExpressionList = ({
                       value={filters}
                       onChange={onFilterChange}
                       className="pt-4"
-                      native={native}
                     />
                   </motion.div>
                 )}
@@ -132,10 +129,9 @@ const ExpressionList = ({
                       highlightedTokens={[]}
                       key={(expression as ExpressionModel)?.id || ""}
                       expression={expression as ExpressionModel}
-                      native={native}
                       onClick={() =>
                         router.push(
-                          `${urlScope}/exp/${(expression as ExpressionModel)?.id}${openModals ? "/m" : ""}`,
+                          `${urlScope}/exp/${(expression as ExpressionModel)?.id}${openModals ? "/m" : ""}${expression.native ? "?native" : ""}`,
                         )
                       }
                     />

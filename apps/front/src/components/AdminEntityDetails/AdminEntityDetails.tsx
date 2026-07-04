@@ -135,7 +135,7 @@ const AdminEntityDetails = <T extends Model>({
           />
         )}
 
-        {["example", "code"].includes(key) && (
+        {["code"].includes(key) && (
           <FormInput
             key={key}
             name={key}

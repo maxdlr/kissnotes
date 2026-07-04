@@ -1,9 +1,9 @@
-import type { ExpressionModel, NativeExpressionModel } from "@kissnotes/types";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
+import type { ExpressionModel } from "@kissnotes/types";
 import { ReactNode } from "react";
 
 export interface ExpressionListProps {
-  expressions: (ExpressionModel | NativeExpressionModel["example"])[];
+  expressions: (ExpressionModel & { native: boolean; score: number })[];
   className?: string;
   filters?: SidebarValue;
   onFilterChange?: (filters: SidebarValue) => void;

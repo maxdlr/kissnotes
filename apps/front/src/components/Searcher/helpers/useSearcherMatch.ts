@@ -18,7 +18,7 @@ const getLineMatches = (
   searchPrompt?: string,
 ): { lines: LineModel[]; hasMatch: boolean } => {
   const lineMatch: LineModel | undefined = searchPrompt
-    ? expression.code.lines.find((line: LineModel) =>
+    ? expression.code?.lines?.find((line: LineModel) =>
         getKeywords(searchPrompt).some((keyword) =>
           line.content.toLowerCase().includes(keyword.toLowerCase()),
         ),
@@ -33,7 +33,7 @@ const getLineMatches = (
     ? expression.code.lines.filter((line: LineModel) =>
         [lineNumber, prevLineNumber, nextLineNumber].includes(line.number),
       )
-    : expression.code.lines.slice(0, 3);
+    : expression.code?.lines.slice(0, 3);
 
   return { lines, hasMatch: !!lineMatch };
 };

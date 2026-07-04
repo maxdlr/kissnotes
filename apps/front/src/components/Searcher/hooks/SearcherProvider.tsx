@@ -8,10 +8,14 @@ type SearcherContextType = {
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedIndex: number;
-  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
-  previewing: Id | undefined;
-  setPreviewing: React.Dispatch<React.SetStateAction<Id | undefined>>;
+  selectedIndex: { index?: number; native: boolean; mouse: boolean };
+  setSelectedIndex: React.Dispatch<
+    React.SetStateAction<{ index?: number; native: boolean; mouse: boolean }>
+  >;
+  previewing: { id?: Id; native: boolean } | undefined;
+  setPreviewing: React.Dispatch<
+    React.SetStateAction<{ id?: Id; native: boolean } | undefined>
+  >;
 };
 
 const SearcherContext = createContext<SearcherContextType | null>(null);
@@ -25,8 +29,16 @@ export const SearcherProvider = ({
 }) => {
   const [prompt, setPrompt] = useState(startSearchPrompt || "");
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [previewing, setPreviewing] = useState<Id | undefined>();
+
+  const [selectedIndex, setSelectedIndex] = useState<{
+    index: number;
+    native: boolean;
+    mouse: boolean;
+  }>({ index: 0, native: false, mouse: false });
+
+  const [previewing, setPreviewing] = useState<
+    { id?: Id; native: boolean } | undefined
+  >();
 
   return (
     <SearcherContext.Provider

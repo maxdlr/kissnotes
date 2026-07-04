@@ -97,7 +97,7 @@ export interface NativeExpressionModel extends Model {
   regex: string;
   arguments: string;
   description: string;
-  example?: CodeModel;
+  code?: CodeModel;
 }
 
 export interface ExpressionModel extends Model {

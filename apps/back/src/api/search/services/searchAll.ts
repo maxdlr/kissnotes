@@ -120,7 +120,7 @@ OR author.username LIKE :${param}
       `(
 expression.title LIKE :${param} 
 OR expression.description LIKE :${param} 
-OR CAST(expression.example AS CHAR) LIKE :${param}
+OR CAST(expression.code AS CHAR) LIKE :${param}
 )`,
       { [param]: `%${word}%` },
     );
@@ -159,14 +159,14 @@ OR CAST(expression.example AS CHAR) LIKE :${param}
       id: ne.id,
       title: ne.title,
       description: ne.description,
-      code: ne.example,
+      code: ne.code,
       author: { username: "After Effects" },
       native: true,
       score: computeScore(
         searchWords,
         ne.title || "",
         ne.description || "",
-        JSON.stringify(ne.example || ""),
+        JSON.stringify(ne.code || ""),
         "After Effects",
       ),
     }),

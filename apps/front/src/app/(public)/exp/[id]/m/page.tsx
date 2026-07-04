@@ -1,7 +1,7 @@
 "use client";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 import type { Id } from "@kissnotes/types";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
 import ExpressionDetails from "@/components/ExpressionDetails";
 import Modal from "@/components/Modal";
@@ -9,9 +9,14 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 
 const ExpressionByIdModalPage = () => {
+  const { id } = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(true);
-  const { id } = useParams();
+  const params = useSearchParams();
+  const isNative = params.get("native");
+
+  console.log({ params, isNative });
+
   const handleClose = () => {
     router.back();
   };
@@ -36,7 +41,7 @@ const ExpressionByIdModalPage = () => {
           }
         >
           <article className="p-4 sm:p-8">
-            <ExpressionDetails id={id as Id} />
+            <ExpressionDetails id={id as Id} native={isNative !== null} />
           </article>
         </Modal>
       )}

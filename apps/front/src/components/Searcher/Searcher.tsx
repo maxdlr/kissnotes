@@ -54,14 +54,26 @@ const Searcher = ({
 
   useShortcut({ keys: ["up"], ignoreInputs: false }, (e) => {
     e.preventDefault();
-    setSelectedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    setSelectedIndex((prevIndex) => ({
+      index:
+        prevIndex.index !== undefined
+          ? Math.max(prevIndex.index - 1, 0)
+          : undefined,
+      native: prevIndex.native,
+      mouse: false,
+    }));
   });
 
   useShortcut({ keys: ["down"], ignoreInputs: false }, (e) => {
     e.preventDefault();
-    setSelectedIndex((prevIndex) =>
-      Math.min(prevIndex + 1, searchResults.length - 1),
-    );
+    setSelectedIndex((prevIndex) => ({
+      index:
+        prevIndex.index !== undefined
+          ? Math.min(prevIndex.index + 1, searchResults.length - 1)
+          : undefined,
+      native: prevIndex.native,
+      mouse: false,
+    }));
   });
 
   const handleSearch = (e: KissChangeEvent) => {
@@ -73,7 +85,13 @@ const Searcher = ({
     (e) => {
       e.preventDefault();
       if (previewing) return;
-      setPreviewing(searchResults.at(selectedIndex)?.id);
+      if (selectedIndex.index === undefined) return;
+
+      setPreviewing({
+        id: searchResults.at(selectedIndex.index)?.id,
+        native: searchResults.at(selectedIndex.index)?.native || false,
+      });
+
       inputRef.current?.focus();
     },
   );
@@ -85,6 +103,7 @@ const Searcher = ({
 
   const scrollCenterRef = useCallback(
     (node: HTMLDivElement | null) => {
+      if (selectedIndex.mouse) return;
       node?.scrollIntoView({
         block: "center" as ScrollLogicalPosition,
         behavior: "smooth" as ScrollBehavior,
@@ -121,10 +140,18 @@ const Searcher = ({
     inputRef.current?.focus();
   };
 
+  const handleHover = (index?: number, native?: boolean) => {
+    setSelectedIndex({ index, native: !!native, mouse: true });
+  };
+
   return (
-    <Modal ref={modalRef} className="bg-dark p-8 pt-4 pb-0 max-w-2xl">
-      <div className="space-y-4 sm:space-y-8">
-        <div className="w-full sticky top-8 z-50 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
+    <Modal
+      ref={modalRef}
+      onClose={onClose}
+      className="bg-dark p-8 pt-4 pb-0 max-w-2xl"
+    >
+      <div className="space-y-12 sm:space-y-14">
+        <div className="w-full sticky top-8 z-60 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
           <FormInput
             ref={inputRef}
             autoFocus
@@ -194,16 +221,24 @@ const Searcher = ({
               searchResults.map((result, index) => {
                 return (
                   <div
+                    onMouseEnter={() => handleHover(index, result.native)}
+                    onMouseLeave={() => handleHover(undefined, undefined)}
                     key={`${result.id}-${index}`}
-                    ref={index === selectedIndex ? scrollCenterRef : undefined}
+                    ref={
+                      index === selectedIndex.index
+                        ? scrollCenterRef
+                        : undefined
+                    }
                   >
                     <SearchResult
                       native={result.native}
                       ref={ref}
                       expression={result}
                       searchPrompt={prompt}
-                      focused={index === selectedIndex}
-                      onClick={() => setPreviewing(result.id)}
+                      focused={index === selectedIndex.index}
+                      onClick={() =>
+                        setPreviewing({ id: result.id, native: result.native })
+                      }
                     />
                   </div>
                 );
@@ -231,7 +266,12 @@ const Searcher = ({
               </motion.div>
             )
           ) : (
-            <ExpressionDetails id={previewing} />
+            previewing.id && (
+              <ExpressionDetails
+                id={previewing.id}
+                native={previewing.native}
+              />
+            )
           )}
         </div>
       </div>

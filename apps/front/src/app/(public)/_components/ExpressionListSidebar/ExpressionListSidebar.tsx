@@ -5,11 +5,7 @@ import MasonryGrid from "@/components/MasonryGrid";
 import useExpressions from "@/hooks/useExpressions";
 import type { KissChangeEvent } from "@/types/form.types";
 import { arrayUnique } from "@/utils/arrayUtils";
-import type {
-  ExpressionModel,
-  ExpressionToken,
-  UserModel,
-} from "@kissnotes/types";
+import type { ExpressionToken, UserModel } from "@kissnotes/types";
 import { useMemo } from "react";
 import { ExpressListSideBarProps, SidebarValue } from "./interfaces";
 
@@ -18,23 +14,21 @@ const ExpressionListSidebar = ({
   expressions,
   onChange,
   value,
-  native = false,
 }: ExpressListSideBarProps) => {
-  const { getTokens } = useExpressions(
-    native ? undefined : (expressions as ExpressionModel[]),
-  );
+  const { getTokens } = useExpressions(expressions);
 
   const tokens = useMemo(
     () => getTokens(["functions", "methods", "properties"]),
     [getTokens],
   );
   const authors = useMemo(() => {
-    if (!expressions || native) return [];
     return arrayUnique(
-      expressions.map((e) => (e as ExpressionModel).author),
+      expressions
+        .map((e) => (!e.native ? e.author : null))
+        .filter((a) => !!a) as UserModel[],
       "username",
     );
-  }, [expressions, native]);
+  }, [expressions]);
 
   const handleOnChange = ({
     target: { name, value: changeValue },
