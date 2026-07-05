@@ -12,9 +12,7 @@ type CreateUserInput = {
   description?: string;
 };
 
-const createUser = async (
-  user: CreateUserInput,
-): Promise<UserEntity> => {
+const createUser = async (user: CreateUserInput): Promise<UserEntity> => {
   const existingUser = await findUser({ username: user.username }).catch(
     () => {},
   );
@@ -38,8 +36,8 @@ const createUser = async (
 
   await validateCrudPayload(userEntity, pwErrors);
 
-  const newUser = await UserRepository.save(userEntity).catch(() => {
-    throw ApiError("Cannot create new user");
+  const newUser = await UserRepository.save(userEntity).catch((e) => {
+    throw ApiError("Cannot create new user" + e.message);
   });
 
   return newUser;

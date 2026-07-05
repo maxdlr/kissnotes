@@ -24,7 +24,7 @@ const AdminListCell = <T extends Model>({
   }
 
   if (
-    ["saves", "shares", "views"].includes(property as string) &&
+    ["saves", "shares", "views", "expressions"].includes(property as string) &&
     Array.isArray(value)
   ) {
     return <span className={className}>{value.length}</span>;

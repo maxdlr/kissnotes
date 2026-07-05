@@ -1,5 +1,11 @@
 "use client";
 
+import useForm from "@/components/FormWrapper/hooks/useForm";
+import useAuth from "@/contexts/AuthContext/useAuth";
+import useToasts from "@/contexts/ToastsContext";
+import useAxios from "@/hooks/useAxios";
+import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
+import { getProfileHref } from "@/utils/userUtils";
 import { faker } from "@faker-js/faker";
 import type {
   KissFormErrors,
@@ -8,11 +14,6 @@ import type {
 } from "@kissnotes/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
-import useAuth from "@/contexts/AuthContext/useAuth";
-import useToasts from "@/contexts/ToastsContext";
-import useAxios from "@/hooks/useAxios";
-import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
-import { getProfileHref } from "@/utils/userUtils";
 import SignUpStepThree from "./_components/SignUpStepThree";
 import SignUpStepTwo from "./_components/SignUpStepTwo";
 import SignUpStepOne from "./_components/SignupStepOne";
@@ -35,7 +36,7 @@ export interface SignUpStepProps {
 
 const SignUpPage = () => {
   const [step, setStep] = useState<number>(1);
-  const [errors, setErrors] = useState<KissFormErrors>([]);
+  const { errors, setErrors } = useForm();
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();

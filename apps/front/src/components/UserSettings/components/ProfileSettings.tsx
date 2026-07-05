@@ -1,8 +1,9 @@
-'use client';
+"use client";
 import SettingsSection from "@/app/[handle]/(protected)/settings/_components/SettingsSection";
 import Button from "@/components/Button";
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
+import useForm from "@/components/FormWrapper/hooks/useForm";
 import Loading from "@/components/Loading";
 import useSearcher from "@/components/Searcher/hooks/SearcherProvider";
 import useAuth from "@/contexts/AuthContext/useAuth";
@@ -11,9 +12,8 @@ import useAxios from "@/hooks/useAxios";
 import { KissChangeEvent } from "@/types/form.types";
 import { getProfileHref } from "@/utils/userUtils";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import { KissFormErrors } from "@kissnotes/types";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ProfileSettingsFormData } from "../interfaces";
 
 const ProfileSettings = () => {
@@ -23,7 +23,7 @@ const ProfileSettings = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState<ProfileSettingsFormData>();
   const router = useRouter();
-  const [errors, setErrors] = useState<KissFormErrors>([]);
+  const { errors, setErrors } = useForm();
   const [loading, setLoading] = useState(false);
 
   const { putData: updateUser } = useAxios("users/edit");

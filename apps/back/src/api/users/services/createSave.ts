@@ -2,15 +2,20 @@ import SaveRepository from "@/repositories/SaveRepository";
 import { Id } from "@kissnotes/types";
 
 const createSave = async (expressionId: Id, userId: Id) => {
-  const exists = await SaveRepository.exists({
+  const existing = await SaveRepository.exists({
     where: {
       expression: { id: expressionId as number },
       user: { id: userId as number },
     },
   });
 
-  if (exists) {
-    throw ApiError("Save already exists");
+  if (existing) {
+    //remove it like a toggle
+    await SaveRepository.delete({
+      expression: { id: expressionId as number },
+      user: { id: userId as number },
+    });
+    return null;
   }
 
   const relation = {

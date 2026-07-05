@@ -99,9 +99,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const refreshMe = useCallback(() => mutate(undefined), [mutate]);
 
   const logIn = async (credentials: { username: string; password: string }) => {
-    await postLogin(credentials);
+    const r = await postLogin(credentials);
     resetMeRetryCount();
     refreshMe();
+    return r;
   };
 
   const logOut = async () => {

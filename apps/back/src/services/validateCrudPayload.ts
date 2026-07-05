@@ -1,19 +1,15 @@
-import { AbstractEntity } from "@/entities/AbstractEntity";
-import { validateOrReject, ValidationError } from "class-validator";
+import { validate, ValidationError } from "class-validator";
 
 const validateCrudPayload = async (
-  entity: AbstractEntity,
+  entity: object,
   extraErrors: ValidationError[] = [],
   options?: { property: string },
 ): Promise<void> => {
-  const entityErrors: ValidationError[] =
-    (await validateOrReject(entity).catch((err: ValidationError[]) => err)) ??
-    [];
+  const entityErrors: ValidationError[] = await validate(entity, {
+    forbidUnknownValues: false,
+  });
 
-  const allErrors = [
-    ...(Array.isArray(entityErrors) ? entityErrors : []),
-    ...extraErrors,
-  ];
+  const allErrors = [...entityErrors, ...extraErrors];
 
   if (allErrors.length) {
     const errors: TValidationError["validation"] = allErrors.map((e) => ({

@@ -1,5 +1,21 @@
 import { LayerTypeEnum, SocialType } from "./enums";
 
+export interface DashboardModel {
+  expressions: {
+    publishedCount: number;
+    nativeCount: number;
+    totalCount: number;
+    savedCount: number;
+    sharesCount: number;
+    viewsCount: number;
+  };
+  users: {
+    totalCount: number;
+    adminCount: number;
+    userCount: number;
+  };
+}
+
 export type TokenKind =
   | "function"
   | "method"

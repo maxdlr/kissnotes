@@ -19,10 +19,6 @@ const saveExpression = async ({ user, body }: Request, res: Response) => {
     throw Missing("Expression not found");
   }
 
-  if (user.saves?.includes(expressionId)) {
-    throw ApiError("Expression already saved");
-  }
-
   await createSave(expressionId, user.id).catch((e) => {
     throw ApiError("Failed to save expression: " + e.message);
   });

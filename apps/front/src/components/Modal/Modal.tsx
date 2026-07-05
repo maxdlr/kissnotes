@@ -109,10 +109,10 @@ const Modal = ({
   })();
 
   return (
-    <ClientPortal selector="#modal">
-      <div className="modal">
-        <AnimatePresence onExitComplete={handleExitComplete}>
-          {isOpen && (
+    isOpen && (
+      <ClientPortal selector="#modal">
+        <div className="modal">
+          <AnimatePresence onExitComplete={handleExitComplete}>
             <>
               <motion.div
                 role="presentation"
@@ -162,10 +162,10 @@ const Modal = ({
                 </motion.div>
               </div>
             </>
-          )}
-        </AnimatePresence>
-      </div>
-    </ClientPortal>
+          </AnimatePresence>
+        </div>
+      </ClientPortal>
+    )
   );
 };
 

@@ -1,19 +1,21 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
+import useForm from "@/components/FormWrapper/hooks/useForm";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
-import useRead from "@/hooks/bread/useRead";
+import { BoltIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 const LogIn = () => {
   const searchParam = useSearchParams();
-
   const referrer = searchParam.get("referrer");
 
   const { addToast } = useToasts();
+  const { errors, setErrors } = useForm();
+
   const { user, logIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -34,21 +36,31 @@ const LogIn = () => {
   const handleSubmit = async (e: KissClickEvent) => {
     e?.preventDefault();
     setLoading(true);
-    await logIn(formData);
-    setLoading(false);
-    addToast({
-      type: "success",
-      title: "Logged in",
-      message: `Welcome back, ${formData.username}!`,
+    await logIn(formData).then((r) => {
+      if (r?.errors) {
+        setErrors(r?.errors);
+        addToast({
+          type: "error",
+          title: "Something went wrong",
+          message: "Please check your credentials and try again.",
+        });
+        return;
+      }
+      addToast({
+        type: "success",
+        title: "Logged in",
+        message: `Welcome back, ${formData.username}!`,
+      });
+      router.push(referrer || "/");
     });
-
-    router.push(referrer || "/");
+    setLoading(false);
   };
 
   const cannotSubmit = !Object.values(formData).every(Boolean);
 
   return (
     <FormWrapper
+      errors={errors}
       title="Login"
       submit={{
         disabled: cannotSubmit,
@@ -65,6 +77,8 @@ const LogIn = () => {
       loading={loading}
     >
       <FormInput
+        StartChild={<BoltIcon className="size-6" />}
+        label="Username"
         required
         name="username"
         placeholder="batman"
@@ -72,6 +86,8 @@ const LogIn = () => {
         onChange={handleOnchange}
       />
       <FormInput
+        StartChild={<ShieldCheckIcon className="size-6" />}
+        label="Password"
         required
         name="password"
         placeholder="imbatman"

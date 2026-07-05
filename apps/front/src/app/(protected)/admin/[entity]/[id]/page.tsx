@@ -11,24 +11,27 @@ import {
   UserModel,
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
+import { useRef, useState } from "react";
 
 type DataModel = NativeExpressionModel | ExpressionModel | UserModel;
 
 const AdminDetailsById = () => {
   const { entity, id } = useParams();
+  const { putData } = useAxios(`/${entity}/edit`);
+  const { addToast } = useToasts();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const [saved, setSaved] = useState(false);
   const { data, loading, mutate } = useRead(entity as string, {
     id: id as string,
   });
-  const { putData } = useAxios(`/${entity}/edit`);
-  const { addToast } = useToasts();
 
-  const handleChange = async ({
+  const handleChange = ({
     target: { name, value },
   }: KissChangeEvent<DataModel> | KissChangeEvent) => {
-    await putData({ ...data, [name]: value })
-      .then((response) => {
-        console.log({ response });
-
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const response = await putData({ ...data, [name]: value });
         if (!response.data) {
           addToast({
             type: "error",
@@ -37,15 +40,17 @@ const AdminDetailsById = () => {
           });
           return;
         }
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
         mutate();
-      })
-      .catch((error) => {
+      } catch (error) {
         addToast({
           type: "error",
           title: "Error",
-          message: `Error updating ${entity} with id ${id}: ${error.message}`,
+          message: `Error updating ${entity} with id ${id}: ${(error as Error).message}`,
         });
-      });
+      }
+    }, 1000);
   };
 
   if (loading) {
@@ -55,6 +60,7 @@ const AdminDetailsById = () => {
   return (
     data && (
       <AdminEntityDetails<DataModel>
+        saved={saved}
         entity={entity as string}
         formData={data as DataModel}
         onChange={handleChange}

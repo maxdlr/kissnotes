@@ -90,6 +90,7 @@ const SearchResult = ({
 
       <div className="flex justify-start items-center gap-2">
         {localSearchPrompt &&
+        result.expression.author?.username &&
         getKeywords(localSearchPrompt)?.some(
           (k) =>
             k.length >= result.expression.author.username.length / 1.5 &&
@@ -102,7 +103,7 @@ const SearchResult = ({
             className={`${native ? "text-native!" : "text-emphasis!"}`}
           />
         ) : (
-          <UserHandle username={expression.author.username} />
+          expression.author?.username && <UserHandle username={expression.author.username} />
         )}
         <span className="text-sm text-accent">
           {getRelativeTime(result.expression.createdAt)}

@@ -2,6 +2,7 @@ import { KissChangeEvent } from "@/types/form.types";
 import { Model } from "@kissnotes/types";
 
 export interface AdminEntityDetailsProps<T extends Model> {
+  saved: boolean;
   onChange: (e: KissChangeEvent<T> | KissChangeEvent) => void;
   formData: T;
   recursive?: boolean;

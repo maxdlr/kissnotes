@@ -2,8 +2,6 @@
 import Button from "@/components/Button";
 import ExpressionDetailsContent from "@/components/ExpressionDetails/components/ExpressionDetailsContent";
 import ExpressionForm from "@/components/ExpressionForm";
-import FormInput from "@/components/FormInput";
-import FormWrapper from "@/components/FormWrapper";
 import Tabs from "@/components/Tabs";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
@@ -21,14 +19,9 @@ import {
 import {
   ExpressionModel,
   ExpressionSymbol,
-  Id,
   KissDeepPartial,
-  LayerEnums,
-  LayerModel,
   LayerTypeEnum,
   PropertyGroupEnum,
-  PropertyModel,
-  UserModel,
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";

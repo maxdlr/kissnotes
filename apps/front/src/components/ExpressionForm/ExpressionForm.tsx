@@ -43,7 +43,7 @@ const ExpressionForm = ({
       animated
       className={className}
     >
-      <div className="col-span-1 flex gap-2 sm:gap-4 justify-center items-start h-full w-full">
+      <FormWrapper.Layout className="col-span-1 flex gap-2 sm:gap-4 justify-center items-start h-full w-full">
         <Button
           label={`${published ? "Update" : "Publish"}`}
           onClick={() => handleOnSubmit()}
@@ -62,7 +62,7 @@ const ExpressionForm = ({
             tooltip={{ content: "Save as draft and carry on later" }}
           />
         )}
-      </div>
+      </FormWrapper.Layout>
 
       <FormInput
         name="title"
@@ -70,10 +70,10 @@ const ExpressionForm = ({
         onChange={handleOnChange}
         value={formData?.title}
         placeholder="My new expression"
-        className="col-span-2"
+        className="col-span-1 md:col-span-2"
       />
 
-      <FormWrapper.Layout className="col-span-1 flex flex-col gap-2 sm:gap-4">
+      <FormWrapper.Layout className="col-span-1 flex flex-col gap-2 sm:gap-8">
         <FormWrapper.Layout className="flex flex-col gap-2 sm:gap-4">
           <FormInput<LayerModel>
             name="layer.type"
@@ -92,7 +92,6 @@ const ExpressionForm = ({
               (o) => o.type === formData.layer?.type,
             )}
             property="type"
-            className="col-span-1"
           />
           <FormInput
             name="layer.name"
@@ -132,7 +131,7 @@ const ExpressionForm = ({
         </FormWrapper.Layout>
       </FormWrapper.Layout>
 
-      <FormWrapper.Layout className="col-span-2 space-y-8">
+      <FormWrapper.Layout className="md:col-span-2 space-y-8">
         <FormInput
           type="code"
           name="codeBlock"

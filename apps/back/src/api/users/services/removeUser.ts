@@ -1,10 +1,12 @@
 import UserRepository from "@/repositories/UserRepository";
+import findUser from "./findUser";
 
 const removeUser = async (where: any) => {
-  const exists = await UserRepository.exists({ where });
-  if (!exists) {
+  const user = await findUser(where);
+  if (!user) {
     throw ApiError("User doesn't exist.");
   }
+
   return await UserRepository.delete(where);
 };
 

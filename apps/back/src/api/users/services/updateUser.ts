@@ -4,6 +4,8 @@ import validateCrudPayload from "@/services/validateCrudPayload";
 import { UserModel } from "@kissnotes/types";
 import findUser from "./findUser";
 
+const UPDATABLE_FIELDS = ["username", "email", "description", "type"] as const;
+
 const updateUser = async (
   user: Partial<UserModel | UserEntity>,
 ): Promise<UserEntity> => {
@@ -14,16 +16,30 @@ const updateUser = async (
     throw ApiError("User doesn't exist");
   });
 
-  const { saves, ...editables } = user;
+  const userId = foundUser.id;
+
+  // Pick only known updatable column fields
+  const editables: Record<string, unknown> = {};
+  for (const field of UPDATABLE_FIELDS) {
+    if (field in user && user[field] !== undefined) {
+      editables[field] = user[field];
+    }
+  }
+
+  if (!Object.keys(editables).length) {
+    return foundUser;
+  }
 
   const updatedUser: UserEntity = UserRepository.merge(
-    foundUser,
-    editables as UserEntity,
+    foundUser as UserEntity,
+    editables as Partial<UserEntity>,
   );
 
   await validateCrudPayload(updatedUser);
 
-  return await UserRepository.save(updatedUser);
+  await UserRepository.update(userId, editables);
+
+  return updatedUser;
 };
 
 export default updateUser;

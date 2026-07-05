@@ -24,6 +24,7 @@ export default class ExpressionEntity
   @ManyToOne(() => UserEntity, (user) => user.expressions, {
     nullable: false,
     eager: true,
+    onDelete: "CASCADE",
   })
   author!: UserEntity;
 

@@ -10,6 +10,7 @@ import authenticate from "./middlewares/authenticate";
 import getRefreshToken from "./api/auth/controllers/getRefreshToken";
 import logOut from "./api/auth/controllers/logOut";
 import signUp from "./api/auth/controllers/signup";
+import dashboardRoutes from "./api/dashboard/routes/index";
 
 const router = Router();
 
@@ -25,5 +26,7 @@ router.use("/native-expressions", nativeExpressionRoutes);
 router.use("/search", searchRoutes);
 router.use("/users", userRoutes);
 router.use("/social-links", socialLinkRoutes);
+
+router.use("/dashboard", authenticate, dashboardRoutes);
 
 export default router;
