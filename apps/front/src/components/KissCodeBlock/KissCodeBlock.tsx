@@ -2,14 +2,14 @@
 
 import { ClipboardIcon as ClipboardIconOutline } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import type { ExpressionModel } from "@kissnotes/types";
+import type { ListExpression } from "@/app/(public)/_components/ExpressionList/interfaces";
 import { useMemo, useState } from "react";
 import { CodeBlock } from "react-code-block";
 import Button from "@/components/Button";
 import KissLineContent from "./components/KissLineContent";
 
 interface CodeBlockProps {
-  expression: Partial<ExpressionModel>;
+  expression: ListExpression;
   className?: string;
   highlightedTokens?: string[];
   highlightedLines?: number | number[];

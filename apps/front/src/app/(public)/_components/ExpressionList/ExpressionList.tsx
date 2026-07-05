@@ -57,8 +57,8 @@ const CollapsibleSidebar = ({
         {!collapsed && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 350, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
+            animate={{ width: 350, opacity: 1, overflow: "visible" }}
+            exit={{ width: 0, opacity: 0, overflow: "hidden" }}
             style={{ overflow: "hidden", flexShrink: 0 }}
           >
             <ExpressionListSidebar
@@ -92,8 +92,8 @@ const CollapsibleSidebar = ({
         {!collapsed && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1, overflow: "visible" }}
+            exit={{ height: 0, opacity: 0, overflow: "hidden" }}
             style={{ overflow: "hidden", flexShrink: 0 }}
           >
             <ExpressionListSidebar

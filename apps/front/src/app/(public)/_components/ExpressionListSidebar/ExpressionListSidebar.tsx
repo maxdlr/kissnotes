@@ -16,7 +16,15 @@ const ExpressionListSidebar = ({
   const handleOnChange = ({
     target: { name, value: changeValue },
   }: KissChangeEvent<unknown>) => {
-    onChange({ ...value, [name]: changeValue } as SidebarValue);
+    // Dropdown options come as { label, value } objects — extract the actual value
+    const resolved =
+      name === "native" &&
+      changeValue &&
+      typeof changeValue === "object" &&
+      "value" in (changeValue as object)
+        ? (changeValue as { value: boolean }).value
+        : changeValue;
+    onChange({ ...value, [name]: resolved } as SidebarValue);
   };
 
   return (
@@ -45,7 +53,11 @@ const ExpressionListSidebar = ({
               { label: "All", value: false },
               { label: "Native expressions only", value: true },
             ]}
-            value={value.native}
+            value={
+              value.native
+                ? { label: "Native expressions only", value: true }
+                : { label: "All", value: false }
+            }
           />
         )}
 

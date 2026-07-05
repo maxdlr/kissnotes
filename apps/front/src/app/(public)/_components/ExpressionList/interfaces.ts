@@ -2,8 +2,11 @@ import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSide
 import type { ExpressionModel, ExpressionToken, UserModel } from "@kissnotes/types";
 import { ReactNode } from "react";
 
-export type ListExpression = Partial<ExpressionModel> &
-  Pick<ExpressionModel, "id" | "title"> & { native?: boolean };
+export type ListExpression = Omit<Partial<ExpressionModel>, "author"> &
+  Pick<ExpressionModel, "id" | "title"> & {
+    native?: boolean;
+    author?: { id?: Id; username: string } | UserModel;
+  };
 
 export interface ExpressionListProps {
   expressions: ListExpression[];
