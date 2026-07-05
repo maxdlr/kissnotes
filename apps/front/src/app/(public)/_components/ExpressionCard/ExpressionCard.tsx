@@ -1,6 +1,6 @@
 "use client";
 
-import type { ExpressionModel } from "@kissnotes/types";
+import type { ListExpression } from "@/app/(public)/_components/ExpressionList/interfaces";
 import { AnimatePresence, motion } from "motion/react";
 import KissCodeBlock from "@/components/KissCodeBlock";
 import Loading from "@/components/Loading";
@@ -11,7 +11,7 @@ import { getRelativeTime } from "@/utils/dateUtils";
 import { truncate } from "@/utils/stringUtils";
 
 interface ExpressionCardProps {
-  expression?: ExpressionModel & { native: boolean; score: number };
+  expression?: ListExpression;
   className?: string;
   highlightedTokens: string[];
   onClick?: () => void;

@@ -141,11 +141,11 @@ const ExpressionDetailsContent = ({
         )}
       </div>
 
-      <LayerMockup
-        layer={expression.layer}
-        property={expression.property}
-        className={`col-span-full ${expression.symbols ? "md:col-span-1" : ""}`}
-      />
+      {/* <LayerMockup */}
+      {/*   layer={expression.layer} */}
+      {/*   property={expression.property} */}
+      {/*   className={`col-span-full ${expression.symbols ? "md:col-span-1" : ""}`} */}
+      {/* /> */}
 
       {expression.symbols && (
         <div className="space-y-2 colspan-full md:col-span-1">

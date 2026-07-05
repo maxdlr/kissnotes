@@ -1,9 +1,12 @@
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
-import type { ExpressionModel } from "@kissnotes/types";
+import type { ExpressionModel, ExpressionToken, UserModel } from "@kissnotes/types";
 import { ReactNode } from "react";
 
+export type ListExpression = Partial<ExpressionModel> &
+  Pick<ExpressionModel, "id" | "title"> & { native?: boolean };
+
 export interface ExpressionListProps {
-  expressions: (ExpressionModel & { native: boolean; score: number })[];
+  expressions: ListExpression[];
   className?: string;
   filters?: SidebarValue;
   onFilterChange?: (filters: SidebarValue) => void;
@@ -13,5 +16,6 @@ export interface ExpressionListProps {
   openModals?: boolean;
   ActionSlot?: ReactNode;
   emptyMsg?: string | ReactNode;
-  native?: boolean;
+  tokenOptions?: ExpressionToken[];
+  authorOptions?: UserModel[];
 }

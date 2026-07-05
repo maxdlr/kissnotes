@@ -6,7 +6,9 @@ import type {
 } from "@kissnotes/types";
 import { useCallback, useMemo } from "react";
 
-const useExpressions = (expressions?: ExpressionModel[] | ExpressionModel) => {
+type ExpressionLike = Pick<ExpressionModel, "symbols"> | Partial<ExpressionModel>;
+
+const useExpressions = (expressions?: ExpressionLike[] | ExpressionLike) => {
   const getTokens = useCallback(
     (
       kinds?: (keyof ExpressionSymbol["groups"])[],

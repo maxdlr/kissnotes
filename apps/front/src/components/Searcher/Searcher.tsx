@@ -130,7 +130,7 @@ const Searcher = ({
 
   const handleExpand = () => {
     if (previewing) {
-      router.push(`/exp/${previewing}`);
+      router.push(`/exp/${previewing.id}${previewing.native ? "?native" : ""}`);
     }
     onClose?.();
   };
@@ -145,11 +145,7 @@ const Searcher = ({
   };
 
   return (
-    <Modal
-      ref={modalRef}
-      onClose={onClose}
-      className="bg-dark p-8 pt-4 pb-0 max-w-2xl"
-    >
+    <Modal ref={modalRef} className="bg-dark p-8 pt-4 max-w-2xl">
       <div className="space-y-12 sm:space-y-14">
         <div className="w-full sticky top-8 z-60 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
           <FormInput

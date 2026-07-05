@@ -7,6 +7,8 @@ import ToggleButtons from "@/components/ToggleButtons";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useDebounce from "@/hooks/useDebounce";
+import useExpressions from "@/hooks/useExpressions";
+import { arrayUnique } from "@/utils/arrayUtils";
 import { asTitle } from "@/utils/stringUtils";
 import { getProfileHref } from "@/utils/userUtils";
 import { BookmarkIcon, HeartIcon } from "@heroicons/react/16/solid";
@@ -23,7 +25,7 @@ import type {
   UserModel,
 } from "@kissnotes/types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ElementType, useMemo, useState } from "react";
+import { ElementType, useEffect, useMemo, useRef, useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
@@ -33,13 +35,11 @@ const ExpressionListPage = () => {
   const [listMode, setListMode] = useState<
     "saved" | "native" | "all" | "mine" | string
   >(listParam);
-  const [filters, setFilters] = useState<SidebarValue>({
-    author: null,
-    tokens: [],
-    search: "",
-    saved: false,
-    native: false,
-  });
+  const [filters, setFilters] = useState<SidebarValue>(
+    listParam === "native"
+      ? { search: "", saved: false, native: true }
+      : { author: null, tokens: [], search: "", saved: false, native: false },
+  );
 
   const debouncedSearch = useDebounce(filters?.search, 400);
 
@@ -83,14 +83,74 @@ const ExpressionListPage = () => {
           .flat()
       : data || [];
 
+  // Accumulate token and author options so they never shrink when filtering
+  const accumulatedTokensRef = useRef<ExpressionToken[]>([]);
+  const accumulatedAuthorsRef = useRef<UserModel[]>([]);
+
+  const { getTokens } = useExpressions((data as ExpressionModel[]) || []);
+
+  const currentTokens = useMemo(
+    () => getTokens(["functions", "methods", "properties"]),
+    [getTokens],
+  );
+
+  const currentAuthors = useMemo(() => {
+    if (!data || listMode === "native") return [];
+    return arrayUnique(
+      (data as ExpressionModel[])
+        .map((e) => e.author)
+        .filter((a): a is UserModel => !!a),
+      "username",
+    );
+  }, [data, listMode]);
+
+  useEffect(() => {
+    if (currentTokens.length > 0) {
+      accumulatedTokensRef.current = arrayUnique(
+        [...accumulatedTokensRef.current, ...currentTokens],
+        "title",
+      );
+    }
+  }, [currentTokens]);
+
+  useEffect(() => {
+    if (currentAuthors.length > 0) {
+      accumulatedAuthorsRef.current = arrayUnique(
+        [...accumulatedAuthorsRef.current, ...currentAuthors],
+        "username",
+      );
+    }
+  }, [currentAuthors]);
+
+  // Use state to trigger re-renders when accumulated values change
+  const [tokenOptions, setTokenOptions] = useState<ExpressionToken[]>([]);
+  const [authorOptions, setAuthorOptions] = useState<UserModel[]>([]);
+
+  useEffect(() => {
+    if (currentTokens.length > 0) {
+      setTokenOptions(accumulatedTokensRef.current);
+    }
+  }, [currentTokens]);
+
+  useEffect(() => {
+    if (currentAuthors.length > 0) {
+      setAuthorOptions(accumulatedAuthorsRef.current);
+    }
+  }, [currentAuthors]);
+
   const handleModes = (value: string) => {
     setListMode(value);
-    setFilters({
-      ...filters,
-      author: value === "mine" ? auth.user : null,
-      saved: value === "saved",
-      native: value === "native",
-    });
+
+    if (value === "native") {
+      setFilters((f) => ({ ...f, saved: false, native: true }));
+    } else {
+      setFilters((f) => ({
+        ...f,
+        author: value === "mine" ? auth.user : f?.author,
+        saved: value === "saved",
+        native: false,
+      }));
+    }
     router.push(`?list=${value}`);
   };
 
@@ -125,17 +185,23 @@ const ExpressionListPage = () => {
     [auth?.user],
   );
 
+  const handleFilterChange = (newFilters: SidebarValue) => {
+    setFilters(newFilters);
+    handleModes(newFilters?.native === true ? "native" : "all");
+  };
+
   return (
     <>
       <Hero />
       <ExpressionList
-        native={listMode === "native"}
         loading={userLoading}
         expressions={expressions}
         filters={filters}
-        onFilterChange={setFilters}
+        onFilterChange={handleFilterChange}
         startCollapsed={true}
         openModals
+        tokenOptions={tokenOptions}
+        authorOptions={authorOptions}
         ActionSlot={
           <ToggleButtons
             value={listMode}

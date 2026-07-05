@@ -8,6 +8,7 @@ import useAuth from "@/contexts/AuthContext/useAuth";
 import useUser from "@/contexts/UserContext";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useDebounce from "@/hooks/useDebounce";
+import useExpressions from "@/hooks/useExpressions";
 import { getHandle, getUsername } from "@/utils/userUtils";
 import {
   DocumentTextIcon as OutlineDocumentTextIcon,
@@ -64,6 +65,13 @@ const ProfilePage = () => {
     [data],
   );
 
+  // Derive token options from the full dataset (all user expressions)
+  const { getTokens } = useExpressions(data || []);
+  const tokenOptions = useMemo(
+    () => getTokens(["functions", "methods", "properties"]),
+    [getTokens],
+  );
+
   const isAuth = isAuthUser(user) && user?.username === getUsername(handle);
 
   const handleShowDrafts = (value: string) => {
@@ -93,6 +101,8 @@ const ProfilePage = () => {
           startCollapsed
           urlScope={`/${getHandle(handle)}`}
           loading={expressionLoading}
+          tokenOptions={tokenOptions}
+          authorOptions={[]}
           ActionSlot={
             isAuth && (
               <ToggleButtons

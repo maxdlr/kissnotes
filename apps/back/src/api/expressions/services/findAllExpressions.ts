@@ -9,6 +9,30 @@ interface ExtendedWhere extends FindOptionsWhere<ExpressionEntity> {
   maxResults?: number | string;
 }
 
+/**
+ * Builds a TypeORM WHERE clause from only the allowed filter fields.
+ * Allowed: `published` (boolean), `author` (object with `id`).
+ */
+const buildWhitelistedWhere = (
+  where: ExtendedWhere,
+): FindOptionsWhere<ExpressionEntity> => {
+  const allowed: FindOptionsWhere<ExpressionEntity> = {};
+
+  if (typeof where.published === "boolean") {
+    allowed.published = where.published;
+  }
+
+  if (
+    where.author &&
+    typeof where.author === "object" &&
+    "id" in where.author
+  ) {
+    allowed.author = { id: (where.author as { id: number }).id };
+  }
+
+  return allowed;
+};
+
 const findAllExpressions = async (
   where?: ExtendedWhere,
 ): Promise<ExpressionEntity[]> => {
@@ -29,17 +53,15 @@ const findAllExpressions = async (
       ? (symbolsFilter as ExpressionSymbol).tokens.map(String)
       : undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { search, maxResults, symbols, ...sanitizedWhere } = where;
-  const take: number = maxResults ? Number(maxResults) : 50;
+  const sanitizedWhere = buildWhitelistedWhere(where);
+  const take: number = where.maxResults ? Number(where.maxResults) : 50;
 
-  if (search) {
-    const baseWhere = sanitizedWhere as FindOptionsWhere<ExpressionEntity>;
+  if (where.search) {
     const qb = ExpressionRepository.createQueryBuilder("expression")
       .leftJoinAndSelect("expression.author", "author")
-      .where(baseWhere);
+      .where(sanitizedWhere);
 
-    const searchWords = search.split(/\s+/).filter(Boolean);
+    const searchWords = where.search.split(/\s+/).filter(Boolean);
     searchWords.forEach((searchWord, i) => {
       const param = `search${i}`;
       qb.andWhere(
@@ -63,7 +85,7 @@ OR author.username LIKE :${param}
   }
 
   let result = await ExpressionRepository.find({
-    where: sanitizedWhere as FindOptionsWhere<ExpressionEntity>,
+    where: sanitizedWhere,
     ...(take && !tokenTitles ? { take } : {}),
     loadRelationIds: { relations: ["saves"] },
   });

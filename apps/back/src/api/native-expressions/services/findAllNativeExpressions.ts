@@ -1,23 +1,46 @@
-import ExpressionEntity from "@/entities/ExpressionEntity";
 import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
 import NativeExpressionRepository from "@/repositories/NativeExpressionRepository";
 import { FindOptionsWhere } from "typeorm";
 
+interface NativeExpressionFilters {
+  search?: string;
+  maxResults?: number | string;
+  title?: string;
+}
+
+/**
+ * Builds a TypeORM WHERE clause from only the allowed filter fields.
+ * Allowed: `title` (string).
+ */
+const buildWhitelistedWhere = (
+  where: NativeExpressionFilters,
+): FindOptionsWhere<NativeExpressionEntity> => {
+  const allowed: FindOptionsWhere<NativeExpressionEntity> = {};
+
+  if (typeof where.title === "string") {
+    allowed.title = where.title;
+  }
+
+  return allowed;
+};
+
 const findAllNativeExpressions = async (
-  where?: any,
+  where?: NativeExpressionFilters,
 ): Promise<NativeExpressionEntity[]> => {
-  const { search, maxResults, symbols, ...sanitizedWhere } = where;
+  if (!where) {
+    return NativeExpressionRepository.find({});
+  }
 
-  const take: number = maxResults ? Number(maxResults) : 50;
+  const sanitizedWhere = buildWhitelistedWhere(where);
+  const take: number = where.maxResults ? Number(where.maxResults) : 50;
 
-  if (search) {
-    const baseWhere = sanitizedWhere as FindOptionsWhere<ExpressionEntity>;
+  if (where.search) {
     const qb =
       NativeExpressionRepository.createQueryBuilder("expression").where(
-        baseWhere,
+        sanitizedWhere,
       );
 
-    const searchWords = search.split(/\s+/).filter(Boolean);
+    const searchWords = where.search.split(/\s+/).filter(Boolean);
     searchWords.forEach((searchWord: string, i: number) => {
       const param = `search${i}`;
       qb.andWhere(
@@ -33,7 +56,10 @@ OR CAST(expression.code AS CHAR) LIKE :${param}
     return await qb.take(take).getMany();
   }
 
-  return await NativeExpressionRepository.findBy(sanitizedWhere);
+  return await NativeExpressionRepository.find({
+    where: sanitizedWhere,
+    take,
+  });
 };
 
 export default findAllNativeExpressions;

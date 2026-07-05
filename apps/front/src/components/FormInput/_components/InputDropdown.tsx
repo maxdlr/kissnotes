@@ -11,7 +11,6 @@ const InputDropdown = <T,>({
   open = false,
   label,
   name,
-  placeholder,
   className,
   property,
   options,
@@ -41,21 +40,21 @@ const InputDropdown = <T,>({
   };
 
   return (
-    <div className="w-full">
+    <div
+      className={`w-full flex flex-col justify-center items-start ${className}`}
+    >
       {(label || value) && (
-        <>
-          <motion.button
-            onClick={handleMainButton}
-            type="button"
-            onHoverStart={() => onHover?.(true)}
-            onHoverEnd={() => onHover?.(false)}
-            onTapStart={() => onTap?.(true)}
-            onTap={() => onTap?.(false)}
-            className="cursor-pointer text-start w-full"
-          >
-            {value?.[property] != null ? String(value[property]) : label}
-          </motion.button>
-        </>
+        <motion.button
+          onClick={handleMainButton}
+          type="button"
+          onHoverStart={() => onHover?.(true)}
+          onHoverEnd={() => onHover?.(false)}
+          onTapStart={() => onTap?.(true)}
+          onTap={() => onTap?.(false)}
+          className="cursor-pointer text-start leading-6 w-full"
+        >
+          {value?.[property] != null ? String(value[property]) : label}
+        </motion.button>
       )}
       <div className="absolute left-0 top-full w-full pt-4" style={{ zIndex }}>
         <Collapsible collapsed={!open}>

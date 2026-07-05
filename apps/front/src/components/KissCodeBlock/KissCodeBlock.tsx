@@ -9,7 +9,7 @@ import Button from "@/components/Button";
 import KissLineContent from "./components/KissLineContent";
 
 interface CodeBlockProps {
-  expression: ExpressionModel;
+  expression: Partial<ExpressionModel>;
   className?: string;
   highlightedTokens?: string[];
   highlightedLines?: number | number[];

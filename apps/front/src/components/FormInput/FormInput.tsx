@@ -100,6 +100,7 @@ const FormInput = <T = "string",>({
           </span>
         </label>
       )}
+
       <motion.div
         animate={
           open
@@ -117,12 +118,13 @@ const FormInput = <T = "string",>({
               }
         }
         className={`
-py-3 px-4 flex 
+p-5 flex
 ${(label && labelIn) || Icon ? "justify-between" : "justify-start"} 
 items-center gap-4 font-semibold text-lg w-full
 ${variantStyles[variant]} ${containerClassName}`}
       >
         {StartChild}
+
         {((label && labelIn) || Icon) && (
           <div>
             {Icon && (
@@ -134,6 +136,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             {labelIn && <label htmlFor={name}>{label}</label>}
           </div>
         )}
+
         {type === "checkbox" && (
           <InputToggle
             value={value as boolean}
@@ -142,6 +145,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             disabled={disabled}
           />
         )}
+
         {["text", "search", "email", "password"].includes(type) && (
           <InputText
             ref={localRef as Ref<HTMLInputElement>}
@@ -153,7 +157,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             name={name}
             autoFocus={autoFocus}
             placeholder={placeholder as InputTextProps["placeholder"]}
-            className={`disabled:cursor-not-allowed focus:ring-0 focus:outline-none whitespace-nowrap ${inputClassName}`}
+            className={`disabled:cursor-not-allowed ${inputClassName}`}
             value={value as InputTextProps["value"]}
             onChange={handleChange}
             onClick={onClick}
@@ -161,6 +165,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             onFocus={handleFocus}
           />
         )}
+
         {type === "textarea" && (
           <InputTextArea
             autoFocus={autoFocus}
@@ -176,13 +181,13 @@ ${variantStyles[variant]} ${containerClassName}`}
             rows={rows}
           />
         )}
+
         {type === "dropdown" && (
           <InputDropdown
             ref={localRef as React.RefObject<HTMLDivElement | null>}
             name={name}
             open={open}
             label={label}
-            placeholder={placeholder}
             onChange={handleChange}
             onClose={() => setOpen(false)}
             onOpen={() => {
@@ -197,6 +202,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             property={property}
           />
         )}
+
         {type === "code" && (
           <InputCode
             value={value as string}
@@ -206,6 +212,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             onUnfocus={unfocus}
           />
         )}
+
         {type === "password" && (
           <Button
             size="sm"
@@ -215,7 +222,9 @@ ${variantStyles[variant]} ${containerClassName}`}
             className={isPasswordRevealed ? "text-secondary!" : ""}
           />
         )}
+
         {EndChild}
+
         {shortcut && <Shortcut shortcut={shortcut} />}
       </motion.div>
       <Collapsible collapsed={!errors?.length}>
