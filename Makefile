@@ -39,9 +39,9 @@ i: ## npm i for back and front
 
 dev: ## npm run dev for back and front
 	make start-db
-	make wait-db
-	make drop-db
-	make create-db
+	make db-wait
+	make db-drop
+	make db-create
 	make -j2 dev-f dev-b
 
 build: ## npm run build for back and front
@@ -49,8 +49,8 @@ build: ## npm run build for back and front
 
 start: ## npm run start for back and front
 	make start-db
-	make wait-db
-	make create-db
+	make db-wait
+	make db-create
 	make -j2 start-f start-b
 
 start-f: ## npm run start for front
@@ -78,13 +78,13 @@ is-db-up: ## Check if db service is up
 		&& echo "✔ $(DB_CONTAINER_NAME) is up" \
 		|| { echo "✘ $(DB_CONTAINER_NAME) is not running"; exit 1; }
 
-create-db: wait-db ## Creates database db
+db-create: db-wait ## Creates database db
 	$(MARIADB) -e "CREATE DATABASE IF NOT EXISTS $(APP_NAME);"
 
-drop-db: wait-db ## Drop database db
+db-drop: db-wait ## Drop database db
 	$(MARIADB) -e "DROP DATABASE IF EXISTS $(APP_NAME);"
 
-wait-db: ## Wait for MariaDB to be ready
+db-wait: ## Wait for MariaDB to be ready
 	@echo "Waiting for MariaDB to be ready..."
 	@for i in $$(seq 1 20); do \
 		docker exec $(DB_CONTAINER_NAME) mariadb -u root -p"root" -e "SELECT 1;" > /dev/null 2>&1 \
