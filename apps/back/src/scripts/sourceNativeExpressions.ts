@@ -6,6 +6,7 @@ import { AppDataSource } from "@/services/database/datasource";
 
 async function nuke() {
   await AppDataSource.initialize();
+  await AppDataSource.synchronize();
 
   console.log("Deleting all native expressions...");
   if (AppDataSource.hasMetadata(NativeExpressionEntity)) {
