@@ -4,8 +4,8 @@ services:
     image: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_ROOT_USERNAME: root
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_USERNAME: ${DB_USERNAME}
       MARIADB_DATABASE: ${APP_NAME}
     volumes:
       - db-data:/var/lib/mysql
@@ -16,6 +16,7 @@ services:
       retries: 10
     networks:
       - internal
+      - shared_proxy_network
 
   back:
     container_name: ${APP_NAME}-back-prod
@@ -28,10 +29,11 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       APP_NAME: ${APP_NAME}
-      BACK_PORT: 4000
+      BACK_PORT: ${BACK_PORT}
       DB_HOST: db
-      DB_PORT: 3306
+      DB_PORT: ${DB_PORT}
       CORS_ORIGIN_URL: https://kissnotes.maxdlr.com
       EC_KEY: ${EC_KEY}
       EC_SALT: ${EC_SALT}
