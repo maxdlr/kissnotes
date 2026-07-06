@@ -10,7 +10,6 @@ const createSave = async (expressionId: Id, userId: Id) => {
   });
 
   if (existing) {
-    //remove it like a toggle
     await SaveRepository.delete({
       expression: { id: expressionId as number },
       user: { id: userId as number },

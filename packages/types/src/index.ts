@@ -197,6 +197,7 @@ export type KissFormErrors =
 export interface KissResponseError {
   message: string;
   errors?: KissFormErrors;
+  error?: { endpoint?: string; traceId?: any };
 }
 
 // --------------------------------------------------

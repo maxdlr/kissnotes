@@ -1,22 +1,22 @@
-import ExpressionEntity from "@/entities/ExpressionEntity";
-import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
-import UserEntity from "@/entities/UserEntity";
-import ExpressionRepository from "@/repositories/ExpressionRepository";
-import jsBuiltins from "@/ressources/js-builtins";
-import { faker } from "@faker-js/faker";
-import nativeExpressionContent from "../ressources/native-expressions";
-import { EntityManager } from "typeorm";
-import { parseAeExpression } from "@/api/expressions/services/parseAeExpressions";
+import ExpressionEntity from '@/entities/ExpressionEntity';
+import NativeExpressionEntity from '@/entities/NativeExpressionEntity';
+import SaveEntity from '@/entities/SaveEntity';
+import UserEntity from '@/entities/UserEntity';
+import ExpressionRepository from '@/repositories/ExpressionRepository';
+import jsBuiltins from '@/ressources/js-builtins';
+import nativeExpressionContent from '../ressources/native-expressions';
+import { parseAeExpression } from '@/api/expressions/services/parseAeExpressions';
 import {
   CodeModel,
   LayerModel,
   LayerTypeEnum,
   PropertyModel,
-} from "@kissnotes/types";
-import SaveEntity from "@/entities/SaveEntity";
+} from '@kissnotes/types';
+import { faker } from '@faker-js/faker';
+import { EntityManager } from 'typeorm';
 
-const randomElement = (array: any[]) => {
-  return array[Math.floor(Math.random() * array.length)];
+const randomElement = <T>(array: T[]): T => {
+  return array[Math.floor(Math.random() * array.length)] as T;
 };
 
 export const expressionCodes = [
@@ -68,51 +68,31 @@ function addZero(n){
 }
 
 addZero(Math.floor(min)) + ":" + addZero(Math.floor(sec));`,
-
-  // Very short
   `time * 360`,
-
   `loopOut("cycle")`,
-
   `value + [Math.sin(time * 3) * 20, 0]`,
-
   `effect("Opacity Control")("Slider") / 100`,
-
   `thisComp.layer("Null 1").transform.position`,
-
-  // Short
   `linear(time, 0, 3, 0, 100)`,
-
   `ease(time, inPoint, outPoint, 0, 100)`,
-
   `posterizeTime(12); value`,
-
   `seedRandom(index, true); wiggle(2, 30)`,
-
   `[value[0], thisComp.height / 2]`,
-
-  // Medium
   `var t = (time - inPoint) / (outPoint - inPoint);
 Math.sin(t * Math.PI) * 100;`,
-
   `var n = index;
 var total = thisComp.numLayers;
 var angle = (n / total) * 2 * Math.PI;
 var r = 200;
 [Math.cos(angle) * r + thisComp.width/2, Math.sin(angle) * r + thisComp.height/2];`,
-
   `var src = thisComp.layer("Control").effect("Slider Control")("Slider");
 var mapped = linear(src, 0, 100, -500, 500);
 [mapped, value[1]];`,
-
   `var bounce = Math.abs(Math.sin(time * 4)) * 50;
 [value[0], value[1] - bounce];`,
-
   `var key1 = key(1).time;
 var key2 = key(numKeys).time;
 ease(time, key1, key2, 0, 360);`,
-
-  // Quite long
   `var maxDist = 400;
 var mouse = thisComp.layer("Null 1").transform.position;
 var d = length(mouse, transform.position);
@@ -123,20 +103,16 @@ var angle = Math.atan2(
 );
 var push = falloff * 80;
 [value[0] + Math.cos(angle) * push, value[1] + Math.sin(angle) * push];`,
-
   `var inDur = 0.5;
 var outDur = 0.5;
 var fadeIn = linear(time, inPoint, inPoint + inDur, 0, 1);
 var fadeOut = linear(time, outPoint - outDur, outPoint, 1, 0);
 Math.min(fadeIn, fadeOut) * 100;`,
-
   `var layer = thisComp.layer(index - 1);
 var offset = 3;
 var t = time - offset * (index - 1) * thisComp.frameDuration;
 if (t < layer.inPoint) { layer.transform.opacity.valueAtTime(layer.inPoint); }
 else { layer.transform.opacity.valueAtTime(t); }`,
-
-  // Very long
   `var ctrl = thisComp.layer("Master Control");
 var bpm = ctrl.effect("BPM")("Slider");
 var beatTime = 60 / bpm;
@@ -154,7 +130,6 @@ if (t < 0.1) {
 var minScale = 100;
 var maxScale = 130;
 linear(pulse, 0, 1, minScale, maxScale);`,
-
   `var numCopies = 8;
 var radius = 300;
 var speed = 45;
@@ -170,98 +145,122 @@ var wobble = Math.sin(time * 2 + i) * 20;
 ];`,
 ];
 
-const makeMaxdlrUser = async (manager: EntityManager): Promise<UserEntity> => {
-  const password = "password";
-  const description = faker.lorem.paragraph(2);
+// --- Helpers ---
+
+const ensureAdminUser = async (manager: EntityManager): Promise<UserEntity> => {
+  if (!process.env.ADMIN_PASSWORD) {
+    throw new Error('ADMIN_PASSWORD environment variable is not set');
+  }
+
+  const existing = await manager.findOneBy(UserEntity, { username: 'maxdlr' });
+  if (existing) return existing;
+
   const user = new UserEntity();
-  user.username = "maxdlr";
-  user.email = "contact@maxdlr.com";
-  user.password = password;
-  user.description = description;
-  user.type = "admin";
+  user.username = 'maxdlr';
+  user.email = 'contact@maxdlr.com';
+  user.password = process.env.ADMIN_PASSWORD;
+  user.description = 'Creator of this platform';
+  user.type = 'admin';
   return await manager.save(UserEntity, user);
 };
 
-const makeAugustaUser = async (manager: EntityManager): Promise<UserEntity> => {
-  const password = "password";
-  const description = faker.lorem.paragraph(2);
-  const user = new UserEntity();
-  user.username = "augusta";
-  user.email = "contact@augusta.com";
-  user.password = password;
-  user.description = description;
-  return await manager.save(UserEntity, user);
+const loadNativeExpressions = async (
+  manager: EntityManager,
+): Promise<NativeExpressionEntity[]> => {
+  await manager
+    .createQueryBuilder()
+    .delete()
+    .from(NativeExpressionEntity)
+    .execute();
+  return await manager.save(NativeExpressionEntity, [
+    ...nativeExpressionContent,
+    ...jsBuiltins,
+  ]);
 };
 
 const makeUsers = async (
   manager: EntityManager,
   count: number,
-): Promise<UserEntity | UserEntity[]> => {
-  const password = "password";
-  const description = faker.lorem.paragraph(2);
-
+): Promise<UserEntity[]> => {
   return await Promise.all(
-    Array.from({ length: count }).map(async (_) => {
-      const author = new UserEntity();
-      author.username = faker.internet.username();
-      author.email = faker.internet.email();
-      author.password = password;
-      author.description = description;
-      return await manager.save(UserEntity, author);
+    Array.from({ length: count }).map(async () => {
+      const user = new UserEntity();
+      user.username = faker.internet.username();
+      user.email = faker.internet.email();
+      user.password = 'password';
+      user.description = faker.lorem.paragraph(2);
+      return await manager.save(UserEntity, user);
     }),
   );
 };
 
-export const loadFixtures = async () => {
-  const count = 50;
+const seedExpressions = async (
+  manager: EntityManager,
+  users: UserEntity[],
+  nativeExpressions: NativeExpressionEntity[],
+  count: number,
+): Promise<void> => {
+  const layer: LayerModel = { name: 'my solid', type: LayerTypeEnum.Solid };
+  const property: PropertyModel = { name: 'position', group: 'transform' };
 
-  return await ExpressionRepository.manager.transaction(async (manager) => {
-    await manager.deleteAll(NativeExpressionEntity);
-    await manager.deleteAll(SaveEntity);
-    await manager.deleteAll(ExpressionEntity);
-    await manager.deleteAll(UserEntity);
+  const codes: CodeModel[] = Array.from({ length: count }).map(() => {
+    const raw = randomElement(expressionCodes);
+    return {
+      lines: raw
+        .split('\n')
+        .map((content, i) => ({ number: i + 1, content })),
+    };
+  });
 
-    const nativeExpressions = await manager.save(NativeExpressionEntity, [
-      ...nativeExpressionContent,
-      ...jsBuiltins,
-    ]);
+  await manager.save(
+    ExpressionEntity,
+    Array.from({ length: count }).map((_, i) => {
+      const code = codes[i] as CodeModel;
+      const expression = new ExpressionEntity();
+      expression.title = faker.lorem.sentence();
+      expression.description = faker.lorem.paragraph(3);
+      expression.author = randomElement(users);
+      expression.layer = layer;
+      expression.property = property;
+      expression.code = code;
+      expression.symbols = parseAeExpression(code, nativeExpressions);
+      expression.published = faker.datatype.boolean();
+      expression.views = faker.number.int({ min: 0, max: 1000 });
+      expression.shares = faker.number.int({ min: 0, max: 1000 });
+      return expression;
+    }),
+  );
+};
 
-    const layer: LayerModel = { name: "my solid", type: LayerTypeEnum.Solid };
-    const property: PropertyModel = { name: "position", group: "transform" };
+// --- Public API ---
 
-    const codes: CodeModel[] = Array.from({ length: count }).map(() => {
-      const raw = randomElement(expressionCodes);
-      return {
-        lines: raw
-          .split("\n")
-          .map((content: string, i: number) => ({ number: i + 1, content })),
-      };
-    });
+/**
+ * Production: ensures admin user exists and refreshes native expressions.
+ * Development: wipes all data and seeds users, expressions, and native expressions.
+ */
+export const loadFixtures = async (): Promise<void> => {
+  const isDev = process.env.NODE_ENV === 'development';
 
-    const users = [
-      ...((await makeUsers(manager, count / 2)) as UserEntity[]),
-      await makeMaxdlrUser(manager),
-    ] as UserEntity[];
+  await ExpressionRepository.manager.transaction(async (manager) => {
+    if (isDev) {
+      await manager.createQueryBuilder().delete().from(SaveEntity).execute();
+      await manager
+        .createQueryBuilder()
+        .delete()
+        .from(ExpressionEntity)
+        .execute();
+      await manager.createQueryBuilder().delete().from(UserEntity).execute();
+    }
 
-    await manager.save(
-      ExpressionEntity,
-      Array.from({ length: count }).map(
-        (_v, i): Omit<ExpressionEntity, "id" | "saves"> => ({
-          title: faker.lorem.sentence(),
-          description: faker.lorem.paragraph(3),
-          author: randomElement(users),
-          layer,
-          property,
-          code: codes[i] as CodeModel,
-          symbols: parseAeExpression(codes[i] as CodeModel, nativeExpressions),
-          createdAt: faker.date.past(),
-          published: faker.datatype.boolean(),
-          views: faker.number.int({ min: 0, max: 1000 }),
-          shares: faker.number.int({ min: 0, max: 1000 }),
-        }),
-      ),
-    );
+    const nativeExpressions = await loadNativeExpressions(manager);
+    const admin = await ensureAdminUser(manager);
 
-    console.log("Fixtures loaded");
+    if (isDev) {
+      const count = 50;
+      const users = [...(await makeUsers(manager, 25)), admin];
+      await seedExpressions(manager, users, nativeExpressions, count);
+    }
+
+    console.log(`Fixtures loaded (${isDev ? 'development' : 'production'})`);
   });
 };
