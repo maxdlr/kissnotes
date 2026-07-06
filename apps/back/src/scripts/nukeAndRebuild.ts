@@ -1,4 +1,3 @@
-// scripts/nukeAndRebuild.ts
 import { AppDataSource } from "@/services/database/datasource";
 
 async function nuke() {

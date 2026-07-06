@@ -1,10 +1,9 @@
-// scripts/nukeAndRebuild.ts
 import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
 import jsBuiltins from "@/ressources/js-builtins";
 import nativeExpressionContent from "@/ressources/native-expressions";
 import { AppDataSource } from "@/services/database/datasource";
 
-async function nuke() {
+async function main() {
   await AppDataSource.initialize();
   await AppDataSource.synchronize();
 
@@ -26,7 +25,7 @@ async function nuke() {
   console.log("Done.");
 }
 
-nuke().catch((err) => {
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
