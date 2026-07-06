@@ -55,10 +55,7 @@ const Searcher = ({
   useShortcut({ keys: ["up"], ignoreInputs: false }, (e) => {
     e.preventDefault();
     setSelectedIndex((prevIndex) => ({
-      index:
-        prevIndex.index !== undefined
-          ? Math.max(prevIndex.index - 1, 0)
-          : undefined,
+      index: Math.max(prevIndex.index - 1, 0),
       native: prevIndex.native,
       mouse: false,
     }));
@@ -67,10 +64,7 @@ const Searcher = ({
   useShortcut({ keys: ["down"], ignoreInputs: false }, (e) => {
     e.preventDefault();
     setSelectedIndex((prevIndex) => ({
-      index:
-        prevIndex.index !== undefined
-          ? Math.min(prevIndex.index + 1, searchResults.length - 1)
-          : undefined,
+      index: Math.min(prevIndex.index + 1, searchResults.length - 1),
       native: prevIndex.native,
       mouse: false,
     }));
@@ -141,7 +135,7 @@ const Searcher = ({
   };
 
   const handleHover = (index?: number, native?: boolean) => {
-    setSelectedIndex({ index, native: !!native, mouse: true });
+    setSelectedIndex({ index: index ?? 0, native: !!native, mouse: true });
   };
 
   return (

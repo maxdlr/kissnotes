@@ -30,7 +30,7 @@ export interface SignUpStepProps {
   loading?: boolean;
   onNext?: (e?: KissClickEvent) => void;
   onChange: (e: KissChangeEvent<SocialLinkModel[] | string | null>) => void;
-  formData?: SignUpPayload;
+  formData?: Partial<SignUpPayload>;
   errors?: KissFormErrors;
 }
 

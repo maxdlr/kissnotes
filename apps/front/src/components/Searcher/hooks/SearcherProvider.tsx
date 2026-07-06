@@ -8,9 +8,9 @@ type SearcherContextType = {
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedIndex: { index?: number; native: boolean; mouse: boolean };
+  selectedIndex: { index: number; native: boolean; mouse: boolean };
   setSelectedIndex: React.Dispatch<
-    React.SetStateAction<{ index?: number; native: boolean; mouse: boolean }>
+    React.SetStateAction<{ index: number; native: boolean; mouse: boolean }>
   >;
   previewing: { id?: Id; native: boolean } | undefined;
   setPreviewing: React.Dispatch<

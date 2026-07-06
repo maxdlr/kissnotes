@@ -28,7 +28,7 @@ const ConfirmModal = ({
               },
             ] as ButtonProps[]
           ).map((button) => (
-            <Button key={button.label} {...button} />
+            <Button key={button.label as string} {...button} />
           ))}
         </div>
       </div>

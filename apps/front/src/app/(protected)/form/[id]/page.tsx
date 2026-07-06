@@ -25,6 +25,7 @@ import {
 } from "@kissnotes/types";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import type { ExpressionFormData } from "@/components/ExpressionForm/interfaces";
 
 const ExpressionFormPage = () => {
   const { user } = useAuth();

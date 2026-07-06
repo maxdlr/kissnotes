@@ -7,7 +7,7 @@ import {
   UserModel,
 } from "@kissnotes/types";
 
-type ExpressionFormData = {
+export type ExpressionFormData = {
   id?: Id;
   title: string;
   description: string;

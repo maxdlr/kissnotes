@@ -5,6 +5,7 @@ import Button from "@/components/Button";
 import useUser from "@/contexts/UserContext";
 import { SocialLinkIcon } from "@/types/socials.types";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import type { SocialLinkModel } from "@kissnotes/types";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -16,21 +17,36 @@ import { KissChangeEvent } from "@/types/form.types";
 import useAxios from "@/hooks/useAxios";
 import useForm from "../FormWrapper/hooks/useForm";
 import useToasts from "@/contexts/ToastsContext";
+import SignUpStepTwo from "@/app/(public)/signup/_components/SignUpStepTwo";
 
 const UserHero = () => {
-  const { user, loading } = useUser();
+  const { user, loading, refreshUser } = useUser();
   const auth = useAuth();
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
-  const socials: SocialLinkModel[] = user?.socials || [];
-  const [isAddSocialModalOpen, setIsAddSocialModalOpen] = useState(false);
-  const [socialFormData, setSocialFormData] =
-    useState<SocialLinkModel[]>(socials);
-  const { putData } = useAxios("social-links/edit");
   const { errors, setErrors } = useForm();
   const { addToast } = useToasts();
 
+  const socials: SocialLinkModel[] = user?.socials || [];
+  const description: string = user?.description || "";
+
+  const [isAddSocialModalOpen, setIsAddSocialModalOpen] = useState(false);
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+
+  const [socialFormData, setSocialFormData] =
+    useState<SocialLinkModel[]>(socials);
+  const [descriptionFormData, setDescriptionFormData] =
+    useState<string>(description);
+
+  const { putData: putSocialLinks } = useAxios("social-links/edit");
+  const { putData: putDescription } = useAxios("users/edit");
+
   const isReady = !loading;
+
+  useEffect(() => {
+    if (user?.socials) setSocialFormData(user.socials);
+    if (user?.description) setDescriptionFormData(user.description);
+  }, [user]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -39,7 +55,7 @@ const UserHero = () => {
   }, [isReady]);
 
   const handleAddSocials = async () => {
-    await putData({ socials: socialFormData }).then((r) => {
+    await putSocialLinks({ socials: socialFormData }).then((r) => {
       if (r?.error) {
         setErrors(r.error.errors);
         return;
@@ -50,6 +66,23 @@ const UserHero = () => {
       });
       setErrors([]);
       setIsAddSocialModalOpen(false);
+      refreshUser();
+    });
+  };
+
+  const handleAddDescription = async () => {
+    await putDescription({ description: descriptionFormData }).then((r) => {
+      if (r?.error) {
+        setErrors(r.error.errors);
+        return;
+      }
+      addToast({
+        type: "success",
+        message: "Description updated successfully!",
+      });
+      setErrors([]);
+      setIsDescriptionModalOpen(false);
+      refreshUser();
     });
   };
 
@@ -57,8 +90,14 @@ const UserHero = () => {
     e: KissChangeEvent<string | SocialLinkModel[] | null>,
   ) => {
     const socials = e.target.value as SocialLinkModel[];
-    console.log({ socials });
     setSocialFormData(socials);
+  };
+
+  const handleDescriptionChange = (
+    e: KissChangeEvent<string | SocialLinkModel[] | null>,
+  ) => {
+    const description = e.target.value as string;
+    setDescriptionFormData(description);
   };
 
   return (
@@ -68,13 +107,25 @@ const UserHero = () => {
           onClose={() => setIsAddSocialModalOpen(false)}
           className="max-w-4xl bg-darker p-8"
         >
-          <div>
-            <SignUpStepThree
-              onChange={handleSocialsChange}
-              onNext={handleAddSocials}
-              errors={errors}
-            />
-          </div>
+          <SignUpStepThree
+            onChange={handleSocialsChange}
+            onNext={handleAddSocials}
+            errors={errors}
+            formData={{ socials: socialFormData }}
+          />
+        </Modal>
+      )}
+      {isDescriptionModalOpen && (
+        <Modal
+          onClose={() => setIsDescriptionModalOpen(false)}
+          className="max-w-2xl bg-darker p-8"
+        >
+          <SignUpStepTwo
+            onChange={handleDescriptionChange}
+            onNext={handleAddDescription}
+            errors={errors}
+            formData={{ description: descriptionFormData }}
+          />
         </Modal>
       )}
       <motion.div
@@ -95,7 +146,18 @@ const UserHero = () => {
                     @{user?.username}
                   </h2>
                 </div>
-                <p className="sm:w-2/3 lg:1/2">{`${user?.description}`}</p>
+                <p className="sm:w-2/3 lg:1/2">
+                  {`${description && user?.description}`}
+                  {auth?.isAuthUser(user) && (
+                    <Button
+                      Icon={PencilIcon}
+                      size="sm"
+                      variant="ghost"
+                      className="text-secondary! ms-2"
+                      onClick={() => setIsDescriptionModalOpen(true)}
+                    />
+                  )}
+                </p>
                 <div className="flex flex-wrap justify-center items-center">
                   {socials.map((s, index) => (
                     <Button

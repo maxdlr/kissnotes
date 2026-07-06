@@ -37,13 +37,13 @@ const LogIn = () => {
     e?.preventDefault();
     setLoading(true);
     await logIn(formData).then((r) => {
-      if (r?.errors || r?.error) {
-        setErrors(r?.errors);
+      if (r?.error) {
+        setErrors(r.error.errors);
         addToast({
           type: "error",
           title: "Something went wrong",
           message:
-            r.error?.message || "Please check your credentials and try again.",
+            r.error.message || "Please check your credentials and try again.",
         });
         return;
       }

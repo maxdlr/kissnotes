@@ -10,13 +10,17 @@ import { asTitle } from "@/utils/stringUtils";
 import type { SignUpStepProps } from "../page";
 import { SocialLinkIcon } from "@/types/socials.types";
 
+//todo: pass formdata
 const SignUpStepThree = ({
   loading,
   onNext,
   onChange,
   errors,
+  formData,
 }: SignUpStepProps) => {
-  const [selectedSocials, setSelectedSocials] = useState<SocialLinkModel[]>([]);
+  const [selectedSocials, setSelectedSocials] = useState<SocialLinkModel[]>(
+    formData?.socials || [],
+  );
   const socialOptions: Pick<SocialLinkModel, "name" | "url">[] = Object.values(
     SocialType,
   ).map((type) => ({

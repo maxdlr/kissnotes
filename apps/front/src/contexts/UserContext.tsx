@@ -11,6 +11,7 @@ import useToasts from "@/contexts/ToastsContext";
 export interface UserContextProps {
   user?: UserModel;
   loading: boolean;
+  refreshUser: () => void;
 }
 
 export interface UserProviderProps {
@@ -26,6 +27,7 @@ export const UserProvider = ({ children, handle }: UserProviderProps) => {
     data: user,
     loading,
     error,
+    mutate,
   } = useRead<UserModel>("users", {
     username: getUsername(handle),
   });
@@ -44,7 +46,8 @@ export const UserProvider = ({ children, handle }: UserProviderProps) => {
     }
   }, [error, router, addToast, user]);
 
-  const value = { user, loading };
+  const refreshUser = () => mutate();
+  const value = { user, loading, refreshUser };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -31,7 +31,7 @@ const AdminEntityDetails = <T extends Model>({
   recursive = false,
 }: AdminEntityDetailsProps<T>) => {
   const { deleteData } = useAxios(
-    initialData?.id ? `/${entity}/delete?id=${initialData?.id}` : null,
+    initialData?.id ? `/${entity}/delete?id=${initialData.id}` : "",
   );
   const [formData, setFormData] = useState<Record<string, unknown>>(
     (initialData as Record<string, unknown>) || {},
@@ -66,7 +66,7 @@ const AdminEntityDetails = <T extends Model>({
     await deleteData().then((r) => {
       if (!r?.error) {
         addToast({
-          message: `${asTitle(entity)} ${initialData?.id} deleted successfully`,
+          message: `${asTitle(entity ?? "")} ${initialData?.id} deleted successfully`,
           type: "success",
         });
       }
@@ -198,15 +198,15 @@ const AdminEntityDetails = <T extends Model>({
       <div>
         <div className="pb-8 flex justify-between items-center flex-wrap">
           <div className="flex justify-start items-center flex-wrap gap-2 sm:gap-4">
-            {formData.createdAt && (
-              <Pill label={`Created ${getRelativeTime(formData.createdAt)}`} />
+            {!!formData.createdAt && (
+              <Pill label={`Created ${getRelativeTime(formData.createdAt as string | Date)}`} />
             )}
 
-            {formData.updatedAt && (
-              <Pill label={`Updated ${getRelativeTime(formData.updatedAt)}`} />
+            {!!formData.updatedAt && (
+              <Pill label={`Updated ${getRelativeTime(formData.updatedAt as string | Date)}`} />
             )}
 
-            {formData.published && (
+            {!!formData.published && (
               <Pill
                 label="Published"
                 className="border-emphasis text-emphasis"
@@ -217,9 +217,9 @@ const AdminEntityDetails = <T extends Model>({
               <Pill label="Draft" className="border-gray-500 text-gray-500" />
             )}
 
-            {formData.deletedAt && (
+            {!!formData.deletedAt && (
               <Pill
-                label={`Deleted ${getRelativeTime(formData.deletedAt)}`}
+                label={`Deleted ${getRelativeTime(formData.deletedAt as string | Date)}`}
                 className="border-danger text-danger"
               />
             )}

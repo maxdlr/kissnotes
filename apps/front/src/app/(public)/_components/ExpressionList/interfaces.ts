@@ -1,5 +1,5 @@
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
-import type { ExpressionModel, ExpressionToken, UserModel } from "@kissnotes/types";
+import type { ExpressionModel, ExpressionToken, Id, UserModel } from "@kissnotes/types";
 import { ReactNode } from "react";
 
 export type ListExpression = Omit<Partial<ExpressionModel>, "author"> &
