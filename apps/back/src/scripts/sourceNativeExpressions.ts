@@ -6,12 +6,14 @@ import { AppDataSource } from "@/services/database/datasource";
 import { EntityManager } from "typeorm";
 
 const loadNativeExpressions = async (manager: EntityManager): Promise<void> => {
+  console.log("Deleting all native expressions...");
   await manager
     .createQueryBuilder()
     .delete()
     .from(NativeExpressionEntity)
     .execute();
 
+  console.log("Sourcing native expressions...");
   await manager.save(NativeExpressionEntity, [
     ...nativeExpressionContent,
     ...jsBuiltins,
@@ -20,13 +22,7 @@ const loadNativeExpressions = async (manager: EntityManager): Promise<void> => {
 
 async function nuke() {
   await AppDataSource.initialize();
-
-  console.log("Deleting all native expressions...");
-  await AppDataSource.manager.deleteAll(NativeExpressionEntity);
-
-  console.log("Sourcing native expressions...");
   await loadNativeExpressions(AppDataSource.manager);
-
   console.log("Done.");
 }
 
