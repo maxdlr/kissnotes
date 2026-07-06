@@ -14,7 +14,7 @@ import {
   GlobeEuropeAfricaIcon,
 } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
-import { ElementType, useMemo, useRef, useState } from "react";
+import { ElementType, Suspense, useMemo, useRef, useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
@@ -138,4 +138,10 @@ const ExpressionListPage = () => {
   );
 };
 
-export default ExpressionListPage;
+export default function ExpressionListPageWrapper() {
+  return (
+    <Suspense>
+      <ExpressionListPage />
+    </Suspense>
+  );
+}
