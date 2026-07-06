@@ -4,7 +4,7 @@ import SaveEntity from '@/entities/SaveEntity';
 import UserEntity from '@/entities/UserEntity';
 import ExpressionRepository from '@/repositories/ExpressionRepository';
 import jsBuiltins from '@/ressources/js-builtins';
-import nativeExpressionContent from '../ressources/native-expressions';
+import nativeExpressionContent from '@/ressources/native-expressions';
 import { parseAeExpression } from '@/api/expressions/services/parseAeExpressions';
 import {
   CodeModel,
