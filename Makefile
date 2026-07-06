@@ -94,6 +94,26 @@ db-wait: ## Wait for MariaDB to be ready
 	done; \
 	echo "✘ MariaDB did not become ready in time"; exit 1
 
+prod-exec-back: ## Exec into the production back container
+	docker exec -it $(APP_NAME)-back-prod sh
+
+prod-exec-front: ## Exec into the production front container
+	docker exec -it $(APP_NAME)-front-prod sh
+
+prod-exec-db: ## Exec into the production db container
+	docker exec -it $(APP_NAME)-db-prod mariadb -u root -p"$(DB_PASSWORD)" $(APP_NAME)
+
+prod-exec-nginx: ## Exec into the production nginx container
+	docker exec -it $(APP_NAME)-nginx sh
+
+prod-run-back: ## Run a command in the production back container (usage: make prod-run-back CMD="...")
+	docker exec $(APP_NAME)-back-prod sh -c "$(CMD)"
+
+prod-db-nuke: ## Drop and recreate the production database
+	docker exec $(APP_NAME)-db-prod mariadb -u root -p"$(DB_PASSWORD)" -e "DROP DATABASE IF EXISTS $(APP_NAME); CREATE DATABASE $(APP_NAME);"
+	@echo "✔ Database nuked and recreated. Restarting back to re-sync schema."
+	docker restart $(APP_NAME)-back-prod
+
 %:
 	@:
 
