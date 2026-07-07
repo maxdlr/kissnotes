@@ -114,7 +114,6 @@ const SignUpPage = () => {
   };
 
   const handleSubmitStepThree = async () => {
-    console.log("button clicked");
     setLoading(true);
 
     const { data, error } = await addSocials<SocialLinkModel>({

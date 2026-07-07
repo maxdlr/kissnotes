@@ -54,7 +54,7 @@ const ExpressionCard = ({
                 <p>{truncate(expression.description, 200)}</p>
               </div>
             )}
-            <div className="flex overflow-auto justify-items-start items-center gap-2">
+            <div className="flex overflow-auto justify-items-start items-center gap-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {getTokens(["functions", "methods", "properties"]).map((t) => (
                 <Pill label={t.label} key={t.index} />
               ))}

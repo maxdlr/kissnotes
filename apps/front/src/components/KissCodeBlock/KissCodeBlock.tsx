@@ -87,7 +87,7 @@ const KissCodeBlock = ({
             </div>
           </div>
         )}
-        <div className="overflow-x-auto w-full relative">
+        <div className="overflow-x-auto w-full relative [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <CodeBlock.Code>
             {({ isLineHighlighted }) => (
               <KissLineContent

@@ -12,8 +12,6 @@ import { useParams } from "next/navigation";
 const SidebarDefault = () => {
   const { entity } = useParams();
 
-  console.log({ entity });
-
   const menu: Partial<ButtonProps & { selected: boolean }>[] = [
     {
       label: "Dashboard",

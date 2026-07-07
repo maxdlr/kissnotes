@@ -43,8 +43,6 @@ const SearchBar = ({
   const handleClose = () => {
     setIsOpen(false);
     setPrompt("");
-    console.log({prompt});
-    
   };
 
   return (

@@ -15,8 +15,6 @@ const ExpressionByIdModalPage = () => {
   const params = useSearchParams();
   const isNative = params.get("native");
 
-  console.log({ params, isNative });
-
   const handleClose = () => {
     router.back();
   };
