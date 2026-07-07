@@ -1,14 +1,14 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { type SocialLinkModel, SocialType } from "@kissnotes/types";
-import { useState } from "react";
 import Button from "@/components/Button";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import FormWrapper from "@/components/FormWrapper";
 import type { KissChangeEvent } from "@/types/form.types";
-import { asTitle } from "@/utils/stringUtils";
-import type { SignUpStepProps } from "../page";
 import { SocialLinkIcon } from "@/types/socials.types";
+import { asTitle } from "@/utils/stringUtils";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { SocialType, type SocialLinkModel } from "@kissnotes/types";
+import { useState } from "react";
+import type { SignUpStepProps } from "../page";
 
 //todo: pass formdata
 const SignUpStepThree = ({
@@ -33,6 +33,8 @@ const SignUpStepThree = ({
   }: KissChangeEvent<unknown>) => {
     const updated = value as SocialLinkModel[];
     setSelectedSocials(updated);
+    console.log({ updated });
+
     onChange({ target: { name: "socials", value: updated } });
   };
 
@@ -82,9 +84,12 @@ const SignUpStepThree = ({
               variant="ghost-reveal"
               Icon={XMarkIcon}
               onClick={() =>
-                setSelectedSocials((prev) =>
-                  prev.filter((s) => s.name !== name),
-                )
+                handleSelectSocials({
+                  target: {
+                    name: "socials",
+                    value: selectedSocials.filter((s) => s.name !== name),
+                  },
+                })
               }
               size="sm"
               className="aspect-square"
