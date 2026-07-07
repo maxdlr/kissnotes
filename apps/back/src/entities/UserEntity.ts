@@ -4,8 +4,8 @@ import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import ExpressionEntity from "./ExpressionEntity";
-import SocialLinkEntity from "./SocialEntity";
 import SaveEntity from "./SaveEntity";
+import SocialLinkEntity from "./SocialEntity";
 
 @Entity({ name: "users" })
 export default class UserEntity extends AbstractEntity implements UserModel {

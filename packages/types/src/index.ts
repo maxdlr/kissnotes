@@ -127,7 +127,7 @@ export interface ExpressionModel extends Model {
   views?: number;
   shares?: number;
   published?: boolean;
-  saves?: number | Id[];
+  saves?: number | Id[] | SaveModel[];
 }
 
 export interface SaveModel extends Model {
@@ -157,7 +157,7 @@ export interface UserModel extends Model {
   description?: string;
   expressions: ExpressionModel[];
   socials: SocialLinkModel[];
-  saves?: Id[];
+  saves?: Id[] | SaveModel[];
   type: "user" | "admin";
 }
 
