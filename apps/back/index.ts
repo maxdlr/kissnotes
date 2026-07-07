@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import "reflect-metadata";
 
-// console.clear();
 dotenv.config({ path: "../../.env" });
 
 import registerGlobals from "@/services/registerGlobals";
@@ -20,18 +19,14 @@ import express from "express";
 import parseQuery from "@/middlewares/parseQuery";
 
 /**
- * ======================
  * 0 - Init Express
- * ======================
  */
 const app = express();
 const port =
   process.env.NODE_ENV === "test" ? 0 : process.env.BACK_PORT || 8080;
 
 /**
- * ======================
  * 2 - Cors
- * ======================
  */
 app.use((req: any, res, next) => {
   setCors(req, res);
@@ -39,55 +34,40 @@ app.use((req: any, res, next) => {
 });
 
 /**
- * ======================
  * 3 - Cookie Parser
- * ======================
  */
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 /**
- * ======================
  * 4 - Body Parser
- * ======================
  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /**
- * ======================
  * QueryParser
- * ======================
  */
 
 app.use(parseQuery);
 
 /**
- * ======================
  * Event Emitters
- * ======================
  */
 
 /**
- * ======================
  * 6 - Routes
- * ======================
  */
-// Wrap all routes handlers to catch errors even if there are no try/catch blocks
 app.use(requestLogger);
 wrapRoutesHandlers(routes);
 app.use("/api", routes);
 
 /**
- * ======================
  * Error Management
- * ======================
  */
 app.use(serviceErrorHandler);
 
 /**
- * ======================
  * TypeOrm
- * ======================
  */
 
 AppDataSource.initialize()
@@ -95,8 +75,6 @@ AppDataSource.initialize()
   .catch((error) => console.trace(error));
 
 /**
- * ======================
- * Listener!
- * ======================
+ * Listener
  */
 app.listen(port, () => printStartupInfo(port, true));

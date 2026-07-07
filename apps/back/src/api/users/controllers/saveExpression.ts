@@ -1,4 +1,5 @@
 import findExpression from "@/api/expressions/services/findExpression";
+import findNativeExpression from "@/api/native-expressions/services/findNativeExpression";
 import { Request, Response } from "express";
 import createSave from "../services/createSave";
 
@@ -7,22 +8,33 @@ const saveExpression = async ({ user, body }: Request, res: Response) => {
     throw Unauthorized();
   }
 
-  if (!body.expressionId) {
-    throw ApiError("Missing expressionId");
+  const { expressionId, nativeExpressionId } = body;
+
+  if (!expressionId && !nativeExpressionId) {
+    throw ApiError("Missing expressionId or nativeExpressionId");
   }
 
-  const { expressionId } = body;
-
-  const expression = findExpression(expressionId);
-
-  if (!expression) {
-    throw Missing("Expression not found");
+  if (expressionId) {
+    const expression = await findExpression(expressionId);
+    if (!expression) {
+      throw Missing("Expression not found");
+    }
+  } else {
+    const nativeExpression = await findNativeExpression(nativeExpressionId);
+    if (!nativeExpression) {
+      throw Missing("Native expression not found");
+    }
   }
 
-  await createSave(expressionId, user.id).catch((e) => {
+  await createSave({
+    expressionId,
+    nativeExpressionId,
+    userId: user.id,
+  }).catch((e) => {
     throw ApiError("Failed to save expression: " + e.message);
   });
 
   return res.status(201).end();
 };
+
 export default saveExpression;

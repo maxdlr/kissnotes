@@ -1,6 +1,5 @@
 import Button from "@/components/Button";
 import KissCodeBlock from "@/components/KissCodeBlock";
-import LayerMockup from "@/components/LayerMockup";
 import Pill from "@/components/Pill";
 import Tooltip from "@/components/Tooltip";
 import UserHandle from "@/components/UserHandle";
@@ -19,7 +18,7 @@ import { ExpressionModel, ExpressionToken, Id } from "@kissnotes/types";
 import { useMemo, useState } from "react";
 
 export interface ExpressionDetailsContentProps {
-  expression: ExpressionModel;
+  expression: ExpressionModel & { native?: boolean };
   onSave?: () => void;
   onEdit?: () => void;
   onPublish?: () => void;
@@ -59,21 +58,40 @@ const ExpressionDetailsContent = ({
   };
 
   const isSaved = useMemo(() => {
-    return (auth?.user?.saves as Id[])?.includes(expression.id);
-  }, [auth?.user?.saves, expression.id]);
+    const saves = auth?.user?.saves as Id[];
+    if (!saves) return false;
+    if (expression.native) {
+      return saves.includes(`native:${expression.id}`);
+    }
+    return saves.includes(expression.id);
+  }, [auth?.user?.saves, expression.id, expression.native]);
+
+  console.log(
+    expression.author?.username,
+    expression.views,
+    expression.shares,
+    expression.native,
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       {(!!expression.author?.username ||
         !!expression.views ||
         !!expression.shares ||
+        !!expression.native ||
         !!expression.saves) && (
         <div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
           {expression.author && (
             <UserHandle username={expression.author.username} />
           )}
-          <span className="text-secondary">•</span>
-          <Button variant="ghost" Icon={ShareIcon} label={expression.shares} />
+          {expression.author && <span className="text-secondary">•</span>}
+          {!expression.native && (
+            <Button
+              variant="ghost"
+              Icon={ShareIcon}
+              label={expression.shares}
+            />
+          )}
           <Button
             variant="ghost"
             Icon={
@@ -83,16 +101,18 @@ const ExpressionDetailsContent = ({
                   ? SolidBookmark
                   : OutlineBookmark
             }
-            label={String(expression.saves)}
+            label={String(expression.saves || 0)}
             onClick={onSave}
             disabled={!auth?.user}
           />
-          <Button
-            variant="ghost"
-            Icon={EyeIcon}
-            label={expression.views}
-            disabled={true}
-          />
+          {!expression.native && (
+            <Button
+              variant="ghost"
+              Icon={EyeIcon}
+              label={expression.views}
+              disabled={true}
+            />
+          )}
         </div>
       )}
 

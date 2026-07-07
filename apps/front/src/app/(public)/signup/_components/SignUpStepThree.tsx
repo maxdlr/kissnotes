@@ -10,7 +10,6 @@ import { SocialType, type SocialLinkModel } from "@kissnotes/types";
 import { useState } from "react";
 import type { SignUpStepProps } from "../page";
 
-//todo: pass formdata
 const SignUpStepThree = ({
   loading,
   onNext,
@@ -33,7 +32,6 @@ const SignUpStepThree = ({
   }: KissChangeEvent<unknown>) => {
     const updated = value as SocialLinkModel[];
     setSelectedSocials(updated);
-    console.log({ updated });
 
     onChange({ target: { name: "socials", value: updated } });
   };

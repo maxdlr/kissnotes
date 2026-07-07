@@ -16,7 +16,11 @@ const UserHandle = ({ username, className }: UserHandleProps) => {
 
   return (
     <Button
-      href={getProfileHref(localUsername)}
+      href={
+        localUsername === "After Effects"
+          ? undefined
+          : getProfileHref(localUsername)
+      }
       label={`@${localUsername}`}
       variant="ghost"
       className={className}

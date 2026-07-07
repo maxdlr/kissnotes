@@ -18,9 +18,10 @@ const ExpressionByIdModalPage = () => {
   const handleClose = () => {
     router.back();
   };
+
   const handleExpand = () => {
     setOpen(false);
-    router.push(`/exp/${id}`);
+    router.push(`/exp/${id}${isNative !== null ? "?native" : ""}`);
   };
 
   return (

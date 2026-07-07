@@ -127,12 +127,13 @@ export interface ExpressionModel extends Model {
   views?: number;
   shares?: number;
   published?: boolean;
-  saves?: number | SaveModel[];
+  saves?: number | Id[];
 }
 
 export interface SaveModel extends Model {
   user: UserModel;
-  expression: ExpressionModel;
+  expression?: ExpressionModel;
+  nativeExpression?: NativeExpressionModel;
 }
 
 export interface AuthId {
@@ -156,7 +157,7 @@ export interface UserModel extends Model {
   description?: string;
   expressions: ExpressionModel[];
   socials: SocialLinkModel[];
-  saves?: Id[] | SaveModel[];
+  saves?: Id[];
   type: "user" | "admin";
 }
 

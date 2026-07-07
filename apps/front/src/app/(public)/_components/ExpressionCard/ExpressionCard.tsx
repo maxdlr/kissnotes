@@ -25,6 +25,9 @@ const ExpressionCard = ({
 }: ExpressionCardProps) => {
   const { getTokens } = useExpressions(expression);
 
+  console.log({expression});
+  
+
   return (
     <AnimatePresence initial={false} mode="wait">
       <motion.div

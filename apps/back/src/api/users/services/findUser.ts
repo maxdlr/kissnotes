@@ -1,5 +1,5 @@
 import UserEntity from "@/entities/UserEntity";
-import SaveEntity from "@/entities/SaveEntity";
+import SaveRepository from "@/repositories/SaveRepository";
 import UserRepository from "@/repositories/UserRepository";
 import { UserModel } from "@kissnotes/types";
 
@@ -37,7 +37,7 @@ const findUser = async (
             ? { email }
             : {},
       loadRelationIds: {
-        relations: ["saves", "expressions"],
+        relations: ["expressions"],
       },
     });
   }
@@ -46,9 +46,17 @@ const findUser = async (
     throw Missing("Cannot find user");
   }
 
-  user.saves = user.saves?.map(
-    (s) => s.expression?.id,
-  ) as unknown as SaveEntity[];
+  const saves = await SaveRepository.find({
+    where: { user: { id: user.id } },
+    relations: ["expression", "nativeExpression"],
+  });
+
+  user.saves = [
+    ...saves.filter((s) => s.expression).map((s) => s.expression!.id),
+    ...saves
+      .filter((s) => s.nativeExpression)
+      .map((s) => `native:${s.nativeExpression!.id}`),
+  ] as unknown as typeof user.saves;
 
   return user;
 };

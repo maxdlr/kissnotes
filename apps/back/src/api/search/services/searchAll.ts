@@ -30,10 +30,6 @@ export interface BrowseResult {
   score: number;
 }
 
-/**
- * Computes a relevance score for a result based on how many search words
- * match in each field, weighted by field importance.
- */
 const computeScore = (
   searchWords: string[],
   title: string,
@@ -58,10 +54,6 @@ const computeScore = (
   return score;
 };
 
-/**
- * Filters expressions where every token title in the list
- * is present in expression.symbols.tokens.
- */
 const filterByTokens = (
   collection: ExpressionEntity[],
   tokenTitles: string[],
@@ -76,9 +68,6 @@ const filterByTokens = (
   );
 };
 
-/**
- * Applies text search conditions to a query builder.
- */
 const applySearch = (
   qb: { andWhere: (condition: string, params: Record<string, string>) => void },
   searchWords: string[],
@@ -96,9 +85,6 @@ const applySearch = (
   });
 };
 
-/**
- * Maps an ExpressionEntity to a normalized BrowseResult.
- */
 const mapExpression = (
   e: ExpressionEntity,
   searchWords: string[],
@@ -110,7 +96,9 @@ const mapExpression = (
   layer: e.layer,
   property: e.property,
   symbols: e.symbols,
-  author: e.author ? { id: e.author.id, username: e.author.username } : undefined,
+  author: e.author
+    ? { id: e.author.id, username: e.author.username }
+    : undefined,
   views: e.views,
   createdAt: e.createdAt,
   native: false,
@@ -123,9 +111,6 @@ const mapExpression = (
   ),
 });
 
-/**
- * Maps a NativeExpressionEntity to a normalized BrowseResult.
- */
 const mapNativeExpression = (
   ne: NativeExpressionEntity,
   searchWords: string[],
@@ -135,6 +120,7 @@ const mapNativeExpression = (
   description: ne.description,
   code: ne.code,
   native: true,
+  author: { id: 0, username: "After Effects" },
   score: computeScore(
     searchWords,
     ne.title || "",
@@ -144,9 +130,6 @@ const mapNativeExpression = (
   ),
 });
 
-/**
- * Fetches published expressions with optional search and author filter.
- */
 const fetchExpressions = async (
   searchWords: string[],
   authorId?: number,
@@ -170,9 +153,6 @@ const fetchExpressions = async (
   return qb.getMany();
 };
 
-/**
- * Fetches native expressions with optional search.
- */
 const fetchNativeExpressions = async (
   searchWords: string[],
   take?: number,
@@ -187,25 +167,21 @@ const fetchNativeExpressions = async (
   return qb.getMany();
 };
 
-/**
- * Fetches expressions saved by a specific user.
- */
 const fetchSavedExpressions = async (
   userId: number,
   searchWords: string[],
   take?: number,
-): Promise<ExpressionEntity[]> => {
+): Promise<BrowseResult[]> => {
   const saves = await SaveRepository.find({
     where: { user: { id: userId } },
-    relations: ["expression", "expression.author"],
+    relations: ["expression", "expression.author", "nativeExpression"],
   });
 
-  let expressions = saves
+  const expressionResults = saves
     .map((s) => s.expression)
-    .filter((e): e is ExpressionEntity => !!e);
-
-  if (searchWords.length) {
-    expressions = expressions.filter((e) => {
+    .filter((e): e is ExpressionEntity => !!e)
+    .filter((e) => {
+      if (!searchWords.length) return true;
       const text = [
         e.title,
         e.description,
@@ -215,20 +191,28 @@ const fetchSavedExpressions = async (
         .join(" ")
         .toLowerCase();
       return searchWords.every((w) => text.includes(w));
-    });
-  }
+    })
+    .map((e) => mapExpression(e, searchWords));
 
-  if (take) expressions = expressions.slice(0, take);
-  return expressions;
+  const nativeResults = saves
+    .map((s) => s.nativeExpression)
+    .filter((ne): ne is NativeExpressionEntity => !!ne)
+    .filter((ne) => {
+      if (!searchWords.length) return true;
+      const text = [ne.title, ne.description, JSON.stringify(ne.code || "")]
+        .join(" ")
+        .toLowerCase();
+      return searchWords.every((w) => text.includes(w));
+    })
+    .map((ne) => mapNativeExpression(ne, searchWords));
+
+  const results = [...expressionResults, ...nativeResults].sort(
+    (a, b) => b.score - a.score,
+  );
+
+  return take ? results.slice(0, take) : results;
 };
 
-/**
- * Unified browse endpoint for all expression list modes.
- * Accepts a mode and filters, returns a normalized sorted result set.
- *
- * @param params - Browse parameters including mode, search, tokens, authorId, userId
- * @returns Sorted array of normalized browse results
- */
 const searchAll = async (params: BrowseParams): Promise<BrowseResult[]> => {
   const { mode, search, tokens = [], authorId, userId, maxResults } = params;
   const take = maxResults || 50;
@@ -254,11 +238,7 @@ const searchAll = async (params: BrowseParams): Promise<BrowseResult[]> => {
 
     case "saved": {
       if (!userId) return [];
-      let expressions = await fetchSavedExpressions(userId, searchWords, take);
-      expressions = filterByTokens(expressions, tokens);
-      return expressions
-        .map((e) => mapExpression(e, searchWords))
-        .sort((a, b) => b.score - a.score);
+      return await fetchSavedExpressions(userId, searchWords, take);
     }
 
     case "all":

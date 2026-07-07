@@ -5,7 +5,10 @@ import { Id } from "@kissnotes/types";
 const findNativeExpression = async (
   id: Id,
 ): Promise<NativeExpressionEntity | null> => {
-  return await NativeExpressionRepository.findOneBy({ id: id as number });
+  return await NativeExpressionRepository.findOne({
+    where: { id: id as number },
+    loadRelationIds: { relations: ["saves"] },
+  });
 };
 
 export default findNativeExpression;

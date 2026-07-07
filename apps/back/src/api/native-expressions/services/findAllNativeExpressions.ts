@@ -56,10 +56,16 @@ OR CAST(expression.code AS CHAR) LIKE :${param}
     return await qb.take(take).getMany();
   }
 
-  return await NativeExpressionRepository.find({
+  const expressions = await NativeExpressionRepository.find({
     where: sanitizedWhere,
     take,
   });
+
+  return expressions.map((e) => ({
+    ...e,
+    native: true,
+    author: { username: "After Effects" },
+  }));
 };
 
 export default findAllNativeExpressions;

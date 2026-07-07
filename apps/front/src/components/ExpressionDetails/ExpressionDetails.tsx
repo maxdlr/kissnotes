@@ -39,7 +39,10 @@ const ExpressionDetails = ({ id, native = false }: ExpressionDetailsProps) => {
 
   const handleSave = () => {
     if (!user || !expression) return;
-    postSave({ expressionId: expression.id }).then((r) => {
+    const payload = expression.native
+      ? { nativeExpressionId: expression.id }
+      : { expressionId: expression.id };
+    postSave(payload).then((r) => {
       if (r.error) return;
       mutate();
       refreshMe();

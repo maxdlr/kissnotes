@@ -1,6 +1,7 @@
 import { CodeModel, NativeExpressionModel } from "@kissnotes/types";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
+import SaveEntity from "./SaveEntity";
 
 @Entity({ name: "nativeExpressions" })
 export default class NativeExpressionEntity
@@ -21,4 +22,7 @@ export default class NativeExpressionEntity
 
   @Column({ type: "json", nullable: true })
   code?: CodeModel;
+
+  @OneToMany(() => SaveEntity, (save) => save.nativeExpression)
+  saves!: SaveEntity[];
 }
