@@ -31,6 +31,7 @@ const AdminListPage = () => {
   return (
     <div className="space-y-4 sm:space-y-8">
       <h1 className="text-3xl font-black text-center">{title}</h1>
+
       <AdminList<Types>
         entities={(entities as Types[]) || []}
         entity={entity as string}

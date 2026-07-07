@@ -49,9 +49,9 @@ const SignUpPage = () => {
   const { putData: addSocials } = useAxios("social-links/edit");
 
   const [formData, setFormData] = useState<SignUpPayload>({
-    email: faker.internet.email(),
-    username: faker.internet.displayName().toLocaleLowerCase(),
-    password: faker.internet.password({ length: 8, memorable: false }),
+    email: "",
+    username: "",
+    password: "",
     description: "",
     socials: [] as SocialLinkModel[],
   });
