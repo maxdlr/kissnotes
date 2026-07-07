@@ -1,15 +1,17 @@
 import ExpressionCard from "@/app/(public)/_components/ExpressionCard";
+import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
 import ExpressionListSidebar from "@/app/(public)/_components/ExpressionListSidebar";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import MasonryGrid from "@/components/MasonryGrid";
-import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
-import type { ExpressionToken, UserModel } from "@kissnotes/types";
+import useAuth from "@/contexts/AuthContext/useAuth";
 import {
   AdjustmentsHorizontalIcon,
   ChevronLeftIcon,
   ChevronUpIcon,
+  PlusIcon as OutlinePlusIcon,
 } from "@heroicons/react/24/outline";
+import type { ExpressionToken, UserModel } from "@kissnotes/types";
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
@@ -45,9 +47,7 @@ const CollapsibleSidebar = ({
           size={collapsed ? "md" : "sm"}
           Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronLeftIcon}
           shortcut={
-            collapsed
-              ? undefined
-              : { keys: ["ctrl", "S"], ignoreInputs: false }
+            collapsed ? undefined : { keys: ["ctrl", "S"], ignoreInputs: false }
           }
           onClick={onToggle}
           tooltip={{ content: "Filters", showDelay: 4000 }}
@@ -126,9 +126,21 @@ const ExpressionList = ({
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
   const router = useRouter();
+  const auth = useAuth();
 
   return (
     <>
+      {auth?.user && (
+        <div className="w-full flex flex-col gap-4 items-center justify-center">
+          <Button
+            label="Add an expression"
+            Icon={OutlinePlusIcon}
+            variant="outline-accent"
+            href={`/form/new`}
+            size="sm"
+          />
+        </div>
+      )}
       {ActionSlot && (
         <div className="hidden lg:flex items-center justify-end">
           {ActionSlot}
