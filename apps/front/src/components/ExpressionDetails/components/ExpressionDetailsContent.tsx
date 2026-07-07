@@ -66,7 +66,8 @@ const ExpressionDetailsContent = ({
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       {(!!expression.author?.username ||
         !!expression.views ||
-        !!expression.shares) && (
+        !!expression.shares ||
+        !!expression.saves) && (
         <div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
           {expression.author && (
             <UserHandle username={expression.author.username} />
