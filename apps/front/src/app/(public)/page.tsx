@@ -12,9 +12,10 @@ import {
   ArrowUpLeftIcon,
   CodeBracketIcon,
   GlobeEuropeAfricaIcon,
+  PlusIcon as OutlinePlusIcon,
 } from "@heroicons/react/24/outline";
 import { useSearchParams } from "next/navigation";
-import { ElementType, Suspense, useMemo, useRef, useState } from "react";
+import { ElementType, Suspense, useMemo, useRef } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
@@ -82,6 +83,17 @@ const ExpressionListPage = () => {
   return (
     <>
       <Hero />
+      {auth?.user && (
+        <div className="w-full flex flex-col gap-4 items-center justify-center">
+          <Button
+            label="Add an expression"
+            Icon={OutlinePlusIcon}
+            variant="outline-accent"
+            href={`/form/new`}
+            size="sm"
+          />
+        </div>
+      )}
       <ExpressionList
         loading={loading}
         expressions={results}

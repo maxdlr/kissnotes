@@ -130,17 +130,6 @@ const ExpressionList = ({
 
   return (
     <>
-      {auth?.user && (
-        <div className="w-full flex flex-col gap-4 items-center justify-center">
-          <Button
-            label="Add an expression"
-            Icon={OutlinePlusIcon}
-            variant="outline-accent"
-            href={`/form/new`}
-            size="sm"
-          />
-        </div>
-      )}
       {ActionSlot && (
         <div className="hidden lg:flex items-center justify-end">
           {ActionSlot}

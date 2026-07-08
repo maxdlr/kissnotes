@@ -9,7 +9,7 @@ import { SearcherProvider } from "@/components/Searcher/hooks/SearcherProvider";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
-  description: "The AE expression sharing platform",
+  description: "The After Effects expression sharing platform",
 };
 
 export default function RootLayout({

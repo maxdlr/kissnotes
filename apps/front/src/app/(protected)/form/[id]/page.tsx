@@ -23,7 +23,7 @@ import {
   LayerTypeEnum,
   PropertyGroupEnum,
 } from "@kissnotes/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ExpressionFormData } from "@/components/ExpressionForm/interfaces";
 
@@ -31,6 +31,7 @@ const ExpressionFormPage = () => {
   const { user } = useAuth();
   const { id } = useParams();
   const { addToast } = useToasts();
+  const router = useRouter();
 
   const [generatedSymbols, setGeneratedSymbols] = useState<ExpressionSymbol>();
   const [formData, setFormData] = useState<ExpressionFormData>({
@@ -149,6 +150,7 @@ const ExpressionFormPage = () => {
       }
       successToast();
       mutate();
+      router.push(`/exp/${r.data?.id}`);
     });
   };
 
