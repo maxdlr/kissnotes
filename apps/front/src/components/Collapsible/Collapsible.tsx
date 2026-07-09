@@ -1,16 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { CollapsibleProps } from "./interfaces";
 
-export interface CollapsibleProps {
-  children: ReactNode;
-  headerChild?: ReactNode;
-  /** Whether the content is collapsed or not, should be used with a state (default: false) */
-  collapsed: boolean;
-  /** Additional class names applied to the root container. */
-  className?: string;
-  horizontal?: boolean;
-}
 const Collapsible = ({
   collapsed,
   horizontal = false,

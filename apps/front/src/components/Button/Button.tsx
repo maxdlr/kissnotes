@@ -8,13 +8,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Tooltip from "../Tooltip";
-import type { ButtonProps, VariantType } from "./interfaces";
-
-type VariantSet = {
-  initial: object;
-  animate: object;
-  exit: object;
-};
+import type { ButtonProps, VariantSet, VariantType } from "./interfaces";
 
 const scaledDown = 0.95;
 const scaledUp = 1.05;

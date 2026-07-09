@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Logo from "@/components/Logo";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import { BoltIcon, FireIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   if (!user) {

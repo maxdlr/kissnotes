@@ -1,24 +1,12 @@
 "use client";
 
+import Button from "@/components/Button";
 import { ClipboardIcon as ClipboardIconOutline } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
-import type { ListExpression } from "@/app/(public)/_components/ExpressionList/interfaces";
 import { useMemo, useState } from "react";
 import { CodeBlock } from "react-code-block";
-import Button from "@/components/Button";
 import KissLineContent from "./components/KissLineContent";
-
-interface CodeBlockProps {
-  expression: ListExpression;
-  className?: string;
-  highlightedTokens?: string[];
-  highlightedLines?: number | number[];
-  enableCopy?: boolean;
-  enableLineCopy?: boolean;
-  condensed?: boolean;
-}
-
-type HighlightMode = "tokens" | "lines" | "none";
+import { CodeBlockProps, HighlightMode } from "./interfaces";
 
 const KissCodeBlock = ({
   expression,

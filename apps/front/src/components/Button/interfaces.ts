@@ -37,3 +37,9 @@ export interface ButtonProps {
   onHoverStart?: () => void;
   onHoverEnd?: () => void;
 }
+
+export type VariantSet = {
+  initial: object;
+  animate: object;
+  exit: object;
+};

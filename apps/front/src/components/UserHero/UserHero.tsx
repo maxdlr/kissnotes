@@ -44,6 +44,7 @@ const UserHero = () => {
   const isReady = !loading;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (user?.socials) setSocialFormData(user.socials);
     if (user?.description) setDescriptionFormData(user.description);
   }, [user]);

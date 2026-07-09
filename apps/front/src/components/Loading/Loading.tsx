@@ -1,16 +1,7 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the list is static and does not change order */
 import { type Easing, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-
-export interface LoadingProps {
-  count?: number;
-  minSize?: number;
-  maxSize?: number;
-  delaySpread?: number;
-  gap?: number;
-  auto?: boolean;
-  className?: string;
-}
+import { LoadingProps } from "./interfaces";
 
 const Loading = ({
   count: countProp,

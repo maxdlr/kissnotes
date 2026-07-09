@@ -1,16 +1,13 @@
 import { truncate } from "@/utils/stringUtils";
 import { Model } from "@kissnotes/types";
 import { adminListColumns } from "../AdminList";
+import { AdminListCellProps } from "../interfaces";
 
 const AdminListCell = <T extends Model>({
   property,
   value,
   className,
-}: {
-  property: keyof T;
-  value: T[keyof T];
-  className?: string;
-}) => {
+}: AdminListCellProps<T>) => {
   const allowedKeys = Array.from(
     new Set(
       Object.values(adminListColumns).flatMap((cols) =>

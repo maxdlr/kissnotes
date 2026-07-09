@@ -2,15 +2,7 @@ import { CheckBadgeIcon } from "@heroicons/react/16/solid";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { CodeBlock } from "react-code-block";
-
-interface KissLineContentProps {
-  children: React.ReactNode;
-  lineContentClassName?: string;
-  lineNumberClassName?: string;
-  className?: string;
-  interactive?: boolean;
-  condensed?: boolean;
-}
+import { KissLineContentProps } from "../interfaces";
 
 const KissLineContent = ({
   children,

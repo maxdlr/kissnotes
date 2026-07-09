@@ -1,35 +1,9 @@
-import type { ElementType } from "react";
-import { useShortcut, type ShortcutDef } from "@/hooks/useShortcut";
+import { useShortcut } from "@/hooks/useShortcut";
 import { motion } from "motion/react";
+import type { ElementType } from "react";
 import type { ModName } from ".";
-import { ColorClass } from "@/types/style.types";
-
-const mods: Map<ModName, string> = new Map();
-mods.set("cmd", "⌘");
-mods.set("opt", "⌥");
-mods.set("shift", "⇧");
-mods.set("capslock", "⇪");
-mods.set("enter", "↩");
-mods.set("ctrl", "⌃");
-mods.set("backspace", "⌫");
-mods.set("del", "⌦");
-mods.set("tab", "⇥");
-mods.set("up", "↑");
-mods.set("down", "↓");
-mods.set("left", "←");
-mods.set("cmd", "⌘");
-mods.set("right", "→");
-
-interface ShortcutProps {
-  shortcut: ShortcutDef;
-  className?: string;
-  keyClassName?: string;
-  pill?: boolean;
-  active?: boolean;
-  onTrigger?: (e?: KeyboardEvent) => void;
-  bgColor?: ColorClass;
-  fgColor?: ColorClass;
-}
+import { ShortcutProps } from "./interfaces";
+import { mods } from "./constants";
 
 const Shortcut = ({
   shortcut,

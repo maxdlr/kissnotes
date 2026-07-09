@@ -1,25 +1,12 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useRef } from "react";
-import type { ShortcutDef } from "@/hooks/useShortcut";
-import type { KissChangeEvent } from "@/types/form.types";
 import FormInput from "@/components/FormInput";
 import Searcher from "@/components/Searcher";
+import type { KissChangeEvent } from "@/types/form.types";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useRef } from "react";
 import useSearcher from "../Searcher/hooks/SearcherProvider";
-
-interface SearchBarProps {
-  placeholder?: string;
-  inputClassName?: string;
-  className?: string;
-  value?: string;
-  name?: string;
-  variant?: "fill" | "outline" | "ghost";
-  modalSearcher?: boolean;
-  shortcut?: ShortcutDef;
-  Icon?: React.ElementType | null;
-  onChange?: (e: KissChangeEvent) => void;
-}
+import { SearchBarProps } from "./interfaces";
 
 const SearchBar = ({
   placeholder = "Search...",

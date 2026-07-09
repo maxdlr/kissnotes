@@ -1,11 +1,9 @@
-interface LogoProps {
-  className?: string;
-  byLine?: boolean;
-  big?: boolean;
-}
+import Link from "next/link";
+import { LogoProps } from "./interfaces";
+
 const Logo = ({ className = "", byLine = true, big = false }: LogoProps) => {
   return (
-    <a className={className} href="/">
+    <Link className={className} href="/">
       <div className="w-fit text-end">
         <div>
           <p
@@ -18,7 +16,7 @@ const Logo = ({ className = "", byLine = true, big = false }: LogoProps) => {
           <p className="text-sm leading-none italic">by Motiontober</p>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 export default Logo;

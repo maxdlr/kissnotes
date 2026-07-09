@@ -1,35 +1,15 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: dont care */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: dont care */
 "use client";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { AnimatePresence, motion } from "motion/react";
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  RefObject,
-} from "react";
 import Button from "@/components/Button";
 import ClientPortal from "@/components/ClientPortal";
 import type { KissClickEvent } from "@/types/form.types";
 import { getNextZIndex } from "@/utils/zIndexManager";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useSearcher from "../Searcher/hooks/SearcherProvider";
-
-type ModalProps = {
-  className?: string;
-  onClose?: (e?: KissClickEvent) => void;
-  children: React.ReactNode;
-  closeOnOverlay?: boolean;
-  isPersistent?: boolean;
-  isFullWidth?: boolean;
-  isFullHeight?: boolean;
-  isCentered?: boolean;
-  HeaderChild?: ReactNode;
-  ref?: RefObject<HTMLDivElement> | null;
-};
+import { ModalProps } from "./interfaces";
 
 const overlayVariants = {
   hidden: { opacity: 0 },

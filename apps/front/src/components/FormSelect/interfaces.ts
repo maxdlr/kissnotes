@@ -66,3 +66,10 @@ export interface FormSelectProps<T> {
   /** Whether the field is required. */
   required?: boolean;
 }
+
+export interface SelectedOptionProps<T> {
+  option: T;
+  property: keyof T;
+  SelectedRenderOption?: (option: T) => React.ReactNode;
+  onDeselect: (option: T) => void;
+}

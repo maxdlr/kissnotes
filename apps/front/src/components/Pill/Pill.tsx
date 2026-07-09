@@ -1,12 +1,6 @@
 "use client";
 import { firaCode } from "@/app/fonts";
-
-interface PillProps {
-  label: string;
-  className?: string;
-  isCode?: boolean;
-  useHovering?: boolean;
-}
+import { PillProps } from "./interfaces";
 
 const Pill = ({ label, className, isCode = true }: PillProps) => {
   return (

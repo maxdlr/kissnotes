@@ -1,6 +1,5 @@
 import Collapsible from "@/components/Collapsible";
 import KissCodeBlock from "@/components/KissCodeBlock";
-import HighlightableText from "@/components/Loading/HighlightableText/HighlightableText";
 import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
 import useDebounce from "@/hooks/useDebounce";
@@ -11,6 +10,7 @@ import { ExpressionModel, ExpressionToken } from "@kissnotes/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { RefObject, useMemo } from "react";
 import useSearcherMatch from "../helpers/useSearcherMatch";
+import HighlightableText from "@/components/HighlightableText";
 
 const SearchResult = ({
   ref,
@@ -103,7 +103,9 @@ const SearchResult = ({
             className={`${native ? "text-native!" : "text-emphasis!"}`}
           />
         ) : (
-          expression.author?.username && <UserHandle username={expression.author.username} />
+          expression.author?.username && (
+            <UserHandle username={expression.author.username} />
+          )
         )}
         <span className="text-sm text-accent">
           {getRelativeTime(result.expression.createdAt)}

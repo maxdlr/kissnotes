@@ -3,7 +3,6 @@
 import Button from "@/components/Button";
 import Collapsible from "@/components/Collapsible";
 import InputText from "@/components/FormInput/_components/InputText";
-import Pill from "@/components/Pill";
 import useFocus from "@/hooks/bread/useFocus";
 import useOnClickOutside from "@/hooks/useClickOutside";
 import { QuestionMarkCircleIcon } from "@heroicons/react/16/solid";
@@ -14,45 +13,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import {
-  type ChangeEvent,
   useCallback,
   useMemo,
   useRef,
   useState,
+  type ChangeEvent,
 } from "react";
 import type { FormSelectProps } from "./interfaces";
-
-// ---------------------------------------------------------------------------
-// Sub-component: selected value pill row
-// ---------------------------------------------------------------------------
-
-interface SelectedOptionProps<T> {
-  option: T;
-  property: keyof T;
-  SelectedRenderOption?: (option: T) => React.ReactNode;
-  onDeselect: (option: T) => void;
-}
-
-const SelectedOption = <T,>({
-  option,
-  property,
-  SelectedRenderOption,
-  onDeselect,
-}: SelectedOptionProps<T>) => (
-  <div key={String(option[property])}>
-    <Button
-      animDirection="up"
-      variant="fill"
-      size="sm"
-      onClick={() => onDeselect(option)}
-      label={SelectedRenderOption?.(option) || (option[property] as string)}
-    />
-  </div>
-);
-
-// ---------------------------------------------------------------------------
-// Main component
-// ---------------------------------------------------------------------------
+import SelectedOption from "./components/SelectOption";
 
 const FormSelect = <T,>({
   Icon,
@@ -122,10 +90,6 @@ const FormSelect = <T,>({
 
   if (!options.length) return;
 
-  // ---------------------------------------------------------------------------
-  // Handlers
-  // ---------------------------------------------------------------------------
-
   const handleOnSelect = (option: T) => {
     if (multiple) {
       const alreadySelected = (value as T[])
@@ -175,10 +139,6 @@ const FormSelect = <T,>({
     (multiple && (value as T[]).length > 0);
 
   const selectedValues = multiple ? (value as T[]) : value ? [value as T] : [];
-
-  // ---------------------------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------------------------
 
   const showSearch =
     (searchable && multiple && options.length) ||

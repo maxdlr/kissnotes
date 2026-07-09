@@ -1,8 +1,4 @@
-interface HighlightableTextProps {
-  text: string;
-  highlightedTexts?: string[];
-  className?: string;
-}
+import { HighlightableTextProps } from "./interfaces";
 
 const HighlightableText = ({
   text,
@@ -14,9 +10,7 @@ const HighlightableText = ({
     return text;
   }
 
-  const escaped = matches.map((t) =>
-    t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-  );
+  const escaped = matches.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   const regex = new RegExp(`(${escaped.join("|")})`, "gi");
   const parts = text.split(regex);
 

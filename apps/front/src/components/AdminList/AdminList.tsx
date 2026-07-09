@@ -1,10 +1,10 @@
 "use client";
 
-import { KissChangeEvent } from "@/types/form.types";
 import { asTitle } from "@/utils/stringUtils";
 import { Model } from "@kissnotes/types";
 import FormInput from "../FormInput";
 import AdminListRow from "./components/AdminListRow";
+import { AdminListProps } from "./interfaces";
 
 export const adminListColumns: Record<
   string,
@@ -38,13 +38,7 @@ const AdminList = <T extends Model>({
   onDelete,
   onSearch,
   dense = false,
-}: {
-  entities: T[];
-  entity: string;
-  onDelete?: (id: T["id"]) => void;
-  onSearch?: (e: KissChangeEvent) => void;
-  dense?: boolean;
-}) => {
+}: AdminListProps<T>) => {
   if (!entities.length) return null;
 
   const columns = [

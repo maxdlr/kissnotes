@@ -1,12 +1,11 @@
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
+import useToasts from "@/contexts/ToastsContext";
 import useAxios from "@/hooks/useAxios";
 import { Model } from "@kissnotes/types";
 import { useState } from "react";
 import { AdminListRowProps } from "../interfaces";
 import AdminListCell from "./AdminListCell";
-import useToasts from "@/contexts/ToastsContext";
-import { asTitle } from "@/utils/stringUtils";
 
 const AdminListRow = <T extends Model>({
   row,

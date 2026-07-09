@@ -1,12 +1,6 @@
-import { ClockIcon, SignalIcon } from "@heroicons/react/24/outline";
-import type { LayerModel, PropertyModel } from "@kissnotes/types";
 import { asTitle } from "@/utils/stringUtils";
-
-interface LayerMockupProps {
-  layer?: LayerModel;
-  property?: PropertyModel;
-  className?: string;
-}
+import { ClockIcon, SignalIcon } from "@heroicons/react/24/outline";
+import { LayerMockupProps } from "./interfaces";
 
 const LayerMockup = ({ layer, property, className = "" }: LayerMockupProps) => {
   return (

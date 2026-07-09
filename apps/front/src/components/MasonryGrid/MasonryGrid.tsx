@@ -1,101 +1,10 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
 "use client";
 
-import { motion } from "motion/react";
-import {
-  Children,
-  type CSSProperties,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type MasonryBreakpoints = {
-  /** column count at each min-width breakpoint (px → columns) */
-  [minWidth: number]: number;
-};
-
-export interface MasonryGridProps {
-  /** Items to lay out – any React nodes */
-  children: ReactNode;
-  /**
-   * Either a fixed column count or a responsive map.
-   * @example columns={3}
-   * @example columns={{ 0: 1, 640: 2, 1024: 3, 1440: 4 }}
-   */
-  columns?: number | MasonryBreakpoints;
-  /** Gap between items (CSS value, e.g. "16px", "1rem"). Default: "16px" */
-  gap?: string;
-  /** Extra className applied to the outer wrapper */
-  className?: string;
-  /** Extra style applied to the outer wrapper */
-  style?: CSSProperties;
-  /** Called whenever the column count changes */
-  onColumnsChange?: (columns: number) => void;
-  /** Enable stagger animation on items. Default: false */
-  stagger?: boolean;
-  /** Delay between each item in seconds. Default: 0.06 */
-  staggerDelay?: number;
-  /** Vertical slide distance in px. Default: 30 */
-  staggerDistance?: number;
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/**
- * Resolve column count from breakpoints map for a given container width.
- * The largest `minWidth` that is ≤ containerWidth wins.
- */
-function resolveColumns(
-  bp: MasonryBreakpoints,
-  containerWidth: number,
-): number {
-  const sorted = Object.keys(bp)
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  let result = 1;
-  for (const minWidth of sorted) {
-    if (containerWidth >= minWidth) result = bp[minWidth];
-  }
-  return Math.max(1, result);
-}
-
-/**
- * Distribute child indices across `columnCount` columns using a
- * shortest-column-first strategy based on recorded item heights.
- */
-function distributeChildren(
-  count: number,
-  columnCount: number,
-  heights: number[],
-): number[][] {
-  const cols: number[][] = Array.from({ length: columnCount }, () => []);
-  const colHeights = new Array<number>(columnCount).fill(0);
-
-  for (let i = 0; i < count; i++) {
-    // Find column with smallest cumulative height
-    const shortest = colHeights.indexOf(Math.min(...colHeights));
-    cols[shortest].push(i);
-    colHeights[shortest] += heights[i] ?? 0;
-  }
-
-  return cols;
-}
-
-// const { MD, LG } = Breakpoint;
-
-// Use useLayoutEffect on the client, useEffect on the server (SSR-safe)
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
-
-// ─── Component ────────────────────────────────────────────────────────────────
+import { motion, useIsomorphicLayoutEffect } from "motion/react";
+import { Children, useCallback, useMemo, useRef, useState } from "react";
+import { resolveColumns, distributeChildren } from "./helpers";
+import { MasonryGridProps } from "./interfaces";
 
 /**
  * MasonryGrid
