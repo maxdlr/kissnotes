@@ -27,7 +27,7 @@ const Bubble = ({ content, position = "top" }: BubbleProps) => {
   return (
     <motion.div
       role="tooltip"
-      className={`absolute z-50 w-max max-w-50 leading-tight border border-accent bg-accent/50 text-xs rounded-2xl p-3 font-semibold text-white ${positionStyles[position]} ${originStyles[position]}`}
+      className={`absolute z-50 w-max max-w-50 leading-tight border border-accent bg-accent/80 text-xs rounded-2xl p-3 font-semibold text-white ${positionStyles[position]} ${originStyles[position]}`}
       variants={bubbleVariants}
       initial="hidden"
       animate="visible"

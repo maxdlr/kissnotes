@@ -9,7 +9,6 @@ import {
   AdjustmentsHorizontalIcon,
   ChevronLeftIcon,
   ChevronUpIcon,
-  PlusIcon as OutlinePlusIcon,
 } from "@heroicons/react/24/outline";
 import type { ExpressionToken, UserModel } from "@kissnotes/types";
 import { AnimatePresence, motion } from "motion/react";

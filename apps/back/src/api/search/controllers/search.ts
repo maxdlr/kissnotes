@@ -2,7 +2,7 @@ import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import searchAll, { BrowseMode } from "../services/searchAll";
 
-const VALID_MODES: BrowseMode[] = ["all", "mine", "saved", "native"];
+const VALID_MODES: BrowseMode[] = ["all", "mine", "saved", "native", "community"];
 
 const search = async (req: Request, res: Response): Promise<Response> => {
   const {

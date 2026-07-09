@@ -4,7 +4,7 @@ import SaveRepository from "@/repositories/SaveRepository";
 import ExpressionEntity from "@/entities/ExpressionEntity";
 import NativeExpressionEntity from "@/entities/NativeExpressionEntity";
 
-export type BrowseMode = "all" | "mine" | "saved" | "native";
+export type BrowseMode = "all" | "mine" | "saved" | "native" | "community";
 
 export interface BrowseParams {
   mode: BrowseMode;
@@ -239,6 +239,14 @@ const searchAll = async (params: BrowseParams): Promise<BrowseResult[]> => {
     case "saved": {
       if (!userId) return [];
       return await fetchSavedExpressions(userId, searchWords, take);
+    }
+
+    case "community": {
+      let expressions = await fetchExpressions(searchWords, authorId, take);
+      expressions = filterByTokens(expressions, tokens);
+      return expressions
+        .map((e) => mapExpression(e, searchWords))
+        .sort((a, b) => b.score - a.score);
     }
 
     case "all":

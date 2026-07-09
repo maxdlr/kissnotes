@@ -196,12 +196,12 @@ const FormSelect = <T,>({
         <div className="flex justify-between items-center">
           {label && (
             <div className="font-semibold flex items-center">
-              {showSearch ? (
+              {showSearch && (
                 <InputText
                   value={prompt}
                   ref={ref}
                   name={name}
-                  placeholder={label as string}
+                  placeholder={placeholder as string}
                   onChange={handlePrompt}
                   onFocus={handleFocus}
                   Icon={
@@ -210,29 +210,29 @@ const FormSelect = <T,>({
                       : undefined
                   }
                 />
-              ) : (
-                <label
-                  htmlFor={name}
-                  className="absolute top-0 left-0 -translate-y-1/2"
-                >
-                  <span className="mx-6 text-sm flex justify-between items-center gap-2 leading-none">
-                    <span
-                      className={`font-normal flex text-accent px-2 bg-darker justify-start items-center gap-2`}
-                    >
-                      <span>•</span>
-                      {label}
-                      <span>•</span>
-                    </span>
-                    {required && (
-                      <span
-                        className={`${value ? "text-emphasis" : "text-accent/40"} translate-y-[30%] px-1 bg-darker`}
-                      >
-                        *
-                      </span>
-                    )}
-                  </span>
-                </label>
               )}
+
+              <label
+                htmlFor={name}
+                className="absolute top-0 left-0 -translate-y-1/2"
+              >
+                <span className="mx-6 text-sm flex justify-between items-center gap-2 leading-none">
+                  <span
+                    className={`font-normal flex text-accent px-2 bg-darker justify-start items-center gap-2`}
+                  >
+                    <span>•</span>
+                    {label}
+                    <span>•</span>
+                  </span>
+                  {required && (
+                    <span
+                      className={`${value ? "text-emphasis" : "text-accent/40"} translate-y-[30%] px-1 bg-darker`}
+                    >
+                      *
+                    </span>
+                  )}
+                </span>
+              </label>
             </div>
           )}
 
@@ -266,17 +266,6 @@ const FormSelect = <T,>({
             )}
           </div>
         </div>
-
-        {!isValue && placeholder && (
-          <div className="flex justify-start items-center gap-2">
-            {placeholder && (
-              <Pill
-                label={placeholder}
-                className="w-fit bg-transparent! border-accent/40 text-secondary/20"
-              />
-            )}
-          </div>
-        )}
 
         <Collapsible collapsed={collapsed}>
           <div className="space-y-4 pt-4 ">

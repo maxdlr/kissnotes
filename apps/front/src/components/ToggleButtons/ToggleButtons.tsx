@@ -1,23 +1,7 @@
 import Shortcut from "@/components/ShortCut";
-import { ShortcutDef } from "@/hooks/useShortcut";
 import { motion } from "motion/react";
-import { ElementType, useId } from "react";
-
-export interface ToggleButton {
-  value: string;
-  label?: string;
-  Icon?: ElementType;
-  HoverIcon?: ElementType;
-  shortcut?: ShortcutDef;
-  className?: string;
-}
-
-export interface ToggleButtonsProps {
-  buttons: ToggleButton[];
-  value: string;
-  onChange: (value: string) => void;
-  size?: "sm" | "md" | "lg";
-}
+import { useId } from "react";
+import { ToggleButtonsProps } from "./interfaces";
 
 const ToggleButtons = ({
   buttons,

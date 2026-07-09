@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Logo from "@/components/Logo";
 import useAuth from "@/contexts/AuthContext/useAuth";
+import { BoltIcon, FireIcon } from "@heroicons/react/24/solid";
 
 const Hero = () => {
   const { user, loading } = useAuth();
@@ -19,12 +20,14 @@ const Hero = () => {
         <div className="flex flex-row justify-center items-center gap-4">
           <Button
             label="Sign up"
+            Icon={FireIcon}
             className="text-primary"
             hoverUp
             onClick={() => router.push("/signup")}
           />
           <p className="hidden sm:block">or</p>
           <Button
+            Icon={BoltIcon}
             label="Log in"
             className="text-primary"
             variant="outline"

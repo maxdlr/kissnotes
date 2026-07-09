@@ -3,6 +3,12 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import MasonryGrid from "@/components/MasonryGrid";
 import type { KissChangeEvent } from "@/types/form.types";
+import {
+    CodeBracketIcon,
+    TagIcon,
+    UserIcon
+} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import type { ExpressionToken, UserModel } from "@kissnotes/types";
 import { ExpressListSideBarProps, SidebarValue } from "./interfaces";
 
@@ -32,6 +38,9 @@ const ExpressionListSidebar = ({
       <MasonryGrid>
         {value?.search !== undefined && (
           <FormInput
+            label="Search"
+            placeholder="wiggle linear ..."
+            StartChild={<MagnifyingGlassIcon className="w-6" />}
             name="search"
             onChange={handleOnChange}
             value={value.search}
@@ -43,6 +52,7 @@ const ExpressionListSidebar = ({
             label: "All" | "Native expressions only";
             value: boolean;
           }>
+            StartChild={<CodeBracketIcon className="w-6" />}
             label="Expression type"
             placeholder="All"
             property="label"
@@ -63,8 +73,10 @@ const ExpressionListSidebar = ({
 
         {value?.tokens !== undefined && (
           <FormSelect<ExpressionToken>
+            Icon={TagIcon}
             name="tokens"
-            label="Expression contains..."
+            placeholder="Expression contains..."
+            label="Tokens"
             options={tokenOptions}
             onChange={handleOnChange}
             value={value?.tokens || []}
@@ -75,8 +87,10 @@ const ExpressionListSidebar = ({
 
         {value?.author !== undefined && (
           <FormSelect<UserModel>
+            placeholder="Author is ..."
+            Icon={UserIcon}
             name="author"
-            label="Author is..."
+            label="Author"
             options={authorOptions}
             onChange={handleOnChange}
             value={value?.author || null}

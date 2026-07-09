@@ -11,11 +11,11 @@ import type {
   PropertyModel,
   UserModel,
 } from "@kissnotes/types";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useReducer, useState } from "react";
 import useSWR from "swr";
 import { arrayUnique } from "@/utils/arrayUtils";
 
-export type BrowseMode = "all" | "mine" | "saved" | "native";
+export type BrowseMode = "all" | "mine" | "saved" | "native" | "community";
 
 export interface BrowseFilters {
   search: string;
@@ -46,6 +46,49 @@ const DEFAULT_FILTERS: BrowseFilters = {
   native: false,
 };
 
+type AccState = {
+  tokens: ExpressionToken[];
+  authors: UserModel[];
+};
+
+type AccAction =
+  | { type: "accumulate"; results: BrowseResult[]; mode: BrowseMode }
+  | { type: "reset" };
+
+const accReducer = (state: AccState, action: AccAction): AccState => {
+  if (action.type === "reset") {
+    return { tokens: [], authors: [] };
+  }
+
+  const { results, mode } = action;
+
+  const newTokens: ExpressionToken[] = results
+    .filter((r) => r.symbols)
+    .flatMap((r) => {
+      const symbols = r.symbols as { tokens?: ExpressionToken[] };
+      return symbols?.tokens || [];
+    });
+
+  const newAuthors: UserModel[] =
+    mode === "native"
+      ? []
+      : results
+          .filter((r) => !r.native && r.author?.username)
+          .map((r) => r.author as UserModel);
+
+  const tokens = newTokens.length
+    ? arrayUnique([...state.tokens, ...newTokens], "title")
+    : state.tokens;
+
+  const authors = newAuthors.length
+    ? arrayUnique([...state.authors, ...newAuthors], "username")
+    : state.authors;
+
+  // Only return new object if something actually changed
+  if (tokens === state.tokens && authors === state.authors) return state;
+  return { tokens, authors };
+};
+
 /**
  * Encapsulates mode, filters, fetching, and option accumulation
  * for the expression browse page.
@@ -55,10 +98,15 @@ const useExpressionBrowse = (initialMode: BrowseMode = "all") => {
   const auth = useAuth();
   const [mode, setMode] = useState<BrowseMode>(initialMode);
   const [filters, setFilters] = useState<BrowseFilters>(DEFAULT_FILTERS);
+  const [acc, dispatchAcc] = useReducer(accReducer, {
+    tokens: [],
+    authors: [],
+  });
 
   const debouncedSearch = useDebounce(filters.search, 400);
 
   // Build query params for the unified endpoint
+  const userId = auth?.user?.id;
   const queryParams = useMemo(() => {
     const params: Record<string, string | number> = { mode };
 
@@ -66,19 +114,19 @@ const useExpressionBrowse = (initialMode: BrowseMode = "all") => {
     if (filters.tokens.length) {
       params.tokens = filters.tokens.map((t) => t.title).join(",");
     }
-    if (mode === "mine" && auth?.user?.id) {
-      params.authorId = auth.user.id as number;
+    if (mode === "mine" && userId) {
+      params.authorId = userId as number;
     }
     if (filters.author?.id && mode !== "mine") {
       params.authorId = filters.author.id as number;
     }
-    if (mode === "saved" && auth?.user?.id) {
-      params.userId = auth.user.id as number;
+    if (mode === "saved" && userId) {
+      params.userId = userId as number;
     }
     params.maxResults = 50;
 
     return params;
-  }, [mode, debouncedSearch, filters.tokens, filters.author, auth?.user?.id]);
+  }, [mode, debouncedSearch, filters.tokens, filters.author, userId]);
 
   const { data, error, isLoading } = useSWR<BrowseResult[]>(
     { url: "/search/browse", params: queryParams },
@@ -86,79 +134,38 @@ const useExpressionBrowse = (initialMode: BrowseMode = "all") => {
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       keepPreviousData: true,
+      onSuccess: (newData) => {
+        dispatchAcc({ type: "accumulate", results: newData, mode });
+      },
     },
   );
 
-  const results: BrowseResult[] = data || [];
+  const results = useMemo(() => data || [], [data]);
 
-  // Accumulate token and author options so they never shrink within a mode
-  const accTokensRef = useRef<ExpressionToken[]>([]);
-  const accAuthorsRef = useRef<UserModel[]>([]);
-  const prevModeRef = useRef<BrowseMode>(initialMode);
+  const tokenOptions = acc.tokens;
+  const authorOptions = mode === "native" ? [] : acc.authors;
 
-  // Reset accumulated options on mode change
-  if (prevModeRef.current !== mode) {
-    accTokensRef.current = [];
-    accAuthorsRef.current = [];
-    prevModeRef.current = mode;
-  }
-
-  // Derive token options from current results
-  const tokenOptions = useMemo(() => {
-    const tokens: ExpressionToken[] = results
-      .filter((r) => r.symbols)
-      .flatMap((r) => {
-        const symbols = r.symbols as { tokens?: ExpressionToken[] };
-        return symbols?.tokens || [];
-      });
-
-    if (tokens.length) {
-      accTokensRef.current = arrayUnique(
-        [...accTokensRef.current, ...tokens],
-        "title",
-      );
-    }
-    return accTokensRef.current;
-  }, [results]);
-
-  // Derive author options from current results (not relevant for native)
-  const authorOptions = useMemo(() => {
-    if (mode === "native") return [];
-    const authors = results
-      .filter((r) => !r.native && r.author?.username)
-      .map((r) => r.author as UserModel);
-
-    if (authors.length) {
-      accAuthorsRef.current = arrayUnique(
-        [...accAuthorsRef.current, ...authors],
-        "username",
-      );
-    }
-    return accAuthorsRef.current;
-  }, [results, mode]);
-
-  // Change mode — this is the primary state change
   const changeMode = useCallback(
     (newMode: BrowseMode) => {
       setMode(newMode);
-      // Reset mode-specific filters
+      dispatchAcc({ type: "reset" });
+
       setFilters((f) => ({
         ...f,
         native: newMode === "native",
-        author: newMode === "mine" ? auth?.user ?? null : null,
+        author: newMode === "mine" ? (auth?.user ?? null) : null,
       }));
       window.history.replaceState(null, "", `?list=${newMode}`);
     },
     [auth?.user],
   );
 
-  // Update filters without changing mode (for sidebar inputs)
   const updateFilters = useCallback(
     (partial: Partial<BrowseFilters>) => {
-      // If native flag changed via sidebar dropdown, sync mode
       if ("native" in partial && partial.native !== (mode === "native")) {
         const newMode = partial.native ? "native" : "all";
         setMode(newMode);
+        dispatchAcc({ type: "reset" });
         window.history.replaceState(null, "", `?list=${newMode}`);
       }
 

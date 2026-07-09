@@ -19,7 +19,8 @@ const InputText = ({
   }
 
   return (
-    <div className={`flex w-full items-center gap-2 ${className}`}>
+    <div className={`flex w-full items-center gap-4 ${className}`}>
+      {Icon && <Icon className="size-6" />}
       <input
         ref={ref}
         type={type}
@@ -35,7 +36,6 @@ const InputText = ({
         disabled={disabled}
         onFocus={onFocus}
       />
-      {Icon && <Icon className="size-6 " />}
     </div>
   );
 };

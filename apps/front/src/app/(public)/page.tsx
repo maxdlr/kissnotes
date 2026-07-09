@@ -69,9 +69,10 @@ const ExpressionListPage = () => {
     () =>
       [
         { value: "all", label: "All", Icon: GlobeEuropeAfricaIcon },
+        { value: "community", label: "Community", Icon: GlobeEuropeAfricaIcon },
+        { value: "native", label: "Native", Icon: CodeBracketIcon },
         auth?.user && { value: "mine", label: "Mine", Icon: HeartIcon },
         auth?.user && { value: "saved", label: "Saved", Icon: BookmarkIcon },
-        { value: "native", label: "Native", Icon: CodeBracketIcon },
       ].filter(Boolean) as {
         value: string;
         label: string;

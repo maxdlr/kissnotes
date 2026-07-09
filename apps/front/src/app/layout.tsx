@@ -1,11 +1,12 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: dont care */
 
-import type { Metadata } from "next";
 import Header from "@/components/Header";
+import { SearcherProvider } from "@/components/Searcher/hooks/SearcherProvider";
+import type { Metadata } from "next";
+import { ReactNode } from "react";
 import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";
-import { SearcherProvider } from "@/components/Searcher/hooks/SearcherProvider";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning data-lt-installed>
