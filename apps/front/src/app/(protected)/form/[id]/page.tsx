@@ -139,7 +139,7 @@ const ExpressionFormPage = () => {
   };
 
   const handleOnSubmit = async (publish: boolean = true) => {
-    await postExpression({
+    await postExpression<ExpressionModel>({
       ...formData,
       code: toCodeModel(formData.codeBlock),
       published: publish,
