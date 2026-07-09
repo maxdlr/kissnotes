@@ -57,7 +57,11 @@ const SearchBar = ({
         variant={variant}
         onClick={modalSearcher ? () => setIsOpen(true) : undefined}
         Icon={Icon || MagnifyingGlassIcon}
-        shortcut={modalSearcher ? shortcut : undefined}
+        shortcut={
+          modalSearcher && shortcut
+            ? { ...shortcut, ignoreInputs: false }
+            : undefined
+        }
         containerClassName={`rounded-full`}
       />
       {isOpen && modalSearcher && <Searcher onClose={handleClose} />}
