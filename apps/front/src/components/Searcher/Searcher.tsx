@@ -2,12 +2,13 @@ import Modal from "@/components/Modal";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useDebounce from "@/hooks/useDebounce";
 import { useShortcut } from "@/hooks/useShortcut";
-import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
+import { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 import {
   ArrowLeftIcon,
   ArrowsPointingOutIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { BoltIcon } from "@heroicons/react/24/solid";
 import type { ExpressionModel } from "@kissnotes/types";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
@@ -25,10 +26,7 @@ interface SearcherProps {
   placeholder?: string;
 }
 
-const Searcher = ({
-  onClose,
-  placeholder = "Search anything",
-}: SearcherProps) => {
+const Searcher = ({ onClose }: SearcherProps) => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -143,67 +141,72 @@ const Searcher = ({
       <div className="space-y-12 sm:space-y-14">
         <div className="w-full sticky top-8 z-60 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
           <FormInput
+            StartChild={<BoltIcon className="w-6" />}
             ref={inputRef}
             autoFocus
             variant="ghost"
             name="search"
-            placeholder={placeholder}
+            placeholder='Search anything (e.g. "wiggle linear")'
             value={prompt}
             onChange={handleSearch}
             className="bg-transparent!"
+            EndChild={
+              <>
+                {!prompt && !previewing && (
+                  <Button
+                    shortcut={{
+                      keys: ["ESC"],
+                      blockers: [!isOpen, !!previewing, !!prompt],
+                      ignoreInputs: false,
+                    }}
+                    variant="ghost"
+                    Icon={XMarkIcon}
+                    onClick={onClose}
+                    aria-label={"close searcher"}
+                  />
+                )}
+                {prompt && !previewing && (
+                  <Button
+                    shortcut={{
+                      keys: ["ESC"],
+                      blockers: [!isOpen, !!previewing, !prompt],
+                      ignoreInputs: false,
+                    }}
+                    label="Clear"
+                    variant="ghost"
+                    onClick={handleClear}
+                    aria-label={"clear search"}
+                  />
+                )}
+                {previewing && (
+                  <>
+                    <Button
+                      shortcut={{
+                        keys: ["ESC"],
+                        blockers: [!isOpen, !previewing],
+                        ignoreInputs: false,
+                      }}
+                      variant="ghost"
+                      Icon={ArrowLeftIcon}
+                      onClick={handleClosePreview}
+                      aria-label={"close preview"}
+                    />
+                    <Button
+                      shortcut={{
+                        keys: ["enter"],
+                        blockers: [!isOpen, !previewing],
+                        ignoreInputs: false,
+                      }}
+                      variant="ghost"
+                      Icon={ArrowsPointingOutIcon}
+                      onClick={handleExpand}
+                      aria-label={"expand preview"}
+                    />
+                  </>
+                )}
+              </>
+            }
           />
-          {!prompt && !previewing && (
-            <Button
-              shortcut={{
-                keys: ["ESC"],
-                blockers: [!isOpen, !!previewing, !!prompt],
-                ignoreInputs: false,
-              }}
-              variant="ghost"
-              Icon={XMarkIcon}
-              onClick={onClose}
-              aria-label={"close searcher"}
-            />
-          )}
-          {prompt && !previewing && (
-            <Button
-              shortcut={{
-                keys: ["ESC"],
-                blockers: [!isOpen, !!previewing, !prompt],
-                ignoreInputs: false,
-              }}
-              label="Clear"
-              variant="ghost"
-              onClick={handleClear}
-              aria-label={"clear search"}
-            />
-          )}
-          {previewing && (
-            <>
-              <Button
-                shortcut={{
-                  keys: ["ESC"],
-                  blockers: [!isOpen, !previewing],
-                  ignoreInputs: false,
-                }}
-                variant="ghost"
-                Icon={ArrowLeftIcon}
-                onClick={handleClosePreview}
-                aria-label={"close preview"}
-              />
-              <Button
-                shortcut={{
-                  keys: ["enter"],
-                  blockers: [!isOpen, !previewing],
-                  ignoreInputs: false,
-                }}
-                variant="ghost"
-                Icon={ArrowsPointingOutIcon}
-                onClick={handleExpand}
-                aria-label={"expand preview"}
-              />
-            </>
-          )}
         </div>
         <div className="space-y-4">
           {!previewing ? (

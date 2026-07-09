@@ -4,9 +4,9 @@ import FormSelect from "@/components/FormSelect";
 import MasonryGrid from "@/components/MasonryGrid";
 import type { KissChangeEvent } from "@/types/form.types";
 import {
-    CodeBracketIcon,
-    TagIcon,
-    UserIcon
+  CodeBracketIcon,
+  TagIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import type { ExpressionToken, UserModel } from "@kissnotes/types";
