@@ -5,22 +5,26 @@ import Button from "@/components/Button";
 import Hero from "@/components/Hero";
 import ToggleButtons from "@/components/ToggleButtons";
 import useAuth from "@/contexts/AuthContext/useAuth";
+import useBreakpoints from "@/hooks/useBreakpoints";
 import useExpressionBrowse, { BrowseMode } from "@/hooks/useExpressionBrowse";
 import { getProfileHref } from "@/utils/userUtils";
 import { BookmarkIcon, HeartIcon } from "@heroicons/react/16/solid";
+import { ArrowUpLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 import {
-  ArrowUpLeftIcon,
-  CodeBracketIcon,
   GlobeEuropeAfricaIcon,
-  PlusIcon as OutlinePlusIcon,
-} from "@heroicons/react/24/outline";
+  CodeBracketIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/solid";
 import { useSearchParams } from "next/navigation";
-import { ElementType, Suspense, useMemo, useRef } from "react";
+import { ElementType, Suspense, useMemo, useState } from "react";
 
 const ExpressionListPage = () => {
   const auth = useAuth();
   const searchParams = useSearchParams();
-  const initialMode = useRef((searchParams.get("list") || "all") as BrowseMode);
+  const [initialMode] = useState(
+    () => (searchParams.get("list") || "all") as BrowseMode,
+  );
+  const { sm } = useBreakpoints();
 
   const {
     mode,
@@ -31,7 +35,7 @@ const ExpressionListPage = () => {
     authorOptions,
     changeMode,
     updateFilters,
-  } = useExpressionBrowse(initialMode.current);
+  } = useExpressionBrowse(initialMode);
 
   // Bridge between SidebarValue shape and the hook's flat filters
   const sidebarValue: SidebarValue = {
@@ -69,7 +73,7 @@ const ExpressionListPage = () => {
     () =>
       [
         { value: "all", label: "All", Icon: GlobeEuropeAfricaIcon },
-        { value: "community", label: "Community", Icon: GlobeEuropeAfricaIcon },
+        { value: "community", label: "Community", Icon: UserGroupIcon },
         { value: "native", label: "Native", Icon: CodeBracketIcon },
         auth?.user && { value: "mine", label: "Mine", Icon: HeartIcon },
         auth?.user && { value: "saved", label: "Saved", Icon: BookmarkIcon },
@@ -85,13 +89,13 @@ const ExpressionListPage = () => {
     <>
       <Hero />
       {auth?.user && (
-        <div className="w-full flex flex-col gap-4 items-center justify-center">
+        <div className="w-full flex flex-col gap-4 items-center justify-center max-sm:mb-8">
           <Button
             label="Add an expression"
-            Icon={OutlinePlusIcon}
+            Icon={PlusIcon}
             variant="outline-accent"
             href={`/form/new`}
-            size="sm"
+            size={sm ? "md" : "sm"}
           />
         </div>
       )}
@@ -109,7 +113,7 @@ const ExpressionListPage = () => {
             value={mode}
             onChange={(v) => changeMode(v as BrowseMode)}
             buttons={modeButtons}
-            size="sm"
+            size={sm ? "md" : "sm"}
           />
         }
         emptyMsg={

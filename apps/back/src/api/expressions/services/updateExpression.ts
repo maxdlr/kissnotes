@@ -12,7 +12,7 @@ const updateExpression = async (
     throw ApiError("Expression doesn't exist.");
   }
 
-  const { saves, ...updatableFields } = expression as any;
+  const { saves: _saves, ...updatableFields } = expression as any;
 
   return await ExpressionRepository.save(updatableFields);
 };

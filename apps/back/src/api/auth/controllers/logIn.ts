@@ -2,10 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import setAuthCookies from "../services/setAuthCookie";
 import findUser from "@/api/users/services/findUser";
-import { TryCatch } from "@/decorators/TryCatch";
 
 const logIn = async ({ body }: Request, res: Response) => {
-  let user = await findUser({ username: body.username }, true);
+  const user = await findUser({ username: body.username }, true);
 
   if (!user) {
     throw ApiError("Email ou mot de passe incorrect");
@@ -28,4 +27,4 @@ const logIn = async ({ body }: Request, res: Response) => {
   // type is returned to help the front-end redirect the user to the right flow
   return res.status(202).end();
 };
-export default TryCatch(logIn);
+export default logIn;

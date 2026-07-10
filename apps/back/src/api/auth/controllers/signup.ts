@@ -1,5 +1,4 @@
 import createUser from "@/api/users/services/createUser";
-import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import setAuthCookies from "../services/setAuthCookie";
 
@@ -18,4 +17,4 @@ const signUp = async ({ body }: Request, res: Response) => {
 
   return res.status(202).send();
 };
-export default TryCatch(signUp);
+export default signUp;

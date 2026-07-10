@@ -14,7 +14,15 @@ export const contentType = "image/png";
 // Image generation
 export default async function Image() {
   // Font loading, process.cwd() is Next.js project directory
-  const interSemiBold = await readFile(
+  const gilroyBlack = await readFile(
+    join(process.cwd(), "src/assets/fonts/Gilroy/Gilroy-Black.ttf"),
+  );
+
+  const gilroyBlackItalic = await readFile(
+    join(process.cwd(), "src/assets/fonts/Gilroy/Gilroy-BlackItalic.ttf"),
+  );
+
+  const gilroyMedium = await readFile(
     join(process.cwd(), "src/assets/fonts/Gilroy/Gilroy-Medium.ttf"),
   );
 
@@ -22,16 +30,58 @@ export default async function Image() {
     // ImageResponse JSX element
     <div
       style={{
-        fontSize: 128,
-        background: "white",
+        background: "#0c2135",
+        color: "white",
         width: "100%",
         height: "100%",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      About Acme
+      <p
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          justifyContent: "center",
+          paddingBottom: 38,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 128,
+            fontStyle: "italic",
+            fontFamily: "Gilroy-black",
+          }}
+        >
+          Kissnotes
+        </span>
+        <span
+          style={{
+            fontSize: 32,
+            fontStyle: "italic",
+            fontFamily: "Gilroy-medium",
+          }}
+        >
+          By Motiontober
+        </span>
+      </p>
+      <p
+        style={{
+          fontSize: 48,
+          textAlign: "center",
+          fontFamily: "Gilroy-medium",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <span style={{ paddingBottom: 8 }}>A free and open-source</span>
+        <span>After Effects expressions sharing platform.</span>
+      </p>
     </div>,
     // ImageResponse options
     {
@@ -40,10 +90,18 @@ export default async function Image() {
       ...size,
       fonts: [
         {
-          name: "Gilroy",
-          data: interSemiBold,
+          name: "Gilroy-black",
+          data: gilroyBlack,
           style: "normal",
-          weight: 400,
+        },
+        {
+          name: "Gilroy-black",
+          data: gilroyBlackItalic,
+          style: "italic",
+        },
+        {
+          name: "Gilroy-medium",
+          data: gilroyMedium,
         },
       ],
     },

@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import { filteredParams } from "@/utils/filteredParams";
 import { UserModel } from "@kissnotes/types";
 import { Request, Response } from "express";
@@ -26,4 +25,4 @@ const readUser = async (
 
   return res.status(200).send(user);
 };
-export default TryCatch(readUser);
+export default readUser;

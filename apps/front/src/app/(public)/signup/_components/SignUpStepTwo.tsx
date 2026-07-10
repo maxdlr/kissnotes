@@ -1,11 +1,12 @@
 import FormInput from "@/components/FormInput";
 import FormWrapper from "@/components/FormWrapper";
 import type { SignUpStepProps } from "../page";
-import { faker } from "@faker-js/faker";
 import useFocus from "@/hooks/bread/useFocus";
 import { useEffect, useState } from "react";
 import { KissChangeEvent } from "@/types/form.types";
 import { KissFormErrors } from "@kissnotes/types";
+
+const TOO_LONG_MESSAGE = "This description is too long.";
 
 const SignUpStepTwo = ({
   loading,
@@ -16,7 +17,6 @@ const SignUpStepTwo = ({
 }: SignUpStepProps) => {
   const { ref, focus } = useFocus<HTMLTextAreaElement>();
   const [valueCount, setValueCount] = useState<number>(0);
-  const [localErrors, setLocalErrors] = useState<KissFormErrors>(errors || []);
 
   const valueMax = 2000;
 
@@ -29,31 +29,12 @@ const SignUpStepTwo = ({
     onChange?.(e);
   };
 
-  useEffect(() => {
-    const message = "This description is too long.";
-
-    if (
-      valueCount > 2000 &&
-      !localErrors?.find((e) => e.messages.includes(message))
-    ) {
-      setLocalErrors((e) => [
-        ...(e || []),
-        {
-          property: "description",
-          messages: [message],
-        },
-      ]);
-    }
-
-    if (
-      valueCount <= valueMax &&
-      localErrors?.find((e) => e.messages.includes(message))
-    ) {
-      setLocalErrors((e) => [
-        ...(e || []).filter((err) => !err.messages.includes(message)),
-      ]);
-    }
-  }, [localErrors, valueCount]);
+  const localErrors: KissFormErrors = [
+    ...(errors || []).filter((e) => !e.messages.includes(TOO_LONG_MESSAGE)),
+    ...(valueCount > valueMax
+      ? [{ property: "description", messages: [TOO_LONG_MESSAGE] }]
+      : []),
+  ];
 
   return (
     <FormWrapper

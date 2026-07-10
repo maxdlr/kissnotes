@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import removeNativeExpression from "../services/removeNativeExpression";
 
@@ -10,4 +9,4 @@ const deleteNativeExpression = async (
   return res.status(200).send("NativeExpression deleted");
 };
 
-export default TryCatch(deleteNativeExpression);
+export default deleteNativeExpression;

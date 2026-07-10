@@ -30,6 +30,9 @@ const ProfileSettings = () => {
 
   useEffect(() => {
     if (!userLoading && user) {
+      // Seeds the local edit form from the user once it has loaded; this is
+      // a one-time sync from async data, not a derived-state duplication.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         username: user.username,
         email: user.email,

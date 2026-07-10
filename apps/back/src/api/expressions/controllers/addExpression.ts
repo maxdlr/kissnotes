@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import ExpressionEntity from "@/entities/ExpressionEntity";
 import { ExpressionModel } from "@kissnotes/types";
 import { Request, Response } from "express";
@@ -24,4 +23,4 @@ const addExpression = async (
   return res.status(200).send(createdExpression);
 };
 
-export default TryCatch(addExpression);
+export default addExpression;

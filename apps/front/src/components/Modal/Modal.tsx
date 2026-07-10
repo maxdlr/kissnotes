@@ -122,7 +122,7 @@ const Modal = ({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div
-                    className={`absolute z-10 top-4 sm:top-8 right-4 sm:right-8 flex justify-center items-center gap-4 sm:gap-8`}
+                    className={`absolute z-10 top-6 sm:top-8 right-6 sm:right-8 flex justify-center items-center gap-4 sm:gap-8`}
                   >
                     {HeaderChild}
                     {onClose && (
@@ -138,7 +138,7 @@ const Modal = ({
                       />
                     )}
                   </div>
-                  <section ref={contentRef}>{children}</section>
+                  <section ref={localContentRef}>{children}</section>
                 </motion.div>
               </div>
             </>

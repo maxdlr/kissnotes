@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: dont care */
 
 import Header from "@/components/Header";
-import { SearcherProvider } from "@/components/Searcher/hooks/SearcherProvider";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import "../assets/globals.css";
@@ -24,16 +23,14 @@ export default function RootLayout({
         className={`${gilroy.className} antialiased bg-background text-foreground`}
       >
         <Providers>
-          <SearcherProvider>
-            <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
-              <Header />
-              {children}
-            </main>
-            <div id="modal-full" />
-            <div id="modal" />
-            <div id="tooltip" />
-            <div id="dropdown" />
-          </SearcherProvider>
+          <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
+            <Header />
+            {children}
+          </main>
+          <div id="modal-full" />
+          <div id="modal" />
+          <div id="tooltip" />
+          <div id="dropdown" />
         </Providers>
       </body>
     </html>

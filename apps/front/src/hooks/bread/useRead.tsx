@@ -11,10 +11,9 @@ const useRead = <T extends Model>(
 ) => {
   const [loading, setLoading] = useState(true);
   const params: Partial<T> = Object.entries(modelParams).reduce(
-    // biome-ignore lint/suspicious/noExplicitAny: don't care
-    (acc: Partial<T>, value: [string, any]) => {
-      if (modelParams[value[0] as keyof Partial<T>]) {
-        acc[value[0] as keyof T] = value[1];
+    (acc: Partial<T>, [key, value]: [string, T[keyof T]]) => {
+      if (modelParams[key as keyof Partial<T>]) {
+        acc[key as keyof T] = value;
       }
       return acc;
     },

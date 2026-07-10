@@ -3,12 +3,17 @@
 import Button from "@/components/Button";
 import Logo from "@/components/Logo";
 import useAuth from "@/contexts/AuthContext/useAuth";
+import useBreakpoints from "@/hooks/useBreakpoints";
 import { BoltIcon, FireIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
 const Hero = () => {
   const { user } = useAuth();
   const router = useRouter();
+
+  const { sm } = useBreakpoints();
+
+  console.log({ sm });
 
   if (!user) {
     return (
@@ -20,14 +25,14 @@ const Hero = () => {
         <div className="flex flex-row justify-center items-center gap-4">
           <Button
             label="Sign up"
-            Icon={FireIcon}
+            Icon={!sm ? FireIcon : undefined}
             className="text-primary"
             hoverUp
             onClick={() => router.push("/signup")}
           />
           <p className="hidden sm:block">or</p>
           <Button
-            Icon={BoltIcon}
+            Icon={!sm ? BoltIcon : undefined}
             label="Log in"
             className="text-primary"
             variant="outline"
@@ -40,7 +45,7 @@ const Hero = () => {
   }
   return (
     <div className="flex justify-center items-center">
-      <h2 className="text-lg sm:text-3xl md:text-5xl font-bold">
+      <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold">
         Hello, {user.username}
       </h2>
     </div>

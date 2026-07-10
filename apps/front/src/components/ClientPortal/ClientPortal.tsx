@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 
 interface ClientPortalProps {
@@ -6,20 +6,15 @@ interface ClientPortalProps {
   selector: string;
 }
 
+const queryTarget = (selector: string): Element | null =>
+  typeof document === "undefined" ? null : document.querySelector(selector);
+
 const ClientPortal = ({ children, selector }: ClientPortalProps) => {
-  const ref = useRef<Element | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [target] = useState(() => queryTarget(selector));
 
-  useEffect(() => {
-    ref.current = document.querySelector(selector);
-    setIsMounted(true);
-  }, [selector]);
+  if (!target) return null;
 
-  if (typeof document === "undefined" || !document.querySelector(selector)) {
-    return;
-  }
-
-  return isMounted && ref.current ? createPortal(children, ref.current) : null;
+  return createPortal(children, target);
 };
 
 export default ClientPortal;

@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import findDashboardData from "../services/findDashboardData";
 
@@ -10,4 +9,4 @@ const getDashboard = async (
   return res.status(200).send(dashboard);
 };
 
-export default TryCatch(getDashboard);
+export default getDashboard;

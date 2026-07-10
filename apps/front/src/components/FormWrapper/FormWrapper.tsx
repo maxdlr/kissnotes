@@ -1,11 +1,26 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dontcare */
-/** biome-ignore-all lint/suspicious/noExplicitAny: dontcare */
 
-import { motion } from "motion/react";
-import { Children, cloneElement, isValidElement, useEffect } from "react";
+import { motion, type Variants } from "motion/react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import Button from "@/components/Button";
 import type { FormWrapperProps } from "./interfaces";
 import { KissClickEvent } from "@/types/form.types";
+
+type FieldProps = {
+  name?: string;
+  className?: string;
+  errors?: string[];
+  children?: ReactNode;
+};
+
+type FieldElement = ReactElement<FieldProps>;
 
 const distance = 200;
 
@@ -24,7 +39,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = (animHeight: number) => ({
+const itemVariants = (animHeight: number): Variants => ({
   hidden: { y: animHeight, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.3 } },
   exit: { y: animHeight, opacity: 0, transition: { duration: 0.2 } },
@@ -52,18 +67,18 @@ const FormWrapper = ({
 }: FormWrapperProps) => {
   const containerClass = "flex flex-col items-center gap-8";
 
-  const injectErrors = (child: React.ReactElement<any>) => {
+  const injectErrors = (child: FieldElement) => {
     const fieldErrors = errors?.find(
-      (e) => e.property === (child.props as any).name,
+      (e) => e.property === child.props.name,
     )?.messages;
     return fieldErrors ? cloneElement(child, { errors: fieldErrors }) : child;
   };
 
-  const processChildren = (nodes: React.ReactNode): React.ReactNode => {
+  const processChildren = (nodes: ReactNode): ReactNode => {
     return Children.map(nodes, (child) => {
-      if (!isValidElement<any>(child)) return child;
-      if ((child.props as any).name) {
-        childNames.push((child.props as any).name);
+      if (!isValidElement<FieldProps>(child)) return child;
+      if (child.props.name) {
+        childNames.push(child.props.name);
         return injectErrors(child);
       }
       return child;
@@ -79,15 +94,15 @@ const FormWrapper = ({
   const renderFields = () => {
     const flat = Children.toArray(children);
     return flat.map((child, i) => {
-      if (!isValidElement<any>(child)) return child;
+      if (!isValidElement<FieldProps>(child)) return child;
 
-      const props = child.props as any;
+      const props = child.props;
 
-      if ((child.type as any) === Layout) {
+      if (child.type === Layout) {
         return (
           <FieldSetTag
             key={i}
-            variants={variants as any}
+            variants={variants}
             className={props.className ?? ""}
           >
             {processChildren(props.children)}
@@ -100,7 +115,7 @@ const FormWrapper = ({
       return (
         <FieldSetTag
           key={i}
-          variants={variants as any}
+          variants={variants}
           className={props.className ?? ""}
         >
           {injectErrors(child)}

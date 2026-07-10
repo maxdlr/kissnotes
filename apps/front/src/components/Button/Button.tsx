@@ -5,6 +5,7 @@ import Loading from "@/components/Loading";
 import Shortcut from "@/components/ShortCut";
 import type { KissClickEvent } from "@/types/form.types";
 import { motion } from "motion/react";
+import type { TargetAndTransition } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Tooltip from "../Tooltip";
@@ -55,14 +56,9 @@ const defaultVariants = {
 const interactionVariants: Record<
   NonNullable<ButtonProps["variant"]>,
   {
-    resting: object;
-    hover: {
-      backgroundColor?: string | number | undefined;
-      borderColor?: string | number | undefined;
-      color?: string | undefined;
-      scale?: string | number;
-    };
-    tap: object;
+    resting: TargetAndTransition;
+    hover: TargetAndTransition;
+    tap: TargetAndTransition;
   }
 > = {
   "fill-accent": {
@@ -307,7 +303,7 @@ const Button = ({
               scale: undefined,
             }
       }
-      whileTap={!disabled ? (tap as any) : undefined}
+      whileTap={!disabled ? tap : undefined}
       onClick={href ? undefined : handleOnClick}
     >
       {content}

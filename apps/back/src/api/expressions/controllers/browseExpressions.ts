@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import ExpressionEntity from "@/entities/ExpressionEntity";
 import { Request, Response } from "express";
 import findAllExpressions from "../services/findAllExpressions";
@@ -12,4 +11,4 @@ const browseExpressions = async (
   return res.status(200).send(expressions);
 };
 
-export default TryCatch(browseExpressions);
+export default browseExpressions;

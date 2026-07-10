@@ -1,7 +1,6 @@
 import UserEntity from "@/entities/UserEntity";
 import { Request, Response } from "express";
 import createUser from "../services/createUser";
-import { TryCatch } from "@/decorators/TryCatch";
 
 const addUser = async (
   req: Request,
@@ -15,4 +14,4 @@ const addUser = async (
   return res.status(200).send(createdUser);
 };
 
-export default TryCatch(addUser);
+export default addUser;

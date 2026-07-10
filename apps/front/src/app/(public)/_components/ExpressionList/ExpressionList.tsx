@@ -4,7 +4,6 @@ import ExpressionListSidebar from "@/app/(public)/_components/ExpressionListSide
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import MasonryGrid from "@/components/MasonryGrid";
-import useAuth from "@/contexts/AuthContext/useAuth";
 import {
   AdjustmentsHorizontalIcon,
   ChevronLeftIcon,
@@ -15,6 +14,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import type { ExpressionListProps } from "./interfaces";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 interface CollapsibleSidebarProps {
   collapsed: boolean;
@@ -25,6 +25,7 @@ interface CollapsibleSidebarProps {
   tokenOptions: ExpressionToken[];
   authorOptions: UserModel[];
   ActionSlot?: ReactNode;
+  sm: boolean;
 }
 
 const CollapsibleSidebar = ({
@@ -36,6 +37,7 @@ const CollapsibleSidebar = ({
   tokenOptions,
   authorOptions,
   ActionSlot,
+  sm,
 }: CollapsibleSidebarProps) => (
   <>
     {/* Desktop */}
@@ -43,7 +45,7 @@ const CollapsibleSidebar = ({
       {hasExpressions && (
         <Button
           variant="ghost"
-          size={collapsed ? "md" : "sm"}
+          size={collapsed ? "sm" : "md"}
           Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronLeftIcon}
           shortcut={
             collapsed ? undefined : { keys: ["ctrl", "S"], ignoreInputs: false }
@@ -78,8 +80,8 @@ const CollapsibleSidebar = ({
       >
         {hasExpressions && (
           <Button
-            variant="ghost"
-            size="sm"
+            variant={sm ? "outline" : "ghost"}
+            size={sm ? "md" : "sm"}
             Icon={collapsed ? AdjustmentsHorizontalIcon : ChevronUpIcon}
             shortcut={{ keys: ["ctrl", "S"], ignoreInputs: false }}
             onClick={onToggle}
@@ -124,8 +126,8 @@ const ExpressionList = ({
   authorOptions = [],
 }: ExpressionListProps) => {
   const [collapsed, setCollapsed] = useState(startCollapsed);
+  const { sm } = useBreakpoints();
   const router = useRouter();
-  const auth = useAuth();
 
   return (
     <>
@@ -145,6 +147,7 @@ const ExpressionList = ({
             tokenOptions={tokenOptions}
             authorOptions={authorOptions}
             ActionSlot={ActionSlot}
+            sm={sm}
           />
         )}
 

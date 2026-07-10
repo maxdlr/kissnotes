@@ -3,7 +3,7 @@ import { type RefObject, useEffect } from "react";
 const useOnClickInside = <T extends Element | null>(
   ref: RefObject<T>,
   handler: (event: MouseEvent | TouchEvent | KeyboardEvent) => void,
-  dependencies: any[],
+  dependencies: unknown[],
 ): void => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,6 +20,9 @@ const useOnClickInside = <T extends Element | null>(
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
+    // dependencies is a caller-supplied array spread intentionally; eslint
+    // cannot statically verify its contents.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies, ref, handler]);
 };
 

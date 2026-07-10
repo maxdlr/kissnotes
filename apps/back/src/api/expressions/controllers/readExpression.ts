@@ -1,6 +1,5 @@
 import type { ExpressionModel } from "@kissnotes/types";
 import type { Request, Response } from "express";
-import { TryCatch } from "@/decorators/TryCatch";
 import findExpression from "../services/findExpression";
 
 const readExpression = async (
@@ -15,4 +14,4 @@ const readExpression = async (
 
 	return res.status(200).send(expression);
 };
-export default TryCatch(readExpression);
+export default readExpression;

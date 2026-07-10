@@ -39,7 +39,7 @@ const ExpressionByIdModalPage = () => {
             />
           }
         >
-          <article className="p-4 sm:p-8">
+          <article className="p-6 sm:p-8">
             <ExpressionDetails id={id as Id} native={isNative !== null} />
           </article>
         </Modal>

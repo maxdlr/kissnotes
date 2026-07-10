@@ -1,6 +1,6 @@
 import type { UserModel } from "@kissnotes/types";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import useSWR, { type SWRConfiguration } from "swr";
 import privateUris from "@/enums/privateUris";
 import useAxios from "@/hooks/useAxios";
@@ -30,13 +30,17 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    () => isDev || getMeRetryCount() < MAX_ME_RETRIES,
+  );
   const pathname = usePathname();
   const router = useRouter();
   const { addToast } = useToasts();
 
   const pathnameRef = useRef(pathname);
-  pathnameRef.current = pathname;
+  useLayoutEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 
   const redirectToHomeIfPrivate = useCallback(() => {
     const isPrivate = privateUris.some((uri) => uri.test(pathnameRef.current));
@@ -54,12 +58,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     () => !isDev && getMeRetryCount() >= MAX_ME_RETRIES,
     [],
   );
-
-  useEffect(() => {
-    if (!isDev && getMeRetryCount() >= MAX_ME_RETRIES) {
-      setLoading(false);
-    }
-  }, []);
 
   const { postData: postLogin } = useAxios("/login");
   const { postData: postLogout } = useAxios("/logout");

@@ -1,8 +1,7 @@
 "use client";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useToasts from "@/contexts/ToastsContext";
-import { getUsername } from "@/utils/userUtils";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 interface UserProfileProtectedLayoutProps {

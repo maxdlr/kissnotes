@@ -28,7 +28,7 @@ export interface FormInputProps<T> {
   name: string;
   label?: string | ReactNode;
   onChange: (event: KissChangeEvent | KissChangeEvent<T>) => void;
-  onFocus?: FocusEventHandler<HTMLInputElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   disabled?: boolean;
   type?:
     | "textarea"

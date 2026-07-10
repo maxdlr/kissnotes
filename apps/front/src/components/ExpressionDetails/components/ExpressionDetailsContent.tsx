@@ -4,6 +4,7 @@ import Pill from "@/components/Pill";
 import Tooltip from "@/components/Tooltip";
 import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
+import useBreakpoints from "@/hooks/useBreakpoints";
 import useExpressions from "@/hooks/useExpressions";
 import {
   CheckBadgeIcon,
@@ -34,6 +35,7 @@ const ExpressionDetailsContent = ({
   onUnpublish,
   preview = false,
 }: ExpressionDetailsContentProps) => {
+  const { sm } = useBreakpoints();
   const { getTokens } = useExpressions(expression || []);
 
   const tokens = getTokens(["properties", "methods", "functions"]);
@@ -66,13 +68,6 @@ const ExpressionDetailsContent = ({
     return saves.includes(expression.id);
   }, [auth?.user?.saves, expression.id, expression.native]);
 
-  console.log(
-    expression.author?.username,
-    expression.views,
-    expression.shares,
-    expression.native,
-  );
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-4 md:gap-8">
       {(!!expression.author?.username ||
@@ -80,7 +75,8 @@ const ExpressionDetailsContent = ({
         !!expression.shares ||
         !!expression.native ||
         !!expression.saves) && (
-        <div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
+        //<div className="flex justify-start items-center gap-4 col-span-1 md:col-span-full">
+        <div className="grid grid-flow-col justify-start items-center gap-2 sm:gap-4 col-span-1 md:col-span-full">
           {expression.author && (
             <UserHandle username={expression.author.username} />
           )}
@@ -90,9 +86,11 @@ const ExpressionDetailsContent = ({
               variant="ghost"
               Icon={ShareIcon}
               label={expression.shares}
+              size={sm ? "sm" : undefined}
             />
           )}
           <Button
+            size={sm ? "sm" : undefined}
             variant="ghost"
             Icon={
               !auth?.user
@@ -107,6 +105,7 @@ const ExpressionDetailsContent = ({
           />
           {!expression.native && (
             <Button
+              size={sm ? "sm" : undefined}
               variant="ghost"
               Icon={EyeIcon}
               label={expression.views}

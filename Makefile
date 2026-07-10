@@ -45,7 +45,7 @@ dev: ## npm run dev for back and front
 	make -j2 dev-f dev-b
 
 build: ## npm run build for back and front
-	npm run build:front && npm run build:back
+	NODE_ENV=production npm run build:front && npm run build:back
 
 start: ## npm run start for back and front
 	make start-db

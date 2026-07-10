@@ -98,7 +98,7 @@ const ToggleButtons = ({
                 )}
                 {button.label && (
                   <span
-                    className={`font-semibold text-nowrap leading-none ${button.className || ""}`}
+                    className={`font-semibold hidden sm:inline text-nowrap leading-none ${button.className || ""}`}
                   >
                     {button.label}
                   </span>

@@ -36,17 +36,23 @@ const InputDropdown = <T,>({
 
   const handleMainButton = () => {
     setZIndex(getNextZIndex());
-    open ? onClose?.() : onOpen?.();
+    if (open) {
+      onClose?.();
+    } else {
+      onOpen?.();
+    }
   };
 
   return (
     <div
+      ref={ref}
       className={`w-full flex flex-col justify-center items-start ${className}`}
     >
       {(label || value) && (
         <motion.button
           onClick={handleMainButton}
           type="button"
+          disabled={disabled}
           onHoverStart={() => onHover?.(true)}
           onHoverEnd={() => onHover?.(false)}
           onTapStart={() => onTap?.(true)}

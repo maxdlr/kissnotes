@@ -3,7 +3,10 @@ import {
   Cog6ToothIcon as Cog6ToothOutlineIcon,
   HomeIcon,
 } from "@heroicons/react/24/outline";
-import { Cog6ToothIcon as Cog6ToothFillIcon } from "@heroicons/react/24/solid";
+import {
+  Cog6ToothIcon as Cog6ToothFillIcon,
+  ServerStackIcon,
+} from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
@@ -12,6 +15,7 @@ import UserHandle from "@/components/UserHandle";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/userUtils";
 import Logo from "../Logo";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;
@@ -23,6 +27,7 @@ const getLoginHref = () => {
 const Header = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { sm } = useBreakpoints();
 
   return (
     <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
@@ -39,7 +44,12 @@ const Header = () => {
         className="w-full"
       />
       {user?.type === "admin" && (
-        <Button label="admin" href="/admin" variant="ghost" />
+        <Button
+          Icon={ServerStackIcon}
+          label={sm ? undefined : "Admin"}
+          href="/admin"
+          variant="ghost"
+        />
       )}
       {loading ? (
         <div className="w-24">

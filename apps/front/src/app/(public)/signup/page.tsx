@@ -6,7 +6,6 @@ import useToasts from "@/contexts/ToastsContext";
 import useAxios from "@/hooks/useAxios";
 import type { KissChangeEvent, KissClickEvent } from "@/types/form.types";
 import { getProfileHref } from "@/utils/userUtils";
-import { faker } from "@faker-js/faker";
 import type {
   KissFormErrors,
   SocialLinkModel,

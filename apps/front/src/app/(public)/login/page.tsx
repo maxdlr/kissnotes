@@ -24,9 +24,11 @@ const LogIn = () => {
   });
 
   const router = useRouter();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this effect when the user changes, not when the router changes
+  // We only want to run this effect when the user changes, not when
+  // referrer/router change.
   useEffect(() => {
     if (user && !referrer) router.push("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleOnchange = ({ target: { name, value } }: KissChangeEvent) => {

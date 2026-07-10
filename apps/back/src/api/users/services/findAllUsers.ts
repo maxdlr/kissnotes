@@ -1,8 +1,14 @@
 import UserEntity from "@/entities/UserEntity";
 import UserRepository from "@/repositories/UserRepository";
 
-const findAllUsers = async (where?: any): Promise<UserEntity[]> => {
-  const { search, maxResults, ...sanitizedWhere } = where || {};
+interface UserFilters {
+  search?: string;
+  maxResults?: number | string;
+}
+
+const findAllUsers = async (where?: UserFilters): Promise<UserEntity[]> => {
+  const { search: _search, maxResults: _maxResults, ...sanitizedWhere } =
+    where || {};
   const users = await UserRepository.find({
     where: sanitizedWhere,
     loadRelationIds: { relations: ["saves", "expressions"] },

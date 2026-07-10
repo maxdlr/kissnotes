@@ -1,6 +1,5 @@
 import Button from "@/components/Button";
 import ConfirmModal from "@/components/ConfirmModal";
-import useToasts from "@/contexts/ToastsContext";
 import useAxios from "@/hooks/useAxios";
 import { Model } from "@kissnotes/types";
 import { useState } from "react";
@@ -18,7 +17,6 @@ const AdminListRow = <T extends Model>({
 }: AdminListRowProps<T>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteData } = useAxios(deleteEndpoint ?? null);
-  const { addToast } = useToasts();
 
   const handleDelete = async () => {
     await deleteData().then((r) => {

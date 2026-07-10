@@ -64,8 +64,14 @@ const FormInput = <T = "string",>({
     ghost: `!p-0 ${label && ["text", "search", "email", "password"].includes(type) ? "border border-transparent! py-3! px-4!" : ""}`,
   };
 
-  // biome-ignore lint/suspicious/noExplicitAny: dontcare
-  const handleFocus: FocusEventHandler = (e: any): void => {
+  const handleInputFocus: FocusEventHandler<HTMLInputElement> = (e): void => {
+    focus();
+    onFocus?.(e);
+  };
+
+  const handleTextAreaFocus: FocusEventHandler<HTMLTextAreaElement> = (
+    e,
+  ): void => {
     focus();
     onFocus?.(e);
   };
@@ -162,7 +168,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             onChange={handleChange}
             onClick={onClick}
             disabled={disabled}
-            onFocus={handleFocus}
+            onFocus={handleInputFocus}
           />
         )}
 
@@ -176,7 +182,7 @@ ${variantStyles[variant]} ${containerClassName}`}
             onChange={handleChange}
             onClick={onClick}
             disabled={disabled}
-            onFocus={handleFocus}
+            onFocus={handleTextAreaFocus}
             value={value as string}
             rows={rows}
           />

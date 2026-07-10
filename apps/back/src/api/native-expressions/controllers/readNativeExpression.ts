@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import { NativeExpressionModel } from "@kissnotes/types";
 import { Request, Response } from "express";
 import findNativeExpression from "../services/findNativeExpression";
@@ -27,4 +26,4 @@ const readNativeExpression = async (
 
   return res.status(200).send(expression);
 };
-export default TryCatch(readNativeExpression);
+export default readNativeExpression;

@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ModName } from "@/components/ShortCut";
 
 // ─── ModName — must match your Shortcut component's index.ts ─────────────────
@@ -76,23 +76,6 @@ export function useShortcut(
   // Derive trigger key + required modifiers from the keys array
   const { triggerKey, modifiers } = deriveKeys(keys);
 
-  // Debug registry — registers this shortcut with its call-site source
-  const debugId = useId();
-  const sourceRef = useRef("unknown");
-  if (
-    process.env.NODE_ENV === "development" &&
-    sourceRef.current === "unknown"
-  ) {
-    const stack = new Error().stack ?? "";
-    sourceRef.current =
-      stack
-        .split("\n")
-        .slice(1)
-        .find((line) => !line.includes("useShortcut"))
-        ?.trim()
-        ?.replace(/^at\s+/, "") ?? "unknown";
-  }
-
   const listener = useCallback(
     (e: Event) => {
       if (!triggerKey) return;
@@ -119,7 +102,6 @@ export function useShortcut(
       handlerRef?.current(ke);
       setTimeout(() => setActive(false), 300);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       triggerKey,
       modifiers.ctrl,

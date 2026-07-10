@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import type { ToastProps } from "./interfaces";
 import {
   CheckBadgeIcon,
@@ -22,7 +28,9 @@ export function Toast({
   const [started, setStarted] = useState(false);
 
   const onDismissRef = useRef(onDismiss);
-  onDismissRef.current = onDismiss;
+  useLayoutEffect(() => {
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
 
   const dismiss = useCallback(() => {
     setExiting(true);

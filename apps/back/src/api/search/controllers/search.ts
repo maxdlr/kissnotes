@@ -1,4 +1,3 @@
-import { TryCatch } from "@/decorators/TryCatch";
 import { Request, Response } from "express";
 import searchAll, { BrowseMode } from "../services/searchAll";
 
@@ -41,4 +40,4 @@ const search = async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).send(results);
 };
 
-export default TryCatch(search);
+export default search;

@@ -2,14 +2,13 @@ import Modal from "@/components/Modal";
 import useBrowse from "@/hooks/bread/useBrowse";
 import useDebounce from "@/hooks/useDebounce";
 import { useShortcut } from "@/hooks/useShortcut";
-import { KissChangeEvent, KissClickEvent } from "@/types/form.types";
+import { KissChangeEvent } from "@/types/form.types";
 import {
   ArrowLeftIcon,
   ArrowsPointingOutIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { BoltIcon } from "@heroicons/react/24/solid";
-import type { ExpressionModel } from "@kissnotes/types";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
@@ -18,13 +17,7 @@ import ExpressionDetails from "../ExpressionDetails";
 import FormInput from "../FormInput";
 import SearchResult from "./components/SearcherResult";
 import useSearcher from "./hooks/SearcherProvider";
-
-type SearchResultModel = ExpressionModel & { native: boolean; score: number };
-
-interface SearcherProps {
-  onClose?: (e?: KissClickEvent) => void;
-  placeholder?: string;
-}
+import { SearcherProps, SearchResultModel } from "./interfaces";
 
 const Searcher = ({ onClose }: SearcherProps) => {
   const router = useRouter();
@@ -101,7 +94,6 @@ const Searcher = ({ onClose }: SearcherProps) => {
         behavior: "smooth" as ScrollBehavior,
       } as ScrollIntoViewOptions);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedIndex],
   );
 

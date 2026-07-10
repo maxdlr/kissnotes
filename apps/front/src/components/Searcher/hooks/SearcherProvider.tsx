@@ -2,21 +2,7 @@
 
 import { Id } from "@kissnotes/types";
 import { createContext, useContext, useState } from "react";
-
-type SearcherContextType = {
-  prompt: string;
-  setPrompt: React.Dispatch<React.SetStateAction<string>>;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedIndex: { index: number; native: boolean; mouse: boolean };
-  setSelectedIndex: React.Dispatch<
-    React.SetStateAction<{ index: number; native: boolean; mouse: boolean }>
-  >;
-  previewing: { id?: Id; native: boolean } | undefined;
-  setPreviewing: React.Dispatch<
-    React.SetStateAction<{ id?: Id; native: boolean } | undefined>
-  >;
-};
+import { SearcherContextType } from "../interfaces";
 
 const SearcherContext = createContext<SearcherContextType | null>(null);
 

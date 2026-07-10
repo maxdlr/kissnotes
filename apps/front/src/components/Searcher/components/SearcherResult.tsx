@@ -1,4 +1,5 @@
 import Collapsible from "@/components/Collapsible";
+import HighlightableText from "@/components/HighlightableText";
 import KissCodeBlock from "@/components/KissCodeBlock";
 import Pill from "@/components/Pill";
 import UserHandle from "@/components/UserHandle";
@@ -8,9 +9,9 @@ import { ArrowDownIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { ArrowUpIcon } from "@heroicons/react/24/solid";
 import { ExpressionModel, ExpressionToken } from "@kissnotes/types";
 import { AnimatePresence, motion } from "framer-motion";
-import { RefObject, useMemo } from "react";
+import { useMemo } from "react";
 import useSearcherMatch from "../helpers/useSearcherMatch";
-import HighlightableText from "@/components/HighlightableText";
+import { SearcherResultProps } from "../interfaces";
 
 const SearchResult = ({
   ref,
@@ -19,14 +20,7 @@ const SearchResult = ({
   focused = false,
   onClick,
   native = false,
-}: {
-  ref?: RefObject<HTMLDivElement | null>;
-  expression: ExpressionModel;
-  searchPrompt?: string;
-  focused?: boolean;
-  onClick?: () => void;
-  native?: boolean;
-}) => {
+}: SearcherResultProps) => {
   const localSearchPrompt = useDebounce(searchPrompt?.trim(), 300);
   const { getLineMatches, getDescriptionMatch, getTitleMatch, getKeywords } =
     useSearcherMatch();
