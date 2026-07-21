@@ -34,7 +34,7 @@ services:
       BACK_PORT: ${BACK_PORT}
       DB_HOST: db
       DB_PORT: ${DB_PORT}
-      CORS_ORIGIN_URL: https://kissnotes.maxdlr.com
+      CORS_ORIGIN_URL: ${CORS_ORIGIN_URL}
       EC_KEY: ${EC_KEY}
       EC_SALT: ${EC_SALT}
       JWT_SECRET: ${JWT_SECRET}

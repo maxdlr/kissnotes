@@ -2,17 +2,19 @@ import Tabs from "../Tabs";
 import ProfileSettings from "./components/ProfileSettings";
 import SavesList from "./components/SavesList";
 
-const UserSettings = () => {
+const UserSettings = ({ className = "" }: { className?: string }) => {
   return (
-    <Tabs.Container defaultTab="profile">
-      <Tabs.Tab label="Profile" value="profile">
-        <ProfileSettings />
-      </Tabs.Tab>
+    <div className={className}>
+      <Tabs.Container defaultTab="profile">
+        <Tabs.Tab label="Profile" value="profile">
+          <ProfileSettings />
+        </Tabs.Tab>
 
-      <Tabs.Tab label="Saves" value="saves">
-        <SavesList />
-      </Tabs.Tab>
-    </Tabs.Container>
+        <Tabs.Tab label="Saves" value="saves">
+          <SavesList />
+        </Tabs.Tab>
+      </Tabs.Container>
+    </div>
   );
 };
 export default UserSettings;

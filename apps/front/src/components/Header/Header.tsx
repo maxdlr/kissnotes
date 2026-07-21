@@ -24,13 +24,15 @@ const getLoginHref = () => {
     : "/login";
 };
 
-const Header = () => {
+const Header = ({ className }: { className?: string }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { sm } = useBreakpoints();
 
   return (
-    <header className="flex justify-evenly items-center w-full gap-6 bg-darker">
+    <header
+      className={`flex justify-evenly items-center w-full gap-6 bg-darker ${className}`}
+    >
       <Logo className="hidden md:block" />
       <Button
         Icon={HomeIcon}

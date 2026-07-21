@@ -85,7 +85,7 @@ const FormInput = <T = "string",>({
   };
 
   return (
-    <div className={`w-full relative ${className}`}>
+    <div className={`w-full relative @container ${className}`}>
       {!labelIn && label && (
         <label htmlFor={name} className="absolute -translate-y-1/2 w-full">
           <span className="mx-6 text-sm flex justify-between items-center gap-2 leading-none">

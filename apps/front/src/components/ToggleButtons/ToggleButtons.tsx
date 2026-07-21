@@ -18,8 +18,8 @@ const ToggleButtons = ({
   }[size];
 
   const iconSizeClass = {
-    sm: "size-3",
-    md: "size-4",
+    sm: "size-4",
+    md: "size-5",
     lg: "size-6",
   }[size];
 

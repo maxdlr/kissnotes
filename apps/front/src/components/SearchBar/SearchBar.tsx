@@ -49,7 +49,7 @@ const SearchBar = ({
             ? { ...shortcut, ignoreInputs: false }
             : undefined
         }
-        containerClassName={`rounded-full`}
+        containerClassName={`rounded-full @max-xs:border-0! @max-xs:px-0!`}
       />
       {isOpen && modalSearcher && <Searcher onClose={handleClose} />}
     </div>

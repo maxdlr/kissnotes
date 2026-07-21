@@ -13,8 +13,6 @@ const Hero = () => {
 
   const { sm } = useBreakpoints();
 
-  console.log({ sm });
-
   if (!user) {
     return (
       <section className="flex flex-col justify-center items-center w-full gap-4 py-8">
@@ -44,7 +42,7 @@ const Hero = () => {
     );
   }
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center py-8">
       <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold">
         Hello, {user.username}
       </h2>

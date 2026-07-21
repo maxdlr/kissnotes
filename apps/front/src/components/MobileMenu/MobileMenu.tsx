@@ -1,0 +1,106 @@
+"use client";
+import useAuth from "@/contexts/AuthContext/useAuth";
+import { getProfileHref } from "@/utils/userUtils";
+import {
+  Cog6ToothIcon as OCog6ToothIcon,
+  PlusIcon as OPlusIcon,
+  HomeIcon as OHomeIcon,
+  UserIcon as OUserIcon,
+  MagnifyingGlassIcon as OMagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
+import {
+  PlusIcon as SPlusIcon,
+  Cog6ToothIcon as SCog6ToothIcon,
+  HomeIcon as SHomeIcon,
+  UserIcon as SUserIcon,
+  MagnifyingGlassIcon as SMagnifyingGlassIcon,
+} from "@heroicons/react/24/solid";
+import Button from "../Button";
+import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
+import { ElementType } from "react";
+import useSearcher from "../Searcher/hooks/SearcherProvider";
+import Searcher from "../Searcher";
+import useBreakpoints from "@/hooks/useBreakpoints";
+
+const MobileMenu = ({ className }: { className?: string }) => {
+  const auth = useAuth();
+  const pathname = usePathname();
+  const { isOpen, setIsOpen, setPrompt } = useSearcher();
+  const { xs } = useBreakpoints();
+
+  const menu: {
+    slug: string;
+    href: string;
+    InactiveIcon: ElementType;
+    ActiveIcon: ElementType;
+  }[] = [
+    {
+      slug: "home",
+      href: "/",
+      InactiveIcon: OHomeIcon,
+      ActiveIcon: SHomeIcon,
+    },
+    {
+      slug: "search",
+      InactiveIcon: OMagnifyingGlassIcon,
+      ActiveIcon: SMagnifyingGlassIcon,
+    },
+    {
+      slug: "add",
+      href: "/form/new",
+      InactiveIcon: OPlusIcon,
+      ActiveIcon: SPlusIcon,
+    },
+    auth?.user && {
+      slug: "account",
+      href: getProfileHref(auth.user.username),
+      InactiveIcon: OUserIcon,
+      ActiveIcon: SUserIcon,
+    },
+    auth?.user && {
+      slug: "settings",
+      href: `${getProfileHref(auth.user.username)}/settings`,
+      InactiveIcon: OCog6ToothIcon,
+      ActiveIcon: SCog6ToothIcon,
+    },
+  ].filter(Boolean);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setPrompt("");
+  };
+
+  return (
+    <div className={`fixed left-0 bottom-0 z-999999 w-full ${className}`}>
+      <motion.div
+        className="bg-dark py-3 border-t rounded-t-4xl"
+        initial={{ opacity: 0, y: "100%" }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          bounce: 0.5,
+        }}
+      >
+        <div className="flex justify-evenly items-center">
+          {menu.map(({ slug, href, InactiveIcon, ActiveIcon }) => (
+            <div key={slug}>
+              <Button
+                href={href}
+                Icon={pathname === href ? ActiveIcon : InactiveIcon}
+                HoverIcon={ActiveIcon}
+                size="lg"
+                variant="ghost"
+                className={`${pathname === href ? "text-secondary!" : "text-accent"} py-4!`}
+                iconSize="size-8"
+                onClick={slug === "search" ? () => setIsOpen(true) : undefined}
+              />
+            </div>
+          ))}
+        </div>
+      </motion.div>
+      {isOpen && <Searcher onClose={handleClose} />}
+    </div>
+  );
+};
+export default MobileMenu;

@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";
+import MobileMenu from "@/components/MobileMenu";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
@@ -23,10 +24,11 @@ export default function RootLayout({
         className={`${gilroy.className} antialiased bg-background text-foreground`}
       >
         <Providers>
-          <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8">
-            <Header />
+          <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8 max-sm:pb-24">
+            <Header className="hidden sm:block" />
             {children}
           </main>
+          <MobileMenu className="sm:hidden" />
           <div id="modal-full" />
           <div id="modal" />
           <div id="tooltip" />

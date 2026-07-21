@@ -26,6 +26,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import type { ExpressionFormData } from "@/components/ExpressionForm/interfaces";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 const ExpressionFormPage = () => {
   const { user } = useAuth();
@@ -186,14 +187,19 @@ const ExpressionFormPage = () => {
     expression?.shares,
   ]);
 
+  const { sm } = useBreakpoints();
+
   return (
-    <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
+    <div className="pt-8 p-2 sm:p-4 space-y-2 sm:space-y-4">
       <div className="flex justify-center items-center gap-4 pb-8">
-        <h1 className="text-4xl flex justify-center items-baseline gap-4 font-extrabold">
-          {expression?.published ? "Edit" : "Add"}{" "}
+        <h1 className="text-4xl flex max-sm:flex-col  justify-center items-baseline gap-4 font-extrabold">
+          <span className="hidden sm:inline">
+            {expression?.published ? "Edit" : "Add"}
+          </span>
           {formData.title ? (
             <>
-              <ArrowRightIcon className="inline size-6" /> {formData.title}
+              <ArrowRightIcon className="size-6 hidden sm:inline" />
+              {formData.title}
             </>
           ) : (
             "a new expression"

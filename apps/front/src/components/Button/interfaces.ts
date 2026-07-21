@@ -18,6 +18,7 @@ export interface ButtonProps {
   label?: string | number | React.ReactNode;
   href?: string;
   className?: string;
+  iconSize?: string;
   labelClassName?: string;
   variant?: VariantType;
   onClick?: (e?: KissClickEvent) => void;

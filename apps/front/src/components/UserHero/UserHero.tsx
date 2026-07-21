@@ -130,7 +130,7 @@ const UserHero = () => {
         </Modal>
       )}
       <motion.div
-        className="w-full"
+        className="w-full py-8"
         animate={{ height: isReady ? contentHeight : "auto" }}
       >
         <div ref={contentRef}>

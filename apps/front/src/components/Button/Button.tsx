@@ -152,6 +152,7 @@ const Button = ({
   label,
   href,
   className = "",
+  iconSize = "",
   variant = "fill",
   type = "button",
   onClick,
@@ -231,11 +232,11 @@ const Button = ({
   const iconContent = Icon && (
     <span className="group">
       <span className={HoverIcon ? "group-hover:hidden" : ""}>
-        <Icon className={s.iconSize} />
+        <Icon className={`${iconSize || s.iconSize}`} />
       </span>
       {HoverIcon && (
         <span className="group-hover:block hidden">
-          <HoverIcon className={s.iconSize} />
+          <HoverIcon className={`${iconSize || s.iconSize}`} />
         </span>
       )}
     </span>

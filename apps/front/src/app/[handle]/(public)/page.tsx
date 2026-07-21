@@ -7,6 +7,7 @@ import UserHero from "@/components/UserHero";
 import useAuth from "@/contexts/AuthContext/useAuth";
 import useUser from "@/contexts/UserContext";
 import useBrowse from "@/hooks/bread/useBrowse";
+import useBreakpoints from "@/hooks/useBreakpoints";
 import useDebounce from "@/hooks/useDebounce";
 import useExpressions from "@/hooks/useExpressions";
 import { getHandle, getUsername } from "@/utils/userUtils";
@@ -41,6 +42,7 @@ const ProfilePage = () => {
   });
 
   const { user } = useUser();
+  const { sm } = useBreakpoints();
 
   const debouncedSearch = useDebounce(filters?.search, 400);
 
@@ -108,6 +110,7 @@ const ProfilePage = () => {
               <ToggleButtons
                 value={showDrafts ? "drafts" : "published"}
                 onChange={handleShowDrafts}
+                size={sm ? "md" : "sm"}
                 buttons={[
                   {
                     value: "published",
@@ -122,7 +125,6 @@ const ProfilePage = () => {
                     HoverIcon: SolidPencilSquareIcon,
                   },
                 ]}
-                size="sm"
               />
             )
           }
