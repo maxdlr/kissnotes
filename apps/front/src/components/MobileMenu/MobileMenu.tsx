@@ -46,6 +46,15 @@ const MobileMenu = ({ className }: { className?: string }) => {
     },
   ];
 
+  if (!auth?.user) {
+    menuItems.push({
+      slug: "account",
+      href: "/login",
+      InactiveIcon: OUserIcon,
+      ActiveIcon: SUserIcon,
+    });
+  }
+
   if (auth?.user) {
     menuItems.push(
       {
