@@ -25,7 +25,7 @@ export default function RootLayout({
       >
         <Providers>
           <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8 max-sm:pb-24">
-            <Header className="hidden sm:block" />
+            <Header className="hidden sm:flex" />
             {children}
           </main>
           <MobileMenu className="sm:hidden" />
