@@ -3,35 +3,33 @@ import useAuth from "@/contexts/AuthContext/useAuth";
 import { getProfileHref } from "@/utils/userUtils";
 import {
   Cog6ToothIcon as OCog6ToothIcon,
-  PlusIcon as OPlusIcon,
   HomeIcon as OHomeIcon,
-  UserIcon as OUserIcon,
   MagnifyingGlassIcon as OMagnifyingGlassIcon,
+  PlusIcon as OPlusIcon,
+  UserIcon as OUserIcon,
 } from "@heroicons/react/24/outline";
 import {
-  PlusIcon as SPlusIcon,
   Cog6ToothIcon as SCog6ToothIcon,
   HomeIcon as SHomeIcon,
-  UserIcon as SUserIcon,
   MagnifyingGlassIcon as SMagnifyingGlassIcon,
+  PlusIcon as SPlusIcon,
+  UserIcon as SUserIcon,
 } from "@heroicons/react/24/solid";
-import Button from "../Button";
-import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+import { usePathname } from "next/navigation";
 import { ElementType } from "react";
-import useSearcher from "../Searcher/hooks/SearcherProvider";
+import Button from "../Button";
 import Searcher from "../Searcher";
-import useBreakpoints from "@/hooks/useBreakpoints";
+import useSearcher from "../Searcher/hooks/SearcherProvider";
 
 const MobileMenu = ({ className }: { className?: string }) => {
   const auth = useAuth();
   const pathname = usePathname();
   const { isOpen, setIsOpen, setPrompt } = useSearcher();
-  const { xs } = useBreakpoints();
 
-  const menu: {
+  const menuItems: {
     slug: string;
-    href: string;
+    href?: string;
     InactiveIcon: ElementType;
     ActiveIcon: ElementType;
   }[] = [
@@ -52,19 +50,26 @@ const MobileMenu = ({ className }: { className?: string }) => {
       InactiveIcon: OPlusIcon,
       ActiveIcon: SPlusIcon,
     },
-    auth?.user && {
-      slug: "account",
-      href: getProfileHref(auth.user.username),
-      InactiveIcon: OUserIcon,
-      ActiveIcon: SUserIcon,
-    },
-    auth?.user && {
-      slug: "settings",
-      href: `${getProfileHref(auth.user.username)}/settings`,
-      InactiveIcon: OCog6ToothIcon,
-      ActiveIcon: SCog6ToothIcon,
-    },
-  ].filter(Boolean);
+  ];
+
+  if (auth?.user) {
+    menuItems.push(
+      {
+        slug: "account",
+        href: getProfileHref(auth.user.username),
+        InactiveIcon: OUserIcon,
+        ActiveIcon: SUserIcon,
+      },
+      {
+        slug: "settings",
+        href: `${getProfileHref(auth.user.username)}/settings`,
+        InactiveIcon: OCog6ToothIcon,
+        ActiveIcon: SCog6ToothIcon,
+      }
+    );
+  }
+
+  const menu = menuItems;
 
   const handleClose = () => {
     setIsOpen(false);
