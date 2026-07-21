@@ -6,6 +6,7 @@ import {
   HomeIcon as OHomeIcon,
   MagnifyingGlassIcon as OMagnifyingGlassIcon,
   PlusIcon as OPlusIcon,
+  ServerStackIcon as OServerStackIcon,
   UserIcon as OUserIcon,
 } from "@heroicons/react/24/outline";
 import {
@@ -13,6 +14,7 @@ import {
   HomeIcon as SHomeIcon,
   MagnifyingGlassIcon as SMagnifyingGlassIcon,
   PlusIcon as SPlusIcon,
+  ServerStackIcon as SServerStackIcon,
   UserIcon as SUserIcon,
 } from "@heroicons/react/24/solid";
 import { motion } from "motion/react";
@@ -48,7 +50,7 @@ const MobileMenu = ({ className }: { className?: string }) => {
 
   if (!auth?.user) {
     menuItems.push({
-      slug: "account",
+      slug: "login",
       href: "/login",
       InactiveIcon: OUserIcon,
       ActiveIcon: SUserIcon,
@@ -76,6 +78,15 @@ const MobileMenu = ({ className }: { className?: string }) => {
         ActiveIcon: SCog6ToothIcon,
       },
     );
+  }
+
+  if (auth?.user?.type === "admin") {
+    menuItems.push({
+      slug: "admin",
+      href: "/admin",
+      InactiveIcon: OServerStackIcon,
+      ActiveIcon: SServerStackIcon,
+    });
   }
 
   const menu = menuItems;
