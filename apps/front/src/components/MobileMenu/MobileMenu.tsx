@@ -44,16 +44,16 @@ const MobileMenu = ({ className }: { className?: string }) => {
       InactiveIcon: OMagnifyingGlassIcon,
       ActiveIcon: SMagnifyingGlassIcon,
     },
-    {
-      slug: "add",
-      href: "/form/new",
-      InactiveIcon: OPlusIcon,
-      ActiveIcon: SPlusIcon,
-    },
   ];
 
   if (auth?.user) {
     menuItems.push(
+      {
+        slug: "add",
+        href: "/form/new",
+        InactiveIcon: OPlusIcon,
+        ActiveIcon: SPlusIcon,
+      },
       {
         slug: "account",
         href: getProfileHref(auth.user.username),
@@ -65,7 +65,7 @@ const MobileMenu = ({ className }: { className?: string }) => {
         href: `${getProfileHref(auth.user.username)}/settings`,
         InactiveIcon: OCog6ToothIcon,
         ActiveIcon: SCog6ToothIcon,
-      }
+      },
     );
   }
 
