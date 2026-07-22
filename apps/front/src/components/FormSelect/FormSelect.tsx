@@ -21,6 +21,7 @@ import {
 } from "react";
 import type { FormSelectProps } from "./interfaces";
 import SelectedOption from "./components/SelectOption";
+import Tooltip from "../Tooltip";
 
 const FormSelect = <T,>({
   Icon,
@@ -216,12 +217,7 @@ const FormSelect = <T,>({
 
             {tooltip && (
               <div className="flex justify-center items-center">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  Icon={QuestionMarkCircleIcon}
-                  className="text-accent"
-                />
+                <Tooltip content={tooltip} size="sm" />
               </div>
             )}
           </div>

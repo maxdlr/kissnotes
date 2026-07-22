@@ -2,6 +2,7 @@ import { truncate } from "@/utils/stringUtils";
 import { Model } from "@kissnotes/types";
 import { adminListColumns } from "../AdminList";
 import { AdminListCellProps } from "../interfaces";
+import UserHandle from "@/components/UserHandle";
 
 const AdminListCell = <T extends Model>({
   property,
@@ -27,15 +28,17 @@ const AdminListCell = <T extends Model>({
     return <span className={className}>{value.length}</span>;
   }
 
+  if (typeof value === "string" && property === "username") {
+    return <UserHandle className="inline text-secondary!" />;
+  }
+
   if (
-    ["title", "description", "username", "email"].includes(
-      property as string,
-    ) &&
+    ["title", "description", "email"].includes(property as string) &&
     typeof value === "string"
   ) {
     return (
-      <span className={`truncate ${className}`}>
-        {truncate(value || "", 30)}
+      <span className={`md:truncate ${className}`}>
+        {truncate(value || "", 100)}
       </span>
     );
   }

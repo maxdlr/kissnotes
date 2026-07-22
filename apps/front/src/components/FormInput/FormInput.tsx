@@ -61,7 +61,7 @@ const FormInput = <T = "string",>({
           ? "border-danger"
           : `border-accent hover:border-secondary/50`
     } ${hovered ? "bg-accent/50" : ""} ${tapped ? "bg-accent/100" : ""} transition-colors cursor-pointer`,
-    ghost: `!p-0 ${label && ["text", "search", "email", "password"].includes(type) ? "border border-transparent! py-3! px-4!" : ""}`,
+    ghost: `!p-0 ${label && ["text", "textarea", "search", "email", "password"].includes(type) ? "border border-transparent! py-3! px-4!" : ""}`,
   };
 
   const handleInputFocus: FocusEventHandler<HTMLInputElement> = (e): void => {

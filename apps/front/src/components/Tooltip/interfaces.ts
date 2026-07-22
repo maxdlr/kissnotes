@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode, SVGProps } from "react";
 import type { BubblePosition } from "../Bubble/interfaces";
 
-export type TooltipSize = "small" | "normal" | "large" | "extraLarge";
+export type TooltipSize = "sm" | "md" | "lg" | "xl";
 
 export interface TooltipProps {
   content: string;

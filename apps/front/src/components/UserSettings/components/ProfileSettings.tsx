@@ -36,8 +36,7 @@ const ProfileSettings = () => {
       setFormData({
         username: user.username,
         email: user.email,
-        notifyLike: true,
-        notifyShare: false,
+        description: user.description || "",
       });
     }
   }, [user, userLoading]);
@@ -115,8 +114,8 @@ const ProfileSettings = () => {
         >
           <FormWrapper
             errors={errors}
-            className="grid! grid-cols-5 gap-8"
-            fieldsetClassName="col-span-4 flex gap-4 py-8"
+            className="py-8"
+            fieldsetClassName="grid grid-cols-1 sm:grid-cols-2 flex gap-4"
             submit={
               isEdit
                 ? {
@@ -124,7 +123,6 @@ const ProfileSettings = () => {
                     onClick: handleSubmit,
                     loading,
                     shortcut: { keys: ["Enter"] },
-                    size: "sm",
                   }
                 : undefined
             }
@@ -139,7 +137,6 @@ const ProfileSettings = () => {
               disabled={!isEdit}
               containerClassName="border-dashed!"
               required
-              className="col-span-2"
             />
             <FormInput
               type="email"
@@ -152,38 +149,21 @@ const ProfileSettings = () => {
               disabled={!isEdit}
               containerClassName="border-dashed!"
               required
-              className="col-span-2"
+            />
+            <FormInput
+              type="textarea"
+              name="description"
+              label="Description"
+              value={formData?.description}
+              placeholder="Your description"
+              onChange={handleOnchange}
+              variant={isEdit ? "outline" : "ghost"}
+              disabled={!isEdit}
+              containerClassName="border-dashed!"
+              className="col-span-1 sm:col-span-2 h-fit"
+              required
             />
           </FormWrapper>
-        </SettingsSection>
-
-        <SettingsSection
-          title="Notifications"
-          subtitle="Receive emails"
-          className="col-span-full"
-        >
-          <div className="grid grid-cols-2 gap-8 py-8">
-            <FormInput
-              labelIn
-              type="checkbox"
-              name="notifyLike"
-              label="Likes"
-              value={formData?.notifyLike}
-              onChange={handleOnchange}
-              variant="ghost"
-              disabled={!isEdit}
-            />
-            <FormInput
-              labelIn
-              type="checkbox"
-              name="notifyShare"
-              label="Shares"
-              value={formData?.notifyShare}
-              onChange={handleOnchange}
-              variant="ghost"
-              disabled={!isEdit}
-            />
-          </div>
         </SettingsSection>
       </div>
     </div>

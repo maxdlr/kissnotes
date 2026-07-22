@@ -21,10 +21,22 @@ const useBreakpoints = () => {
   }, []);
 
   const sm = breakpoint === Breakpoint.SM;
-  const md = breakpoint === Breakpoint.MD;
-  const lg = breakpoint === Breakpoint.LG;
-  const xl = breakpoint === Breakpoint.XL;
-  const xxl = breakpoint === Breakpoint.XXL;
+  const md = breakpoint === Breakpoint.MD || breakpoint === Breakpoint.SM;
+  const lg =
+    breakpoint === Breakpoint.LG ||
+    breakpoint === Breakpoint.MD ||
+    breakpoint === Breakpoint.SM;
+  const xl =
+    breakpoint === Breakpoint.XL ||
+    breakpoint === Breakpoint.LG ||
+    breakpoint === Breakpoint.MD ||
+    breakpoint === Breakpoint.SM;
+  const xxl =
+    breakpoint === Breakpoint.XXL ||
+    breakpoint === Breakpoint.XL ||
+    breakpoint === Breakpoint.LG ||
+    breakpoint === Breakpoint.MD ||
+    breakpoint === Breakpoint.SM;
 
   return { breakpoint, sm, md, lg, xl, xxl };
 };

@@ -1,8 +1,7 @@
 export interface ProfileSettingsFormData {
   username: string;
   email: string;
-  notifyLike: boolean;
-  notifyShare: boolean;
+  description: string;
 }
 
 export interface ProfileSettingsPasswordFormData {

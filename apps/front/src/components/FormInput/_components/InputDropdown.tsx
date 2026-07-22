@@ -1,10 +1,11 @@
+import Collapsible from "@/components/Collapsible";
+import { useShortcut } from "@/hooks/useShortcut";
 import { KissChangeEvent } from "@/types/form.types";
 import { getNextZIndex } from "@/utils/zIndexManager";
-import { useState } from "react";
+import { ChevronUpIcon } from "@heroicons/react/24/solid";
 import { motion } from "motion/react";
-import Collapsible from "@/components/Collapsible";
+import { useState } from "react";
 import { FormDropdownProps } from "../interfaces";
-import { useShortcut } from "@/hooks/useShortcut";
 
 const InputDropdown = <T,>({
   ref,
@@ -57,9 +58,16 @@ const InputDropdown = <T,>({
           onHoverEnd={() => onHover?.(false)}
           onTapStart={() => onTap?.(true)}
           onTap={() => onTap?.(false)}
-          className="cursor-pointer text-start leading-6 w-full"
+          className="cursor-pointer text-start leading-6 w-full flex justify-between items-center"
         >
           {value?.[property] != null ? String(value[property]) : label}
+          <motion.div
+            initial={{ rotate: 0 }}
+            animate={{ rotate: open ? -180 : 0 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+          >
+            <ChevronUpIcon className="size-5" />
+          </motion.div>
         </motion.button>
       )}
       <div className="absolute left-0 top-full w-full pt-4" style={{ zIndex }}>

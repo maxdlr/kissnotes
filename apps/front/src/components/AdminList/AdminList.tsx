@@ -59,7 +59,7 @@ const AdminList = <T extends Model>({
 
       <div className="flex flex-col">
         <div
-          className="hidden sm:grid gap-4 px-4 py-4 bg-darker sticky top-0"
+          className="hidden md:grid gap-4 px-4 py-4 bg-darker sticky top-0"
           style={{ gridTemplateColumns: gridTemplate }}
         >
           {columns.map((col) => (

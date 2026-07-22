@@ -51,7 +51,7 @@ const CollapsibleSidebar = ({
             collapsed ? undefined : { keys: ["ctrl", "S"], ignoreInputs: false }
           }
           onClick={onToggle}
-          tooltip={{ content: "Filters", showDelay: 4000 }}
+          tooltip={{ content: "Filters", showDelay: 3000 }}
         />
       )}
       <AnimatePresence initial={false}>

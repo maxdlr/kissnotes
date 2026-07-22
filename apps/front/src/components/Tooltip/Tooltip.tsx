@@ -7,16 +7,16 @@ import Bubble from "@/components/Bubble";
 import type { TooltipProps, TooltipSize } from "./interfaces";
 
 const PIN_SIZES: Record<TooltipSize, string> = {
-  small: "size-4",
-  normal: "size-6",
-  large: "size-10",
-  extraLarge: "size-14",
+  sm: "size-4",
+  md: "size-6",
+  lg: "size-10",
+  xl: "size-14",
 };
 
 const Tooltip = ({
   content,
   position = "top",
-  size = "normal",
+  size = "md",
   className = "",
   parentClassName = "",
   showDelay = 500,
@@ -53,7 +53,9 @@ const Tooltip = ({
         aria-describedby={visible ? "tooltip-bubble" : undefined}
       >
         {children ?? (
-          <TriggerIcon className={`inline-block ${PIN_SIZES[size]} text-accent`} />
+          <TriggerIcon
+            className={`inline-block ${PIN_SIZES[size]} text-accent`}
+          />
         )}
       </span>
       <AnimatePresence>
