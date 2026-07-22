@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: dont care */
-
 import Header from "@/components/Header";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
@@ -7,6 +6,7 @@ import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";
 import MobileMenu from "@/components/MobileMenu";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
@@ -25,7 +25,7 @@ export default function RootLayout({
       >
         <Providers>
           <main className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 md:space-y-8 max-sm:pb-24">
-            <Header className="hidden sm:flex" />
+            <Header />
             {children}
           </main>
           <MobileMenu className="sm:hidden" />

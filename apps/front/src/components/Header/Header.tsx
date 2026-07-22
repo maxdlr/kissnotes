@@ -8,7 +8,7 @@ import {
   Cog6ToothIcon as Cog6ToothFillIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import SearchBar from "@/components/SearchBar";
@@ -23,6 +23,7 @@ import Tooltip from "../Tooltip";
 import useBrowse from "@/hooks/bread/useBrowse";
 import { DashboardModel } from "@kissnotes/types";
 import useSWR from "swr";
+import { ElementType } from "react";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;
@@ -31,17 +32,53 @@ const getLoginHref = () => {
     : "/login";
 };
 
+interface Stats {
+  id: number;
+  value: number;
+  Icon: ElementType;
+  tooltip: string;
+}
+
+const Stats = ({
+  stats,
+  isLoading,
+}: {
+  stats: Stats[];
+  isLoading: boolean;
+}) => {
+  return (
+    <div className="flex items-center justify-center gap-3">
+      {stats.map(({ id, value, Icon, tooltip }, index) => (
+        <Fragment key={id}>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <Tooltip content={tooltip}>
+              <div key={id} className="flex items-center gap-2 text-secondary">
+                <Icon className="size-5" />
+                {value}
+              </div>
+            </Tooltip>
+          )}
+          {index < stats.length - 1 && <span>•</span>}
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
 const Header = ({ className }: { className?: string }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { sm } = useBreakpoints();
+  const pathname = usePathname();
 
   const { data, isLoading } = useSWR<DashboardModel>({
     url: "/dashboard/browse",
     params: {},
   });
 
-  const stats = [
+  const stats: Stats[] = [
     {
       id: 1,
       value: data?.expressions.publishedCount ?? 0,
@@ -55,6 +92,14 @@ const Header = ({ className }: { className?: string }) => {
       tooltip: "Total users",
     },
   ];
+
+  if (sm) {
+    if (pathname === "/") {
+      return <Stats stats={stats} isLoading={isLoading} />;
+    } else {
+      return null;
+    }
+  }
 
   return (
     <header
@@ -75,26 +120,7 @@ const Header = ({ className }: { className?: string }) => {
         className="w-full"
       />
 
-      <div className="flex items-center justify-center gap-3">
-        {stats.map(({ id, value, Icon, tooltip }, index) => (
-          <Fragment key={id}>
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <Tooltip content={tooltip}>
-                <div
-                  key={id}
-                  className="flex items-center gap-2 text-secondary"
-                >
-                  <Icon className="size-5" />
-                  {value}
-                </div>
-              </Tooltip>
-            )}
-            {index < stats.length - 1 && <span>•</span>}
-          </Fragment>
-        ))}
-      </div>
+      <Stats stats={stats} isLoading={isLoading} />
 
       {user?.type === "admin" && (
         <Button
