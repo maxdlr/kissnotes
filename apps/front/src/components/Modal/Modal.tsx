@@ -114,7 +114,7 @@ const Modal = ({
                 onClick={handleOverlayClick}
               >
                 <motion.div
-                  className={`${layoutClass} ${isFullHeight ? "overflow-y-auto" : "overflow-hidden"}`}
+                  className={`${layoutClass} ${isFullHeight ? "overflow-y-auto" : ""}`}
                   variants={modalVariants}
                   initial="hidden"
                   animate="visible"
@@ -138,7 +138,11 @@ const Modal = ({
                       />
                     )}
                   </div>
-                  <section ref={localContentRef}>{children}</section>
+                  <section ref={localContentRef}>
+                    {typeof children === "function"
+                      ? children({ zIndexModal })
+                      : children}
+                  </section>
                 </motion.div>
               </div>
             </>

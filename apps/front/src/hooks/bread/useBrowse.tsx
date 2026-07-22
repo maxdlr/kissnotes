@@ -20,7 +20,7 @@ const useBrowse = <T extends Model[]>(
       ) as Partial<T[number]>)
     : undefined;
 
-  const { data, error, mutate } = useSWR<KRes<T>>(
+  const { data, error, mutate, isValidating } = useSWR<KRes<T>>(
     {
       url: `/${model}/browse`,
       params: { maxResults: 50, ...filteredParams },
@@ -37,7 +37,7 @@ const useBrowse = <T extends Model[]>(
     } as SWRConfiguration<KRes<T>>,
   );
 
-  return { data, error, loading, mutate };
+  return { data, error, loading, isValidating, mutate };
 };
 
 export default useBrowse;
