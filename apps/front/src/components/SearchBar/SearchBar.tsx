@@ -1,7 +1,6 @@
 "use client";
 
 import FormInput from "@/components/FormInput";
-import Searcher from "@/components/Searcher";
 import type { KissChangeEvent } from "@/types/form.types";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
@@ -19,17 +18,12 @@ const SearchBar = ({
   name = "search",
   Icon,
 }: SearchBarProps) => {
-  const { isOpen, setIsOpen, prompt, setPrompt } = useSearcher();
+  const { setIsOpen, prompt, setPrompt } = useSearcher();
   const ref = useRef<HTMLInputElement | null>(null);
 
   const handleOnChange = (e: KissChangeEvent) => {
     setPrompt(e.target.value);
     onChange?.(e);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-    setPrompt("");
   };
 
   return (
@@ -51,7 +45,6 @@ const SearchBar = ({
         }
         containerClassName={`rounded-full @max-xs:border-0! @max-xs:px-0!`}
       />
-      {isOpen && modalSearcher && <Searcher onClose={handleClose} />}
     </div>
   );
 };

@@ -114,7 +114,7 @@ const Modal = ({
                 onClick={handleOverlayClick}
               >
                 <motion.div
-                  className={layoutClass}
+                  className={`${layoutClass} ${isFullHeight ? "overflow-y-auto" : "overflow-hidden"}`}
                   variants={modalVariants}
                   initial="hidden"
                   animate="visible"

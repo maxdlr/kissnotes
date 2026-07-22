@@ -21,13 +21,12 @@ import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { ElementType } from "react";
 import Button from "../Button";
-import Searcher from "../Searcher";
 import useSearcher from "../Searcher/hooks/SearcherProvider";
 
 const MobileMenu = ({ className }: { className?: string }) => {
   const auth = useAuth();
   const pathname = usePathname();
-  const { isOpen, setIsOpen, setPrompt } = useSearcher();
+  const { setIsOpen } = useSearcher();
 
   const menuItems: {
     slug: string;
@@ -91,11 +90,6 @@ const MobileMenu = ({ className }: { className?: string }) => {
 
   const menu = menuItems;
 
-  const handleClose = () => {
-    setIsOpen(false);
-    setPrompt("");
-  };
-
   return (
     <div className={`fixed left-0 bottom-0 z-999999 w-full ${className}`}>
       <motion.div
@@ -124,7 +118,6 @@ const MobileMenu = ({ className }: { className?: string }) => {
           ))}
         </div>
       </motion.div>
-      {isOpen && <Searcher onClose={handleClose} />}
     </div>
   );
 };

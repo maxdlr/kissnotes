@@ -18,11 +18,13 @@ import FormInput from "../FormInput";
 import SearchResult from "./components/SearcherResult";
 import useSearcher from "./hooks/SearcherProvider";
 import { SearcherProps, SearchResultModel } from "./interfaces";
+import useBreakpoints from "@/hooks/useBreakpoints";
 
 const Searcher = ({ onClose }: SearcherProps) => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { sm } = useBreakpoints();
 
   const {
     setPreviewing,
@@ -129,9 +131,14 @@ const Searcher = ({ onClose }: SearcherProps) => {
   };
 
   return (
-    <Modal ref={modalRef} className="bg-dark p-8 pt-4 max-w-2xl">
-      <div className="space-y-12 sm:space-y-14">
-        <div className="w-full sticky top-8 z-60 bg-dark flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
+    <Modal
+      ref={modalRef}
+      className="bg-dark p-8 pt-4 max-w-2xl relative"
+      isFullHeight={sm}
+      isFullWidth={sm}
+    >
+      <div className="sticky top-0 z-60 bg-darker py-8 -ms-8 -me-8">
+        <div className="w-full flex justify-between items-center p-4 gap-6 rounded-3xl border border-accent">
           <FormInput
             StartChild={<BoltIcon className="w-6" />}
             ref={inputRef}
@@ -200,65 +207,61 @@ const Searcher = ({ onClose }: SearcherProps) => {
             }
           />
         </div>
-        <div className="space-y-4">
-          {!previewing ? (
-            searchResults.length > 0 ? (
-              searchResults.map((result, index) => {
-                return (
-                  <div
-                    onMouseEnter={() => handleHover(index, result.native)}
-                    onMouseLeave={() => handleHover(undefined, undefined)}
-                    key={`${result.id}-${index}`}
-                    ref={
-                      index === selectedIndex.index
-                        ? scrollCenterRef
-                        : undefined
+      </div>
+
+      <div className="space-y-4">
+        {!previewing ? (
+          searchResults.length > 0 ? (
+            searchResults.map((result, index) => {
+              return (
+                <div
+                  onMouseEnter={() => handleHover(index, result.native)}
+                  onMouseLeave={() => handleHover(undefined, undefined)}
+                  key={`${result.id}-${index}`}
+                  ref={
+                    index === selectedIndex.index ? scrollCenterRef : undefined
+                  }
+                >
+                  <SearchResult
+                    native={result.native}
+                    ref={ref}
+                    expression={result}
+                    searchPrompt={prompt}
+                    focused={index === selectedIndex.index}
+                    onClick={() =>
+                      setPreviewing({ id: result.id, native: result.native })
                     }
-                  >
-                    <SearchResult
-                      native={result.native}
-                      ref={ref}
-                      expression={result}
-                      searchPrompt={prompt}
-                      focused={index === selectedIndex.index}
-                      onClick={() =>
-                        setPreviewing({ id: result.id, native: result.native })
-                      }
-                    />
-                  </div>
-                );
-              })
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 60 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{ transformOrigin: "center" }}
-                className="w-fit mx-auto pb-12"
-              >
-                <div className="flex flex-col gap-4 justify-center items-center">
-                  <span className="font-bold text-2xl">No results</span>
-                  <Button
-                    label="Clear"
-                    onClick={handleClear}
-                    Icon={XMarkIcon}
-                    shortcut={{
-                      keys: ["ESC"],
-                      ignoreInputs: false,
-                      blockers: [!isOpen, !!previewing, !prompt],
-                    }}
                   />
                 </div>
-              </motion.div>
-            )
+              );
+            })
           ) : (
-            previewing.id && (
-              <ExpressionDetails
-                id={previewing.id}
-                native={previewing.native}
-              />
-            )
-          )}
-        </div>
+            <motion.div
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{ transformOrigin: "center" }}
+              className="w-fit mx-auto pb-12"
+            >
+              <div className="flex flex-col gap-4 justify-center items-center">
+                <span className="font-bold text-2xl">No results</span>
+                <Button
+                  label="Clear"
+                  onClick={handleClear}
+                  Icon={XMarkIcon}
+                  shortcut={{
+                    keys: ["ESC"],
+                    ignoreInputs: false,
+                    blockers: [!isOpen, !!previewing, !prompt],
+                  }}
+                />
+              </div>
+            </motion.div>
+          )
+        ) : (
+          previewing.id && (
+            <ExpressionDetails id={previewing.id} native={previewing.native} />
+          )
+        )}
       </div>
     </Modal>
   );

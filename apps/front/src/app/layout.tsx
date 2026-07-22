@@ -6,7 +6,7 @@ import "../assets/globals.css";
 import { gilroy } from "./fonts";
 import { Providers } from "./providers";
 import MobileMenu from "@/components/MobileMenu";
-import useBreakpoints from "@/hooks/useBreakpoints";
+import GlobalSearcher from "@/components/GlobalSearcher";
 
 export const metadata: Metadata = {
   title: "Kissnotes",
@@ -29,6 +29,7 @@ export default function RootLayout({
             {children}
           </main>
           <MobileMenu className="sm:hidden" />
+          <GlobalSearcher />
           <div id="modal-full" />
           <div id="modal" />
           <div id="tooltip" />
