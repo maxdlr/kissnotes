@@ -78,7 +78,8 @@ const Modal = ({
   };
 
   const layoutClass = (() => {
-    const base = `relative shadow-md w-full ${isFullHeight ? "" : "mb-8"} ${className}`;
+    const isAbsolutelyPositioned = isFullWidth || isFullHeight;
+    const base = `${isAbsolutelyPositioned ? "" : "relative"} shadow-md w-full ${isFullHeight ? "" : "mb-8"} ${className}`;
     if (isFullWidth) {
       return `${base} absolute bottom-0 top-0 sm:top-6 sm:rounded-t-6xl`;
     }

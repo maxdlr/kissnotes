@@ -219,7 +219,7 @@ const Searcher = ({ onClose }: SearcherProps) => {
   return (
     <Modal
       ref={modalRef}
-      className="bg-dark p-8 pt-0 max-w-2xl relative"
+      className="bg-dark p-8 pt-0 max-w-2xl"
       isFullHeight={sm}
       isFullWidth={sm}
     >
@@ -240,7 +240,7 @@ const Searcher = ({ onClose }: SearcherProps) => {
             </div>
           )}
 
-          <div className={`space-y-4 ${sm ? "pb-28" : ""}`}>
+          <div className={`space-y-4 ${sm ? "pt-8 pb-28" : ""}`}>
             {!previewing ? (
               error ? (
                 <motion.div
@@ -268,6 +268,7 @@ const Searcher = ({ onClose }: SearcherProps) => {
                       <Loading count={5} minSize={2} maxSize={10} />
                     </div>
                   )}
+
                   {searchResults.length > 0 ? (
                     searchResults.map((result, index) => {
                       return (
