@@ -29,7 +29,7 @@ const AdminListCell = <T extends Model>({
   }
 
   if (typeof value === "string" && property === "username") {
-    return <UserHandle className="inline text-secondary!" />;
+    return <UserHandle className="inline text-secondary!" username={value} />;
   }
 
   if (

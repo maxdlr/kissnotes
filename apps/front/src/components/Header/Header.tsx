@@ -1,4 +1,12 @@
 "use client";
+import Button from "@/components/Button";
+import Loading from "@/components/Loading";
+import SearchBar from "@/components/SearchBar";
+import UserHandle from "@/components/UserHandle";
+import useAuth from "@/contexts/AuthContext/useAuth";
+import useBreakpoints from "@/hooks/useBreakpoints";
+import { getProfileHref } from "@/utils/userUtils";
+import { UserIcon } from "@heroicons/react/16/solid";
 import {
   CodeBracketIcon,
   Cog6ToothIcon as Cog6ToothOutlineIcon,
@@ -8,22 +16,13 @@ import {
   Cog6ToothIcon as Cog6ToothFillIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
-import { usePathname, useRouter } from "next/navigation";
-import Button from "@/components/Button";
-import Loading from "@/components/Loading";
-import SearchBar from "@/components/SearchBar";
-import UserHandle from "@/components/UserHandle";
-import useAuth from "@/contexts/AuthContext/useAuth";
-import { getProfileHref } from "@/utils/userUtils";
-import Logo from "../Logo";
-import useBreakpoints from "@/hooks/useBreakpoints";
-import { UserIcon } from "@heroicons/react/16/solid";
-import { Fragment } from "react/jsx-runtime";
-import Tooltip from "../Tooltip";
-import useBrowse from "@/hooks/bread/useBrowse";
 import { DashboardModel } from "@kissnotes/types";
-import useSWR from "swr";
+import { usePathname, useRouter } from "next/navigation";
 import { ElementType } from "react";
+import { Fragment } from "react/jsx-runtime";
+import useSWR from "swr";
+import Logo from "../Logo";
+import Tooltip from "../Tooltip";
 
 const getLoginHref = () => {
   const referrer = window.location.pathname;
@@ -93,7 +92,7 @@ const Header = ({ className }: { className?: string }) => {
     },
   ];
 
-  if (sm) {
+  if (sm && user?.type === "admin") {
     if (pathname === "/") {
       return <Stats stats={stats} isLoading={isLoading} />;
     } else {
@@ -120,15 +119,16 @@ const Header = ({ className }: { className?: string }) => {
         className="w-full"
       />
 
-      <Stats stats={stats} isLoading={isLoading} />
-
       {user?.type === "admin" && (
-        <Button
-          Icon={ServerStackIcon}
-          label={sm ? undefined : "Admin"}
-          href="/admin"
-          variant="ghost"
-        />
+        <>
+          <Stats stats={stats} isLoading={isLoading} />
+          <Button
+            Icon={ServerStackIcon}
+            label={sm ? undefined : "Admin"}
+            href="/admin"
+            variant="ghost"
+          />
+        </>
       )}
 
       {loading ? (
