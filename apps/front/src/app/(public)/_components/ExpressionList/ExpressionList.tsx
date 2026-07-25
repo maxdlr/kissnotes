@@ -1,3 +1,4 @@
+"use client"
 import ExpressionCard from "@/app/(public)/_components/ExpressionCard";
 import type { SidebarValue } from "@/app/(public)/_components/ExpressionListSidebar";
 import ExpressionListSidebar from "@/app/(public)/_components/ExpressionListSidebar";

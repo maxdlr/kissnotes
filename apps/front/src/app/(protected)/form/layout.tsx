@@ -1,20 +1,17 @@
-"use client";
-import { useParams, useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { Metadata } from "next";
+import { ReactNode } from "react";
+import ExpressionFormRedirect from "./_components/ExpressionFormRedirect";
 
 interface ExpressionFormLayoutProps {
   children: ReactNode;
 }
-const ExpressionFormLayout = ({ children }: ExpressionFormLayoutProps) => {
-  const { id } = useParams();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (!id) {
-      router.replace("/form/new");
-    }
-  });
-
-  return children;
+export const metadata: Metadata = {
+  title: "Create or edit an expression",
 };
+
+const ExpressionFormLayout = ({ children }: ExpressionFormLayoutProps) => (
+  <ExpressionFormRedirect>{children}</ExpressionFormRedirect>
+);
+
 export default ExpressionFormLayout;

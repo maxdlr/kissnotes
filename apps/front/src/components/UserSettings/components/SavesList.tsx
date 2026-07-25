@@ -1,3 +1,4 @@
+"use client";
 import ExpressionList from "@/app/(public)/_components/ExpressionList";
 import Button from "@/components/Button";
 import useAuth from "@/contexts/AuthContext/useAuth";
@@ -23,11 +24,7 @@ const SavesList = () => {
       emptyMsg={
         <div className="flex flex-col items-center justify-center gap-4">
           <p>You haven&apos;t saved any expression yet.</p>
-          <Button
-            label="Browse expressions"
-            href="/"
-            Icon={ArrowUpLeftIcon}
-          />
+          <Button label="Browse expressions" href="/" Icon={ArrowUpLeftIcon} />
         </div>
       }
     />

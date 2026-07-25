@@ -92,12 +92,11 @@ const Header = ({ className }: { className?: string }) => {
     },
   ];
 
-  if (sm && user?.type === "admin") {
-    if (pathname === "/") {
+  if (sm) {
+    if (user?.type === "admin") {
       return <Stats stats={stats} isLoading={isLoading} />;
-    } else {
-      return null;
     }
+    return null;
   }
 
   return (

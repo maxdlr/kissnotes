@@ -1,18 +1,30 @@
-"use client";
-import ExpressionDetails from "@/components/ExpressionDetails";
-import type { Id } from "@kissnotes/types";
-import { useParams, useSearchParams } from "next/navigation";
+import { Metadata } from "next";
+import { fetchExpressionById } from "./_utils/fetchExpressionById";
+import ExpressionById from "./m/_components/ExpressionById";
 
-const ExpressionByIdPage = () => {
-  const { id } = useParams();
-  const params = useSearchParams();
-  const isNative = params.get("native");
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const expression = await fetchExpressionById(id);
 
-  return (
-    <article className="w-full md:w-11/12 lg:w-10/12 xl:w-8/12 2xl:w-7/12 mx-auto">
-      <ExpressionDetails id={id as Id} native={isNative !== null} />
-    </article>
-  );
+  return {
+    title: `Kissnotes • ${expression.title}`,
+    description:
+      expression.description ||
+      `Explore the expression "${expression.title}" on Kissnotes.`,
+  };
+}
+
+const ExpressionByIdPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  return <ExpressionById id={id} />;
 };
 
 export default ExpressionByIdPage;
