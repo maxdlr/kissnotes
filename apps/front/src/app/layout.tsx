@@ -9,6 +9,7 @@ import MobileMenu from "@/components/MobileMenu";
 import GlobalSearcher from "@/components/GlobalSearcher";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
   title: "Kissnotes",
   description: "The After Effects expression sharing platform",
 };

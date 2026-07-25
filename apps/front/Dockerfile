@@ -2,6 +2,8 @@ FROM node:22-slim AS build
 WORKDIR /app
 ARG NEXT_PUBLIC_API_URL=http://localhost/api
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 COPY package.json ./
 COPY packages/types ./packages/types
 COPY apps/front ./apps/front

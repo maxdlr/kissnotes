@@ -5,6 +5,7 @@
 .DS_Store
 *.pem
 .env*
+!.env.example
 *.tsbuildinfo
 apps/**/dist
 packages/**/dist
