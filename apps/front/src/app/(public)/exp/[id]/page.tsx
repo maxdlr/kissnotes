@@ -4,11 +4,17 @@ import ExpressionById from "./m/_components/ExpressionById";
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const expression = await fetchExpressionById(id);
+  const sParams = await searchParams;
+
+  const expression = await fetchExpressionById(id, !!sParams.native);
 
   return {
     title: `Kissnotes • ${expression.title}`,
