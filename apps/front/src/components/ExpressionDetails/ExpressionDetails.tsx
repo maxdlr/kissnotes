@@ -7,6 +7,8 @@ import type { ExpressionModel, Id } from "@kissnotes/types";
 import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
 import ExpressionDetailsContent from "./components/ExpressionDetailsContent";
+import { useEffect } from "react";
+import useToasts from "@/contexts/ToastsContext";
 
 export interface ExpressionDetailsProps {
   id: Id;
@@ -14,17 +16,33 @@ export interface ExpressionDetailsProps {
 }
 
 const ExpressionDetails = ({ id, native = false }: ExpressionDetailsProps) => {
-  const { data: expression, mutate } = useRead<
-    ExpressionModel & { native: boolean; score: number }
-  >(native ? "native-expressions" : "expressions", {
-    id: id as Id,
-  });
-
+  const { addToast } = useToasts();
   const { postData: postSave } = useAxios("users/cmd/save-expression");
   const { putData: putPublish } = useAxios("expressions/edit");
   const { user, refreshMe } = useAuth();
   const { mutate: globalMutate } = useSWRConfig();
   const router = useRouter();
+
+  const {
+    data: expression,
+    mutate,
+    isValidating,
+  } = useRead<ExpressionModel & { native: boolean; score: number }>(
+    native ? "native-expressions" : "expressions",
+    {
+      id: id as Id,
+    },
+  );
+
+  useEffect(() => {
+    if (!isValidating && !expression) {
+      addToast({
+        type: "error",
+        message: "Expression not found",
+      });
+      router.back();
+    }
+  }, [expression, addToast, router]);
 
   const revalidateExpressionsList = () => {
     globalMutate(
