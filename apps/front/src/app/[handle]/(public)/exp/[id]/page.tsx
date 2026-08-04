@@ -15,6 +15,8 @@ const UserExpressionById = () => {
   const params = useSearchParams();
   const isNative = params.get("native");
 
+  console.log({ isNative });
+
   return (
     <Modal
       onClose={handleClose}
