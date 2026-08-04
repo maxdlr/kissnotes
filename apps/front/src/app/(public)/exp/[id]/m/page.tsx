@@ -13,7 +13,7 @@ const ExpressionByIdModalPage = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const params = useSearchParams();
-  const isNative = params.get("native");
+  const isNative = params.has("native");
 
   const handleClose = () => {
     router.back();
@@ -21,7 +21,7 @@ const ExpressionByIdModalPage = () => {
 
   const handleExpand = () => {
     setOpen(false);
-    router.push(`/exp/${id}${isNative !== undefined ? "?native" : ""}`);
+    router.push(`/exp/${id}${isNative ? "?native" : ""}`);
   };
 
   return (
@@ -40,7 +40,7 @@ const ExpressionByIdModalPage = () => {
           }
         >
           <article className="p-6 sm:p-8">
-            <ExpressionDetails id={id as Id} native={isNative !== undefined} />
+            <ExpressionDetails id={id as Id} native={isNative} />
           </article>
         </Modal>
       )}
