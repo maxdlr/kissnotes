@@ -17,7 +17,7 @@ import {
   ServerStackIcon,
 } from "@heroicons/react/24/solid";
 import { DashboardModel } from "@kissnotes/types";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ElementType } from "react";
 import { Fragment } from "react/jsx-runtime";
 import useSWR from "swr";
@@ -70,10 +70,9 @@ const Header = ({ className }: { className?: string }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { sm } = useBreakpoints();
-  const pathname = usePathname();
 
   const { data, isLoading } = useSWR<DashboardModel>({
-    url: "/dashboard/browse",
+    url: user ? "/dashboard/browse" : null,
     params: {},
   });
 
