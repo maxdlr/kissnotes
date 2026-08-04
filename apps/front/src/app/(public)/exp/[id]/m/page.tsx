@@ -21,7 +21,7 @@ const ExpressionByIdModalPage = () => {
 
   const handleExpand = () => {
     setOpen(false);
-    router.push(`/exp/${id}${isNative !== null ? "?native" : ""}`);
+    router.push(`/exp/${id}${isNative !== undefined ? "?native" : ""}`);
   };
 
   return (
@@ -40,7 +40,7 @@ const ExpressionByIdModalPage = () => {
           }
         >
           <article className="p-6 sm:p-8">
-            <ExpressionDetails id={id as Id} native={isNative !== null} />
+            <ExpressionDetails id={id as Id} native={isNative !== undefined} />
           </article>
         </Modal>
       )}
