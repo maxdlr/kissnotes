@@ -42,15 +42,14 @@ const getTokenColor = (types: string[]): string => {
 // Image generation
 export default async function Image({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
-  const sParams = await searchParams;
 
-  const expression = await fetchExpressionById(id, "native" in sParams);
+  const expression = await fetchExpressionById(id).catch(() =>
+    fetchExpressionById(id, true),
+  );
 
   // Font loading, process.cwd() is Next.js project directory
   const gilroyBlack = await readFile(
