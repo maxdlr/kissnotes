@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { id } = await params;
   const sParams = await searchParams;
 
-  const expression = await fetchExpressionById(id, !!sParams.native);
+  const expression = await fetchExpressionById(id, "native" in sParams);
 
   return {
     title: `Kissnotes • ${expression.title}`,
