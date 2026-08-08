@@ -12,6 +12,10 @@ const readExpression = async (
 	}
 	const expression = await findExpression(id as string);
 
+	if (!expression) {
+		throw Missing("Expression not found");
+	}
+
 	return res.status(200).send(expression);
 };
 export default readExpression;
