@@ -1,5 +1,5 @@
 "use client";
-import ExpressionByIdModalPage from "@/app/(public)/exp/[id]/m/page";
+import ExpressionByIdModalPage from "@/app/(public)/exp/[id]/m/_components/ExpressionByIdModalPage";
 
 const ProfileExpressionDetailsPage = () => {
   return <ExpressionByIdModalPage />;

@@ -21,6 +21,12 @@ export async function generateMetadata({
     description:
       expression.description ||
       `Explore the expression "${expression.title}" on Kissnotes.`,
+    // /exp/[id] is the canonical URL for an expression. The same expression is
+    // also reachable at /@handle/exp/[id] when browsed from a profile page —
+    // this tells search engines to index this URL instead of that one.
+    alternates: {
+      canonical: `/exp/${id}`,
+    },
   };
 }
 

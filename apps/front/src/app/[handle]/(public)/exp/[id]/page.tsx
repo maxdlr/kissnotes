@@ -1,30 +1,35 @@
-"use client";
-import type { Id } from "@kissnotes/types";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import ExpressionDetails from "@/components/ExpressionDetails";
-import Modal from "@/components/Modal";
+import type { Metadata } from "next";
+import { fetchExpressionById } from "@/app/(public)/exp/[id]/_utils/fetchExpressionById";
+import UserExpressionById from "./_components/UserExpressionById";
 
-const UserExpressionById = () => {
-  const router = useRouter();
-  const handleClose = () => {
-    router.back();
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string; handle: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const sParams = await searchParams;
+
+  const expression = await fetchExpressionById(id, "native" in sParams);
+
+  return {
+    title: `Kissnotes • ${expression.title}`,
+    description:
+      expression.description ||
+      `Explore the expression "${expression.title}" on Kissnotes.`,
+    // Same expression is also reachable at /exp/[id] (the profile-scoped URL
+    // is a UX convenience, not a distinct piece of content) — canonicalize to
+    // the unscoped URL to avoid duplicate-content indexing.
+    alternates: {
+      canonical: `/exp/${id}`,
+    },
   };
+}
 
-  const { id } = useParams();
-
-  const params = useSearchParams();
-  const isNative = params.has("native");
-
-  return (
-    <Modal
-      onClose={handleClose}
-      className="bg-dark lg:w-3/4 xl:w-2/3 2xl:w-1/2 rounded-4xl border"
-    >
-      <article className="p-8">
-        <ExpressionDetails id={id as Id} native={isNative} />
-      </article>
-    </Modal>
-  );
+const UserExpressionByIdPage = () => {
+  return <UserExpressionById />;
 };
 
-export default UserExpressionById;
+export default UserExpressionByIdPage;

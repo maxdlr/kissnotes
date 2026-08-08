@@ -1,51 +1,34 @@
-"use client";
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
-import type { Id } from "@kissnotes/types";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import Button from "@/components/Button";
-import ExpressionDetails from "@/components/ExpressionDetails";
-import Modal from "@/components/Modal";
-import { AnimatePresence } from "motion/react";
-import { useState } from "react";
+import type { Metadata } from "next";
+import { fetchExpressionById } from "../_utils/fetchExpressionById";
+import ExpressionByIdModalPage from "./_components/ExpressionByIdModalPage";
 
-const ExpressionByIdModalPage = () => {
-  const { id } = useParams();
-  const router = useRouter();
-  const [open, setOpen] = useState(true);
-  const params = useSearchParams();
-  const isNative = params.has("native");
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const sParams = await searchParams;
 
-  const handleClose = () => {
-    router.back();
+  const expression = await fetchExpressionById(id, "native" in sParams);
+
+  return {
+    title: `Kissnotes • ${expression.title}`,
+    description:
+      expression.description ||
+      `Explore the expression "${expression.title}" on Kissnotes.`,
+    // /exp/[id]/m is the modal-view URL used when navigating from a listing
+    // (homepage or profile) — same content as /exp/[id], so canonicalize there.
+    alternates: {
+      canonical: `/exp/${id}`,
+    },
   };
+}
 
-  const handleExpand = () => {
-    setOpen(false);
-    router.push(`/exp/${id}${isNative ? "?native" : ""}`);
-  };
-
-  return (
-    <AnimatePresence mode="wait">
-      {open && (
-        <Modal
-          onClose={handleClose}
-          className="bg-dark lg:w-3/4 xl:w-2/3 2xl:w-1/2 rounded-4xl border"
-          HeaderChild={
-            <Button
-              Icon={ArrowsPointingOutIcon}
-              variant="ghost"
-              onClick={handleExpand}
-              shortcut={{ keys: ["ENTER"] }}
-            />
-          }
-        >
-          <article className="p-6 sm:p-8">
-            <ExpressionDetails id={id as Id} native={isNative} />
-          </article>
-        </Modal>
-      )}
-    </AnimatePresence>
-  );
+const ExpressionByIdModalPageWrapper = () => {
+  return <ExpressionByIdModalPage />;
 };
 
-export default ExpressionByIdModalPage;
+export default ExpressionByIdModalPageWrapper;
