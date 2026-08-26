@@ -17,9 +17,9 @@ const Hero = () => {
     return (
       <section className="flex flex-col justify-center items-center w-full gap-4 py-8">
         <Logo className="text-primary" big />
-        <p className="text-center max-sm:w-2/3">
+        <h1 className="text-center max-sm:w-2/3 text-xl font-normal">
           A free and open-source After Effects expressions sharing platform.
-        </p>
+        </h1>
         <div className="flex flex-row justify-center items-center gap-4">
           <Button
             label="Sign up"

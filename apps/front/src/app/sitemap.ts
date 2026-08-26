@@ -17,6 +17,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const expressionRoutes: MetadataRoute.Sitemap = expressions.map(
     (expression) => ({
       url: `${siteUrl}/exp/${expression.id}`,
+      lastModified: expression.updatedAt,
       changeFrequency: "weekly",
       priority: 0.8,
     }),
@@ -24,6 +25,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
   const profileRoutes: MetadataRoute.Sitemap = users.map((user) => ({
     url: `${siteUrl}/@${user.username}`,
+    lastModified: user.updatedAt,
     changeFrequency: "weekly",
     priority: 0.5,
   }));
